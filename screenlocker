@@ -1,0 +1,165 @@
+#!/bin/sh
+
+#####################
+# --- variables --- #
+#####################
+
+# color  0
+# type: hex string
+ color0=""
+# color  2
+# type: hex string
+ color2=""
+# color  8
+# type: hex string
+ color8=""
+# color 10
+# type: hex string
+color10=""
+# color 12
+# type: hex string
+color12=""
+# color 15
+# type: hex string
+color15=""
+
+# type:        int
+# description:
+#   randomly chosen color index
+COLO_OPT=$(shuf -n 1 -e 0 2 8 10 15)
+
+# type:        hex string
+# description:
+#   color used for auth background
+AuthBgColor=""
+
+# type:        hex string
+# description:
+#   color used for auth foreground
+AuthFgColor=""
+
+# type:        int
+# description:
+#   pid of current xsecurelock instance
+xsecurelock_pid=""
+
+# type:        int
+# description:
+#   pid of launched dimmer
+dimmer_pid=""
+
+#####################
+# --- functions --- #
+#####################
+
+# return type: void
+# description:
+#   kill orphaned sleep processes
+#   that may linger after dim-screen.sh
+kill_orphan_sleeps () {
+	for process_pid in $(pgrep -a sleep | grep 2147483647 | cut -d ' ' -f 1); do
+		process=$(ps -p "$process_pid" -o command=)
+		if pstree -Aps "$process_pid" | grep "init(1)---sleep(${process_pid})" >/dev/null; then
+			kill "$process_pid"
+			printf '%s %s: orphan "%s" PID: %s killed.\n' "$(date +"%F %T")" "${0##*/}" "${process##*/}" "$process_pid"
+		fi
+	done
+}
+
+# return type: void
+# description:
+#   kill dim-screen.sh process
+#   that may be dangling from previous instances
+kill_dangling_dimmers () {
+	dangling_dim_screen=$(pgrep -a dim-screen.sh)
+	if [ -n "$dangling_dim_screen" ]; then
+		dangling_dim_screen_pid="${dangling_dim_screen%% *}"
+		kill "$dangling_dim_screen_pid"
+		printf '%s %s: "%s" PID: %s killed.\n' "$(date +"%F %T")" "${0##*/}" "${dangling_dim_screen##*/}" "$dangling_dim_screen_pid"
+		kill_orphan_sleeps
+	fi
+}
+
+# return type: void
+# description:
+#   start xsecurelock and capture it's pid
+start_xsecurelock () {
+	XSECURELOCK_FONT="Noto Sans CJK JP" \
+	XSECURELOCK_PASSWORD_PROMPT="disco" \
+	XSECURELOCK_SAVER=~/.local/bin/saver.sh \
+	XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1 \
+	XSECURELOCK_SHOW_HOSTNAME=0 \
+	XSECURELOCK_SHOW_USERNAME=1 \
+	XSECURELOCK_SHOW_DATETIME=1 \
+	XSECURELOCK_DATETIME_FORMAT='%A      %T' \
+	SECURELOCK_COMPOSITE_OBSCURER=0 \
+	XSECURELOCK_NO_COMPOSITE=1 \
+	XSECURELOCK_AUTH_TIMEOUT=120 \
+	XSECURELOCK_BLANK_TIMEOUT=300 \
+	XSECURELOCK_SAVER_STOP_ON_BLANK=0 \
+	XSECURELOCK_BURNIN_MITIGATION=50 \
+	XSECURELOCK_BURNIN_MITIGATION_DYNAMIC=1 \
+	XSECURELOCK_AUTH_BACKGROUND_COLOR=$AuthBgColor \
+	XSECURELOCK_AUTH_FOREGROUND_COLOR=$AuthFgColor \
+	XSECURELOCK_BLANK_DPMS_STATE=off \
+	xsecurelock 2>/dev/null &
+	xsecurelock_pid=$!
+	sleep 1
+	if ps -p "$xsecurelock_pid" -o cmd | grep -q "xsecurelock" ; then
+		printf '%s %s: xsecurelock %s launched.\n' "$(date +"%F %T")" "${0##*/}" "$xsecurelock_pid" >> "${HOME}/.cache/xsecurelock"
+		printf '%s %s: launched %s PID: %s \n' "$(date +"%F %T")" "${0##*/}" "$(ps -p $xsecurelock_pid -o command=)" "$xsecurelock_pid"
+	else
+		printf '%s %s: xsecurelock start failed, trying again.\n' "$(date +"%F %T")" "${0##*/}"
+		start_xsecurelock
+	fi
+}
+
+if pidof xsecurelock >/dev/null ; then
+	instance_pid=$(pidof xsecurelock)
+	printf '%s %s: xsecurelock instance %s already running, no new instance will be launched.\n' "$(date +"%F %T")" "${0##*/}" "$instance_pid"
+	printf '%s %s: xsecurelock %s already running.\n' "$(date +"%F %T")" "${0##*/}" "$instance_pid" >> "${HOME}/.cache/xsecurelock"
+	exit
+else
+	printf '%s %s: no xsecurelock instance running.\n' "$(date +"%F %T")" "${0##*/}"
+	printf '%s %s: starting screenlocking.\n' "$(date +"%F %T")" "${0##*/}"
+	. "${HOME}/.cache/wal/colors.sh"
+	export SAVER_OPT="$COLO_OPT"
+	case "${COLO_OPT}" in
+		0)  AuthBgColor="$color0" ;;
+		2)  AuthBgColor="$color2" ;;
+		8)  AuthBgColor="$color8" ;;
+		10) AuthBgColor="$color10" ;;
+		15) AuthBgColor="$color15" ;;
+	esac
+	case "${COLO_OPT}" in
+		0)  AuthFgColor="$color12" ;;
+		2)  AuthFgColor="$color15" ;;
+		8)  AuthFgColor="$color15" ;;
+		10) AuthFgColor="$color0" ;;
+		15) AuthFgColor="$color8" ;;
+	esac
+
+	start_xsecurelock
+
+	kill_dangling_dimmers
+	while pidof xsecurelock >/dev/null; do
+		if pgrep auth_x11 >/dev/null; then
+			# kill_dangling_dimmers
+			if kill -0 "$dimmer_pid" 2>/dev/null; then
+				dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
+				kill "$dimmer_pid"
+				printf '%s %s: "%s" PID: %s killed.\n' "$(date +"%F %T")" "${0##*/}" "${dimmer_comm##*/}" "$dimmer_pid"
+			fi
+		else
+			if ! pgrep dim-screen.sh >/dev/null; then
+				sleep 1
+				dim-screen.sh -step-time 0.25 &
+				dimmer_pid=$!
+			fi
+		fi
+		sleep 0.1
+	done
+	kill_dangling_dimmers
+fi
+printf '%s %s: screen unlocked.\n' "$(date +"%F %T")" "${0##*/}"
+printf '%s %s: screen unlocked.\n' "$(date +"%F %T")" "${0##*/}" >> "${HOME}/.cache/xsecurelock"
