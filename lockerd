@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#config file
+CONFIG="${XDG_CONFIG_HOME:-~/.config}/better-xsecurelock/config"
+
+
+
+xss-loc -s $XDG_SESSION_ID -n dim-screen.sh -v -l -- screenlocker
