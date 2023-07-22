@@ -75,7 +75,7 @@ kill_dangling_dimmers () {
 	if [ -n "$dangling_dim_screen" ]; then
 		dangling_dim_screen_pid="${dangling_dim_screen%% *}"
 		kill "$dangling_dim_screen_pid"
-		printf '%s %s: "%s" PID: %s killed.\n' "$(date +"%F %T")" "${0##*/}" "${dangling_dim_screen##*/}" "$dangling_dim_screen_pid"
+		printf '%s %s: dangling "%s" PID: %s killed.\n' "$(date +"%F %T")" "${0##*/}" "${dangling_dim_screen##*/}" "$dangling_dim_screen_pid"
 		kill_orphan_sleeps
 	fi
 }
