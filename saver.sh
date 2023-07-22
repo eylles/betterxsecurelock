@@ -100,9 +100,9 @@ run_saver() {
         [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
         ;;
       pipes)
-        np=$(shuf -n 1 -e 2 3 4 5 6 7 8 9)
+        np=$(shuf -n 1 -e 2 3 4)
         [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
-        xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 8000 &
+        xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 3000 &
         saver_pid=$!
         [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
         ;;
