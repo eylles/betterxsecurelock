@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Provide DBus service to call xscreensaver
+# Provide DBus service to call xdg-screensaver
 # http://ubuntuforums.org/showthread.php?t=1865593&s=1c7f28c50a3f258e1d3404e41f098a0b&p=11418175#post11418175
 
 import dbus
@@ -8,9 +8,24 @@ import dbus.glib
 from gi.repository import GObject
 import subprocess
 
-import psutil
 import Xlib
 import Xlib.display
+import signal
+import sys
+
+
+def terminateProcess(signalNumber, frame):
+    # print(signalNumber)
+    print()
+    if signalNumber != 2:
+        print('terminating the process')
+    sys.exit()
+
+
+def readConfiguration(signalNumber, frame):
+    print('(SIGHUP) reading configuration')
+    return
+
 
 class ScreenDbusObj(dbus.service.Object):
     def __init__(self):
@@ -42,5 +57,9 @@ class ScreenDbusObj(dbus.service.Object):
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, terminateProcess)
+    signal.signal(signal.SIGTERM, terminateProcess)
+    signal.signal(signal.SIGHUP, readConfiguration)
+
     object = ScreenDbusObj()
     GObject.MainLoop().run()
