@@ -153,7 +153,7 @@ else
 		else
 			if ! pgrep dim-screen.sh >/dev/null; then
 				sleep 1
-				dim-screen.sh -step-time 0.25 &
+				dim-screen.sh -step-time 0.2 &
 				dimmer_pid=$!
 			fi
 		fi
