@@ -125,18 +125,18 @@ else
 	. "${HOME}/.cache/wal/colors.sh"
 	export SAVER_OPT="$COLO_OPT"
 	case "${COLO_OPT}" in
-		0)  AuthBgColor="$color0" ;;
-		2)  AuthBgColor="$color2" ;;
-		8)  AuthBgColor="$color8" ;;
-		10) AuthBgColor="$color10" ;;
-		15) AuthBgColor="$color15" ;;
+		0)  export AuthBgColor="$color0" ;;
+		2)  export AuthBgColor="$color2" ;;
+		8)  export AuthBgColor="$color8" ;;
+		10) export AuthBgColor="$color10" ;;
+		15) export AuthBgColor="$color15" ;;
 	esac
 	case "${COLO_OPT}" in
-		0)  AuthFgColor="$color12" ;;
-		2)  AuthFgColor="$color15" ;;
-		8)  AuthFgColor="$color15" ;;
-		10) AuthFgColor="$color0" ;;
-		15) AuthFgColor="$color8" ;;
+		0)  export AuthFgColor="$color12" ;;
+		2)  export AuthFgColor="$color15" ;;
+		8)  export AuthFgColor="$color15" ;;
+		10) export AuthFgColor="$color0" ;;
+		15) export AuthFgColor="$color8" ;;
 	esac
 
 	start_xsecurelock
