@@ -1,8 +1,86 @@
 #!/bin/sh
 
+myname="${0##*/}"
+
+DBGOUT=""
+TIME_TO_LOCK=""
+xsslock_pid=""
+NO_CONTINUE=""
+
+# default 600 seconds
+# but config value will
+# be used if set
+TIME=600
+
+# ~/.config/better-xsecurelock/
+CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}/better-xsecurelock"
 #config file
-CONFIG="${XDG_CONFIG_HOME:-~/.config}/better-xsecurelock/config"
+CONF="${CONFIG_DIR}/config"
 
+outHandler () {
+    [ "$DBGOUT" = 1 ] && echo "exiting on signal: $1"
+    # kill "$xsslock_pid"
+    NO_CONTINUE=1
+    # exit
+}
 
+load_config () {
+    if [ -r "$CONF" ]; then
+        . "$CONF"
+        [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config loaded"
+        TIME="$TIME_TO_LOCK"
+    fi
+}
 
-xss-loc -s $XDG_SESSION_ID -n dim-screen.sh -v -l -- screenlocker
+set_time () {
+    load_config
+    [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} time" "$TIME"
+    # screensaver time
+    # <timeout> <cycle>
+    time_ss="$((TIME - (TIME / 5) )) $(( TIME / 5 ))"
+    # dpms time
+    # <standby> <suspend> <off>
+    time_dpms="0 0 $((TIME * 3 / 2))"
+
+    [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time screensaver" "$time_ss"
+    [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time dpms" "$time_dpms"
+
+    # we want word splitting here
+    # shellcheck disable=SC2086
+    xset s ${time_ss}
+    # shellcheck disable=SC2086
+    xset dpms ${time_dpms}
+}
+
+hupHandler () {
+    set_time
+}
+
+# input parsing
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        debug)   DBGOUT=1  ;;
+        *) echo "${myname}: error, invalid argument: ${1}" ;;
+    esac
+    shift
+done
+
+set_time
+
+xss-lock -s $XDG_SESSION_ID -l -n dim-screen.sh -v -- screenlocker &
+xsslock_pid=$!
+
+trap hupHandler HUP
+trap 'outHandler "TERM"' TERM
+trap 'outHandler "INT"' INT
+trap 'outHandler "QUIT"' QUIT
+trap 'outHandler "KILL"' KILL
+
+# trap 'outHandler "EXIT"' EXIT
+
+while [ -z "$NO_CONTINUE" ]; do
+    sleep 0.2
+done
+
+kill "$xsslock_pid"
+[ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
