@@ -10,7 +10,7 @@
 Screen_Saver=""
 
 saver_list_1="walldir,livewall"
-saver_list_2="currwall"
+saver_list_2="currwall,snake"
 saver_list_3="matrix,pipes,snake"
 saver_list_4="walldir,livewall"
 saver_list_5="livewall"
