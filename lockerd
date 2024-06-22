@@ -71,12 +71,10 @@ xss-lock -s $XDG_SESSION_ID -l -n dim-screen.sh -v -- screenlocker &
 xsslock_pid=$!
 
 trap hupHandler HUP
+trap 'outHandler "EXIT"' EXIT
 trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
-trap 'outHandler "KILL"' KILL
-
-# trap 'outHandler "EXIT"' EXIT
 
 while [ -z "$NO_CONTINUE" ]; do
     sleep 0.2
