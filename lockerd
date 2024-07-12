@@ -1,11 +1,30 @@
 #!/bin/sh
 
 myname="${0##*/}"
+mypid="$$"
 
 DBGOUT=""
 TIME_TO_LOCK=""
 xsslock_pid=""
 NO_CONTINUE=""
+
+logdir="${HOME}/.local/state/better-xsecurelock"
+if [ ! -f "$logdir" ]; then
+    mkdir -p "$logdir"
+fi
+logfile="${logdir}/${myname}"
+
+write_log () {
+    name="$myname"
+    mesage="$1"
+    printf '[%s] %s: %s\n' \
+        "$(date +'%Y-%m-%d %H:%M:%S')" \
+        "$name" \
+        "$mesage" \
+        >> "$logfile"
+}
+
+write_log "started with pid: ${mypid}."
 
 # default 600 seconds
 # but config value will
@@ -50,9 +69,11 @@ set_time () {
     xset s ${time_ss}
     # shellcheck disable=SC2086
     xset dpms ${time_dpms}
+    write_log "set time s as: ${time_ss} and dpms as: ${time_dpms}"
 }
 
 hupHandler () {
+    write_log "hup recieved"
     set_time
 }
 
@@ -76,9 +97,27 @@ trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
 
+write_log "waiting for xss-lock"
 while [ -z "$NO_CONTINUE" ]; do
+    # 5 cycles per second, 60 seconds per minute, 5 minutes
+    INTERVAL=$(( 5 * 60 * 5 ))
+    # is the count of cycle iterations the same as the interval?
+    if [ "$count" = "$INTERVAL" ]; then
+        write_log "running"
+        # reset the count to 0
+        count=0
+    fi
+    # ingrement the count
+    count=$(( count + 1 ))
+    # the duty cycle of this daemon is 5 iterations per second
+    # this is fast enough to feel responsive to signales, yet not hog
+    # resources, mainly cpu
     sleep 0.2
 done
 
+write_log "no continue recieved"
+
 kill "$xsslock_pid"
+write_log "xss-lock killed"
 [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
+write_log "terminating."
