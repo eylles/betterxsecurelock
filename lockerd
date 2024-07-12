@@ -88,8 +88,18 @@ done
 
 set_time
 
-xss-lock -s $XDG_SESSION_ID -l -n dim-screen.sh -v -- screenlocker &
-xsslock_pid=$!
+xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
+    | sed -e "s/^/\[$(date +'%Y-%m-%d %H:%M:%S')\] xss-lock: /" >> "$logfile" &
+# capture pid
+# a simple $! is not enough thanks to using sed...
+xsslock_pid=$(pstree -Aps "${mypid}" \
+    | awk '\
+        match($0, /xss-lock\([[:digit:]]*)/)\
+        {\
+          print substr($0,RSTART+9,RLENGTH-10) \
+        }\
+      ')
+write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap hupHandler HUP
 trap 'outHandler "EXIT"' EXIT
