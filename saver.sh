@@ -5,6 +5,11 @@
 #####################
 
 # type:        string
+# description
+#   script base name through the idiom "${0##*/}"
+myname="${0##*/}"
+
+# type:        string
 # description:
 #   screen saver module to use
 Screen_Saver=""
@@ -89,72 +94,72 @@ split_str() {
 #   is terminated.
 run_saver() {
   if [ "$DRYRUN" = 1 ]; then
-    printf '%s\n' "${0##*/}: dry run mode, no saver started."
+    printf '%s\n' "${myname}: dry run mode, no saver started."
   else
-    # printf '%s\n' "${0##*/}: saver module $Screen_Saver selected."
+    # printf '%s\n' "${myname}: saver module $Screen_Saver selected."
     case "$Screen_Saver" in
       matrix)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e unimatrix -af -s 95 &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
       pipes)
         np=$(shuf -n 1 -e 1 2 3 4)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
       snake)
         sl=$(shuf -n 1 -e fancy dots)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
       fire)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         xterm -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e fire -l 300 -t -s 10 -f 3 &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
       walldir)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         delay=$(shuf -n 1 -e 0.5 1 1.5 2 2.5 3)
         find ~/Pictures/wallpapers -type f | shuf | nsxiv -i -bfq -S "$delay"\
         -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         # find ~/Pictures/wallpapers -type f | shuf |\
         # mpv --no-input-terminal --loop=inf --no-stop-screensaver\
         # --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
         # --vo=gpu --image-display-duration="$delay"
         ;;
       currwall)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         nsxiv -bfq -e "$XSCREENSAVER_WINDOW" -g "$geometry"\
         -s F ~/.local/share/bg 2>/dev/null &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         # mpv --no-input-terminal --loop=inf --no-stop-screensaver\
         # --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
         # --vo=gpu --video-unscaled=yes ~/.local/share/bg
         ;;
       livewall)
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: starting saver $Screen_Saver"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
         mpv --no-input-terminal --loop=inf --no-stop-screensaver\
         --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
         --really-quiet --no-audio\
         --vo=gpu "$(shuf -n 1 -e ~/Videos/live-walls/* )" 2>/dev/null &
         saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${0##*/}: saver pid $saver_pid"
+        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
     esac
     if kill -0 "$saver_pid"; then
       wait
     else
-      printf '%s\n' "${0##*/}: saver module failed, re-running."
+      printf '%s\n' "${myname}: saver module failed, re-running."
       run_saver
     fi
   fi
@@ -202,7 +207,7 @@ while [ "$#" -gt 0 ]; do
         # it is really only used on saver_xscreensaver tho.
         -root)    :         ;;
         *)
-          printf '%s\n' "${0##*/}: error, invalid argument: ${1} ignored."
+          printf '%s\n' "${myname}: error, invalid argument: ${1} ignored."
           # exit 1
           ;;
     esac

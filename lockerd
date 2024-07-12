@@ -1,6 +1,13 @@
 #!/bin/sh
 
+# type:        string
+# description
+#   script base name through the idiom "${0##*/}"
 myname="${0##*/}"
+
+# type:        string
+# description
+#   current running pid of the script
 mypid="$$"
 
 DBGOUT=""

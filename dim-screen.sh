@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# type:        string
+# description
+#   script base name through the idiom "${0##*/}"
+myname="${0##*/}"
+
 # Example notifier script -- lowers screen brightness, then waits to be killed
 # and restores previous brightness on exit.
 
@@ -113,7 +118,7 @@ fade_brightness() {
 sig_handler() {
     if kill -0 "$sleep_pid" 2>/dev/null; then
         kill "$sleep_pid"
-        { [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: sleep %s killed.\n" "$(date +"%F %T")" "${0##*/}" "$sleep_pid"
+        { [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: sleep %s killed.\n" "$(date +"%F %T")" "${myname}" "$sleep_pid"
     fi
     exit 0
 }
@@ -153,7 +158,7 @@ case $dim_step in
     0) dim_step=1 ;;
 esac
 
-{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${0##*/}" "$$"
+{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
 
 trap 'sig_handler' TERM INT HUP
 trap 'reset_brightness' EXIT
@@ -161,5 +166,5 @@ current_brightness=$(get_brightness)
 fade_brightness $min_brightness
 sleep 2147483647 &
 sleep_pid=$!
-{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: waiting for %s sleep.\n" "$(date +"%F %T")" "${0##*/}" "$sleep_pid"
+{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: waiting for %s sleep.\n" "$(date +"%F %T")" "${myname}" "$sleep_pid"
 wait "$sleep_pid"
