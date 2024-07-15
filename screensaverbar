@@ -1,0 +1,85 @@
+#!/bin/sh
+
+_cols=$(tput cols)
+halfcol=$(( _cols / 2 ))
+getbat() {
+    bat_icon=""
+    bat1i=
+    bat2i=
+    bat3i=
+    bat4i=
+    bat5i=
+    bat_level=$(cat /sys/class/power_supply/BAT0/capacity)
+    case "$bat_level" in
+        [0-9]|1[0-9])
+            bat_icon="$bat1i"
+        ;;
+        2[0-9]|3[0-9])
+            bat_icon="$bat2i"
+        ;;
+        4[0-9]|5[0-9])
+            bat_icon="$bat3i"
+        ;;
+        6[0-9]|7[0-9])
+            bat_icon="$bat4i"
+        ;;
+        8[0-9]|9[0-9]|100)
+            bat_icon="$bat5i"
+        ;;
+    esac
+    printf '%s %3s' "$bat_icon" "$bat_level"
+}
+
+wbat=6
+wday=10
+wtime=8
+spaces=6
+padding=$(( halfcol - (( wday + wtime + wbat + spaces ) / 2 ) ))
+
+[ -z "$AuthFgColor" ] && AuthFgColor="#c1c1c3"
+AuthFgColor="${AuthFgColor#*#}"
+fgr=$(printf '0x%0.2s\n' "${AuthFgColor}")
+fgr=$(printf '%d\n' "$fgr")
+fgg=$(printf '0x%0.2s\n' "${AuthFgColor#??}")
+fgg=$(printf '%d\n' "$fgg")
+fgb=$(printf '0x%0.2s\n' "${AuthFgColor#????}")
+fgb=$(printf '%d\n' "$fgb")
+[ -z "$AuthBgColor" ] && AuthBgColor="#5f7397"
+AuthBgColor="${AuthBgColor#*#}"
+bgr=$(printf '0x%0.2s\n' "${AuthBgColor}")
+bgr=$(printf '%d\n' "$bgr")
+bgg=$(printf '0x%0.2s\n' "${AuthBgColor#??}")
+bgg=$(printf '%d\n' "$bgg")
+bgb=$(printf '0x%0.2s\n' "${AuthBgColor#????}")
+bgb=$(printf '%d\n' "$bgb")
+
+# fgcol="${fgr};${fgg};${fgb}"
+# bgcol="${bgr};${bgg};${bgb}"
+
+# esc='\033'
+
+# echo $_cols
+
+exit_handler() {
+    printf '\33[?25h'
+}
+
+printf '\33[?25l'
+cont=1
+while [ "$cont" = 1 ]; do
+    cday=$(date '+%A')
+    ctime=$(date '+%T')
+    cbat="$(getbat)"
+    printf ' %*s ' "$wday" "$cday"
+    printf '%*s' "$padding" " "
+    printf '\033[38;2;%s;%s;%sm' "${fgr}" "${fgg}" "${fgb}"
+    printf '\033[48;2;%s;%s;%sm' "${bgr}" "${bgg}" "${bgb}"
+    printf ' %*s ' "$wtime" "$ctime"
+    printf '\033[0m'
+    printf '%*s' "$padding" " "
+    printf ' %*s ' "$wbat" "$cbat"
+    printf '\r'
+    sleep 0.5
+done
+
+trap 'exit_handler' EXIT

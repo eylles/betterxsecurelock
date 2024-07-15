@@ -44,6 +44,12 @@ geometry=$(xdpyinfo | grep 'dimensions:' | cut -d' ' -f7)
 #   used by sig_handler to kill the running screen saver module.
 saver_pid=""
 
+# type:        int
+# description:
+#   current screen saver bar pid
+#   used by auth watcher to kill the running screen saver bar.
+ssbar_pid=""
+
 #####################
 # --- functions --- #
 #####################
@@ -192,7 +198,17 @@ run_saver() {
             ;;
         esac
         if kill -0 "$saver_pid"; then
-            wait
+            # show screensaver bar
+            while kill -0 "$saver_pid"; do
+                if pgrep auth_x11 >/dev/null; then
+                    if ! kill -0 "$ssbar_pid"; then
+                        xterm -into "$XSCREENSAVER_WINDOW" -g "98x1" -fa "BlexMono Nerd Font Mono" -fs 20 -b 0 -e screensaverbar &
+                        ssbar_pid=$!
+                    fi
+                    # wait
+                fi
+                sleep 0.1
+            done
         else
             printf '%s\n' "${myname}: saver module failed, re-running."
             run_saver
@@ -208,6 +224,10 @@ run_saver() {
 #   it is called on the USR1 signal
 sig_handler() {
     kill $saver_pid
+    if [ -n "$ssbar_pid" ]; then
+        kill $ssbar_pid
+        ssbar_pid=""
+    fi
     roll_saver
     run_saver
 }

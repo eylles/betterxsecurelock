@@ -95,7 +95,6 @@ start_xsecurelock () {
     XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1 \
     XSECURELOCK_SHOW_HOSTNAME=0 \
     XSECURELOCK_SHOW_USERNAME=1 \
-    XSECURELOCK_SHOW_DATETIME=1 \
     XSECURELOCK_DATETIME_FORMAT='%A      %T' \
     XSECURELOCK_COMPOSITE_OBSCURER=0 \
     XSECURELOCK_NO_COMPOSITE=1 \
@@ -147,6 +146,7 @@ else
     start_xsecurelock
 
     kill_dangling_dimmers
+    # auth watcher
     while pidof xsecurelock >/dev/null; do
         if pgrep auth_x11 >/dev/null; then
             # kill_dangling_dimmers
