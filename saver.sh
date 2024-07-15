@@ -119,9 +119,25 @@ run_saver() {
     case "$Screen_Saver" in
       matrix)
         [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-        xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e unimatrix -af -s 95 &
-        saver_pid=$!
-        [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+        # try to use unimatrix first
+        matrix_cmd=$(command -v unimatrix)
+        # fallback to cmatrix
+        [ -z "$matrix_cmd" ] && matrix_cmd=$(command -v cmatrix)
+        if [ -z "$matrix_cmd" ]; then
+          return 1
+        else
+          case "$matrix_cmd" in
+            *unimatrix)
+              flags="-af -s 95"
+              ;;
+            *cmatrix)
+              flags="-ba"
+              ;;
+          esac
+          xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e $matrix_cmd "$flags" &
+          saver_pid=$!
+          [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+        fi
         ;;
       pipes)
         np=$(shuf -n 1 -e 1 2 3 4)
