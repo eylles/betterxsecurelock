@@ -85,6 +85,24 @@ split_str() {
     set +f
 }
 
+roll_saver() {
+  [ "$DBGOUT" = 1 ] && printf '%s\n' "SAVER_OPT: $SAVER_OPT"
+  if [ -z "$SAVER_OPT" ]; then
+    if [ -z "$Screen_Saver" ]; then
+      Screen_Saver=$(shuf -n 1 -e walldir currwall livewall)
+    fi
+  else
+    case "${SAVER_OPT}" in
+      0)  Screen_Saver=$(split_str "$saver_list_1" "," | shuf -n 1) ;;
+      2)  Screen_Saver=$(split_str "$saver_list_2" "," | shuf -n 1) ;;
+      10) Screen_Saver=$(split_str "$saver_list_3" "," | shuf -n 1) ;;
+      8)  Screen_Saver=$(split_str "$saver_list_4" "," | shuf -n 1) ;;
+      15) Screen_Saver=$(split_str "$saver_list_5" "," | shuf -n 1) ;;
+    esac
+  fi
+  [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
+}
+
 # return type: void
 # usage: run_saver
 # description:
@@ -93,6 +111,7 @@ split_str() {
 #   after that it will wait until the screen saver module
 #   is terminated.
 run_saver() {
+  roll_saver
   if [ "$DRYRUN" = 1 ]; then
     printf '%s\n' "${myname}: dry run mode, no saver started."
   else
@@ -165,24 +184,6 @@ run_saver() {
   fi
 }
 
-roll_saver() {
-  [ "$DBGOUT" = 1 ] && printf '%s\n' "SAVER_OPT: $SAVER_OPT"
-  if [ -z "$SAVER_OPT" ]; then
-    if [ -z "$Screen_Saver" ]; then
-      Screen_Saver=$(shuf -n 1 -e walldir currwall livewall)
-    fi
-  else
-    case "${SAVER_OPT}" in
-      0)  Screen_Saver=$(split_str "$saver_list_1" "," | shuf -n 1) ;;
-      2)  Screen_Saver=$(split_str "$saver_list_2" "," | shuf -n 1) ;;
-      10) Screen_Saver=$(split_str "$saver_list_3" "," | shuf -n 1) ;;
-      8)  Screen_Saver=$(split_str "$saver_list_4" "," | shuf -n 1) ;;
-      15) Screen_Saver=$(split_str "$saver_list_5" "," | shuf -n 1) ;;
-    esac
-  fi
-  [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
-}
-
 # return type: void
 # usage: trap 'sig_handler' SIGNAL
 # description:
@@ -221,7 +222,5 @@ done
 [ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 5: $saver_list_5"
 
 trap 'sig_handler' USR1
-
-roll_saver
 
 run_saver
