@@ -5,14 +5,14 @@ a wrapper to xsecurelock
 <details>
     <summary>Screenshots</summary>
     <br>
-    ![screenshot 1](./screenshots/Screenshot01.png)
-    ![screenshot 2](./screenshots/Screenshot02.png)
-    ![screenshot 3](./screenshots/Screenshot03.png)
-    ![screenshot 4](./screenshots/Screenshot04.png)
-    ![screenshot 5](./screenshots/Screenshot05.png)
-    ![screenshot 6](./screenshots/Screenshot06.png)
-    ![screenshot 7](./screenshots/Screenshot07.png)
-    ![screenshot 8](./screenshots/Screenshot08.png)
+    ![screenshot 1](/screenshots/Screenshot01.png)
+    ![screenshot 2](/screenshots/Screenshot02.png)
+    ![screenshot 3](/screenshots/Screenshot03.png)
+    ![screenshot 4](/screenshots/Screenshot04.png)
+    ![screenshot 5](/screenshots/Screenshot05.png)
+    ![screenshot 6](/screenshots/Screenshot06.png)
+    ![screenshot 7](/screenshots/Screenshot07.png)
+    ![screenshot 8](/screenshots/Screenshot08.png)
 </details>
 
 this provides wrapping for xss-lock, xsecurelock and multiple programs to use
