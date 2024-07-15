@@ -103,9 +103,9 @@ xsslock_pid=$(pstree -Aps "${mypid}" \
     | awk '\
         match($0, /xss-lock\([[:digit:]]*)/)\
         {\
-          print substr($0,RSTART+9,RLENGTH-10) \
+            print substr($0,RSTART+9,RLENGTH-10) \
         }\
-      ')
+    ')
 write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap hupHandler HUP

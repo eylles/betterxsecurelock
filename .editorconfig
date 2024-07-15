@@ -23,4 +23,4 @@ indent_size = 4
 max_line_length = 80
 
 [Makefile]
-indent_style = tab
+indent_style = space
