@@ -152,6 +152,12 @@ run_saver() {
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
+        btop)
+            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
+            xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e btop &
+            saver_pid=$!
+            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            ;;
         snake)
             sl=$(shuf -n 1 -e fancy dots)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
