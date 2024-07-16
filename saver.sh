@@ -202,7 +202,13 @@ run_saver() {
             while kill -0 "$saver_pid"; do
                 if pgrep auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid"; then
-                        xterm -into "$XSCREENSAVER_WINDOW" -g "98x1" -fa "BlexMono Nerd Font Mono" -fs 20 -b 0 -e screensaverbar &
+                        # if [ -n "$XSECURELOCK_FONT" ]; then
+                        #   bar_font="$XSECURELOCK_FONT"
+                        # else
+                        #   bar_font="BlexMono Nerd Font Mono"
+                        # fi
+                        bar_font="BlexMono Nerd Font Mono"
+                        xterm -into "$XSCREENSAVER_WINDOW" -g "98x1" -fa "$bar_font" -fs 20 -b 0 -e screensaverbar &
                         ssbar_pid=$!
                     fi
                     # wait

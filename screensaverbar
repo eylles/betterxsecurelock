@@ -4,11 +4,16 @@ _cols=$(tput cols)
 halfcol=$(( _cols / 2 ))
 getbat() {
     bat_icon=""
-    bat1i=
-    bat2i=
-    bat3i=
-    bat4i=
-    bat5i=
+    # bat1i=
+    # bat2i=
+    # bat3i=
+    # bat4i=
+    # bat5i=
+    bat1i=▁
+    bat2i=▂
+    bat3i=▄
+    bat4i=▆
+    bat5i=█
     bat_level=$(cat /sys/class/power_supply/BAT0/capacity)
     case "$bat_level" in
         [0-9]|1[0-9])
@@ -27,7 +32,7 @@ getbat() {
             bat_icon="$bat5i"
         ;;
     esac
-    printf '%s %3s' "$bat_icon" "$bat_level"
+    printf '%s %3s' "$bat_icon" "${bat_level}%"
 }
 
 wbat=6
@@ -67,7 +72,7 @@ exit_handler() {
 printf '\33[?25l'
 cont=1
 while [ "$cont" = 1 ]; do
-    cday=$(date '+%A')
+    cday=$(date '+%Y %m %d')
     ctime=$(date '+%T')
     cbat="$(getbat)"
     printf ' %*s ' "$wday" "$cday"
