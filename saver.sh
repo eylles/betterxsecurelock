@@ -20,6 +20,14 @@ saver_list_3="matrix,pipes,snake"
 saver_list_4="walldir,livewall"
 saver_list_5="livewall"
 
+term_font="BlexMono Nerd Font Mono"
+
+wallpaper="${HOME}/.local/share/bg"
+
+live_walls="${HOME}/Videos/live-walls"
+
+wall_dir="${HOME}/Pictures/wallpapers"
+
 # type:        int bool
 # description:
 #   C like int bool, whether to print debug output.
@@ -140,7 +148,7 @@ run_saver() {
                         flags="-ba"
                     ;;
                 esac
-                xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e $matrix_cmd "$flags" &
+                xterm -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e $matrix_cmd "$flags" &
                 saver_pid=$!
                 [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             fi
@@ -148,20 +156,20 @@ run_saver() {
         pipes)
             np=$(shuf -n 1 -e 1 2 3 4)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
+            xterm -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         btop)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "BlexMono Nerd Font Mono" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e btop &
+            xterm -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e btop &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         snake)
             sl=$(shuf -n 1 -e fancy dots)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "BlexMono Nerd Font Mono" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
+            xterm -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
@@ -174,7 +182,7 @@ run_saver() {
         walldir)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
             delay=$(shuf -n 1 -e 0.5 1 1.5 2 2.5 3)
-            find ~/Pictures/wallpapers -type f | shuf | nsxiv -i -bfq -S "$delay"\
+            find "$wall_dir" -type f | shuf | nsxiv -i -bfq -S "$delay"\
             -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
@@ -186,7 +194,7 @@ run_saver() {
         currwall)
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
             nsxiv -bfq -e "$XSCREENSAVER_WINDOW" -g "$geometry"\
-            -s F ~/.local/share/bg 2>/dev/null &
+            -s F "$wallpaper" 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             # mpv --no-input-terminal --loop=inf --no-stop-screensaver\
@@ -198,7 +206,7 @@ run_saver() {
             mpv --no-input-terminal --loop=inf --no-stop-screensaver\
             --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
             --really-quiet --no-audio\
-            --vo=gpu "$(shuf -n 1 -e ~/Videos/live-walls/* )" 2>/dev/null &
+            --vo=gpu "$(shuf -n 1 -e "${live_walls}"/* )" 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
