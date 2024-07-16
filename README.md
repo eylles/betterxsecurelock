@@ -49,6 +49,8 @@ software installed:
 |brightnessctl:|to dim the screen before lock and during screensaver|
 |psmisc:|for pgrep and pstree|
 |noto sans cjk jp:|font for the auth dialog|
+|python dbus| dbus-screenlock-freedesktop.py |
+|python xlib| dbus-screenlock-freedesktop.py |
 
 Once you have everyithing you need copy all the scripts to your path, for
 xdg-screensaver just use the bundled one, you need to have a pywal colorscheme
@@ -64,7 +66,12 @@ will show randomly, then you need to edit the following variables:
 |live_walls| "${HOME}/Videos/live-walls" |
 |wall_dir|"${HOME}/Pictures/wallpapers"|
 
-if all goes well you should have a xsecurelock similar to the one on my screenshots.
+now you just have to run lockerd for the screen locker daemon and
+dbus-screenlock-freedesktop.py if you want to allow programs that only speak dbus
+to inhibit the screensaver. add them to either your autostart programs or run them
+somewehre in your xinitrc or xsessionrc.
+
+If all goes well you should have a xsecurelock similar to the one on my screenshots.
 
 
 TODO:
