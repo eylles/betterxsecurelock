@@ -22,6 +22,50 @@ unlock and inhibit the screensaver.
 more features are to come but for now this is very alpha software that has been
 wrangled to work on my setup.
 
+## how do i use this
+
+you don't, at least for now as this hasn't even had a v0.0.0 release, but if
+you insist be warned you'll have to use this almost like suckless software,
+ie: modifiying the source code directly.
+
+first and foremost satisfy the dependencies, you need to have the following
+software installed:
+
+|software|use|
+|--|--|
+|xsecurelock:| the program doing the hard work.|
+|xss-lock:| for launching xsecurelock and listening to screen and suspend events|
+|nsxiv:| for displaying images.|
+|mpv:| for video|
+|xterm:|statusbar and terminal screensavers|
+|unimatrix:|matrix screensaver (optional)|
+|cmatrix:|matrix screensaver|
+|[pipes.sh](https://github.com/pipeseroni/pipes.sh):|pipes screensaver (optional)|
+|[sssnake](https://github.com//AngelJumbo/sssnake):|snake screensaver (optional)|
+|[fire](https://github.com/kiedtl/fire):|for the fire screensaver (optional)|
+|btop:|for the btop screensaver|
+|pywal16:|for the theme|
+|xdg-screensaver:|very necesary|
+|brightnessctl:|to dim the screen before lock and during screensaver|
+|psmisc:|for pgrep and pstree|
+|noto sans cjk jp:|font for the auth dialog|
+
+Once you have everyithing you need copy all the scripts to your path, for
+xdg-screensaver just use the bundled one, you need to have a pywal colorscheme
+as those colors will be used for the auth dialog and statusbar, i will
+eventually add proper themes support but for now do this. Then you have to
+edit saver.sh, edit `saver_list_1` to `saver_list_5` to set which screensavers
+will show randomly, then you need to edit the following variables:
+
+|var|default|
+|--|--|
+|term_font| "BlexMono Nerd Font Mono" |
+|wallpaper| "${HOME}/.local/share/bg" |
+|live_walls| "${HOME}/Videos/live-walls" |
+|wall_dir|"${HOME}/Pictures/wallpapers"|
+
+if all goes well you should have a xsecurelock similar to the one on my screenshots.
+
 
 TODO:
 - [ ] wrap and use the screensaver modules provided by xsecurelock
