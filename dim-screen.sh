@@ -66,7 +66,7 @@ get_brightness() {
 # usage: set_brightness num
 # description:
 #    will set the brightness to the passed number
-#    brighness values are from 0 to 255
+#    brightness values are from 0 to 255
 set_brightness() {
     [ -n "$dbgOUT" ] && printf 'brightness level: %s\n' "$1"
     if [ -z "$sysfs_path" ]; then
