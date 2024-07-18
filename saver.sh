@@ -214,6 +214,7 @@ run_saver() {
         if kill -0 "$saver_pid"; then
             # show screensaver bar
             while kill -0 "$saver_pid"; do
+                sleep 0.1
                 if pgrep auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid"; then
                         # if [ -n "$XSECURELOCK_FONT" ]; then
@@ -227,7 +228,6 @@ run_saver() {
                     fi
                     # wait
                 fi
-                sleep 0.1
             done
         else
             printf '%s\n' "${myname}: saver module failed, re-running."
