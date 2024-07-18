@@ -82,7 +82,7 @@ split_str() {
     IFS=$2
 
     # Create an argument list splitting at each
-    # occurance of '$2'.
+    # occurence of '$2'.
     #
     # This is safe to disable as it just warns against
     # word-splitting which is the behavior we expect.
