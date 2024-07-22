@@ -29,7 +29,7 @@ if argc > 1:
         #     print(myname, "unknown arg: {}".format(sys.argv[i]))
         i = i + 1
 
-msg_inhibit = "Inhibit called for inhibitor window id: {} hex: {}"
+msg_inhibit = "Inhibit called for inhibitor window id: {} hex: {} by: {} reason: {}"
 msg_uninhibit = "UnInhibit called for inhibitor {} hex: {}"
 
 
@@ -71,7 +71,7 @@ class ScreenDbusObj(dbus.service.Object):
                                             Xlib.X.AnyPropertyType).value[0]
         xid = hex(winid)
         if DBG_OUT:
-            print(myname, msg_inhibit.format(winid, xid))
+            print(myname, msg_inhibit.format(winid, xid, caller, reason))
         subprocess.call(['xdg-screensaver', 'suspend', xid])
         return dbus.UInt32(winid)
 
