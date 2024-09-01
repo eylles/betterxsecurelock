@@ -1410,7 +1410,7 @@ dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.fr
 # Consider "xautolock" a separate DE
 xautolock -enable > /dev/null 2>&1 && DE="xautolock_screensaver"
 # Consider "xss-lock" a separate DE
-xss-lock --version > /dev/null 2>&1 && ps x -o cmd | grep '^xss-lock' | grep -q "\-s ${XDG_SESSION_ID}\|--session=${XDG_SESSION_ID}" && DE="xss-lock_screensaver"
+command -v xss-lock > /dev/null 2>&1 && ps x -o cmd | grep '^xss-lock' | grep -qF -e "-s ${XDG_SESSION_ID}" -e "--session=${XDG_SESSION_ID}" && DE="xss-lock_screensaver"
 
 if [ "$action" = "resume" ] ; then
     do_resume
