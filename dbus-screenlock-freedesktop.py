@@ -29,7 +29,9 @@ if argc > 1:
         #     print(myname, "unknown arg: {}".format(sys.argv[i]))
         i = i + 1
 
-msg_inhibit = "Inhibit called for inhibitor window id: {} hex: {} by: {} reason: {}"
+msg_inhibit = (
+    "Inhibit called for inhibitor window id: {} hex: {} by: {} reason: {}"
+)
 msg_uninhibit = "UnInhibit called for inhibitor {} hex: {}"
 
 
@@ -37,42 +39,47 @@ def terminateProcess(signalNumber, frame):
     # print(signalNumber)
     print()
     if signalNumber != 2:
-        print('terminating the process')
+        print("terminating the process")
     sys.exit()
 
 
 def readConfiguration(signalNumber, frame):
-    print('(SIGHUP) reading configuration')
+    print("(SIGHUP) reading configuration")
     return
 
 
 class ScreenDbusObj(dbus.service.Object):
     def __init__(self):
         session_bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName("org.freedesktop.ScreenSaver",
-                                        bus=session_bus)
-        dbus.service.Object.__init__(self, bus_name,
-                                     '/org/freedesktop/ScreenSaver')
+        bus_name = dbus.service.BusName(
+            "org.freedesktop.ScreenSaver", bus=session_bus
+        )
+        dbus.service.Object.__init__(
+            self, bus_name, "/org/freedesktop/ScreenSaver"
+        )
         # self._get_procid = session_bus.get_object(
         #     'org.freedesktop.DBus', '/').GetConnectionUnixProcessID
         self.disp = Xlib.display.Display()
         self.root = self.disp.screen().root
-        self.NET_ACTIVE_WINDOW = self.disp.intern_atom('_NET_ACTIVE_WINDOW')
+        self.NET_ACTIVE_WINDOW = self.disp.intern_atom("_NET_ACTIVE_WINDOW")
 
     @dbus.service.method("org.freedesktop.ScreenSaver")
     def Lock(self):
-        subprocess.Popen(['xdg-screensaver', 'lock'])
+        subprocess.Popen(["xdg-screensaver", "lock"])
 
-    @dbus.service.method("org.freedesktop.ScreenSaver",
-                         sender_keyword='dbus_sender')
-    def Inhibit(self, caller: dbus.String,
-                reason: dbus.String, dbus_sender: str):
-        winid = self.root.get_full_property(self.NET_ACTIVE_WINDOW,
-                                            Xlib.X.AnyPropertyType).value[0]
+    @dbus.service.method(
+        "org.freedesktop.ScreenSaver", sender_keyword="dbus_sender"
+    )
+    def Inhibit(
+        self, caller: dbus.String, reason: dbus.String, dbus_sender: str
+    ):
+        winid = self.root.get_full_property(
+            self.NET_ACTIVE_WINDOW, Xlib.X.AnyPropertyType
+        ).value[0]
         xid = hex(winid)
         if DBG_OUT:
             print(myname, msg_inhibit.format(winid, xid, caller, reason))
-        subprocess.call(['xdg-screensaver', 'suspend', xid])
+        subprocess.call(["xdg-screensaver", "suspend", xid])
         return dbus.UInt32(winid)
 
     @dbus.service.method("org.freedesktop.ScreenSaver")
@@ -80,10 +87,10 @@ class ScreenDbusObj(dbus.service.Object):
         xid = hex(inhibitor_id)
         if DBG_OUT:
             print(myname, msg_uninhibit.format(inhibitor_id, xid))
-        subprocess.call(['xdg-screensaver', 'resume', xid])
+        subprocess.call(["xdg-screensaver", "resume", xid])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     signal.signal(signal.SIGINT, terminateProcess)
     signal.signal(signal.SIGTERM, terminateProcess)
     signal.signal(signal.SIGHUP, readConfiguration)
