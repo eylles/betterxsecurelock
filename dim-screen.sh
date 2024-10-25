@@ -118,7 +118,10 @@ fade_brightness() {
 sig_handler() {
     if kill -0 "$sleep_pid" 2>/dev/null; then
         kill "$sleep_pid"
-        { [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: sleep %s killed.\n" "$(date +"%F %T")" "${myname}" "$sleep_pid"
+        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+            printf "%s %s: sleep %s killed.\n" \
+                "$(date +"%F %T")" "${myname}" "$sleep_pid"
+        fi
     fi
     exit 0
 }
@@ -158,7 +161,9 @@ case $dim_step in
     0) dim_step=1 ;;
 esac
 
-{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+    printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
+fi
 
 trap 'sig_handler' TERM INT HUP
 trap 'reset_brightness' EXIT
@@ -166,5 +171,8 @@ current_brightness=$(get_brightness)
 fade_brightness $min_brightness
 sleep 2147483647 &
 sleep_pid=$!
-{ [ -n "$dbgOUT" ] || [ -n "$VERB" ]; } && printf "%s %s: waiting for %s sleep.\n" "$(date +"%F %T")" "${myname}" "$sleep_pid"
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+    printf "%s %s: waiting for %s sleep.\n" \
+        "$(date +"%F %T")" "${myname}" "$sleep_pid"
+fi
 wait "$sleep_pid"
