@@ -23,11 +23,11 @@ logfile="${logdir}/${myname}"
 
 write_log () {
     name="$myname"
-    mesage="$1"
+    message="$1"
     printf '[%s] %s: %s\n' \
         "$(date +'%Y-%m-%d %H:%M:%S')" \
         "$name" \
-        "$mesage" \
+        "$message" \
         >> "$logfile"
 }
 
@@ -80,7 +80,7 @@ set_time () {
 }
 
 hupHandler () {
-    write_log "hup recieved"
+    write_log "hup received"
     set_time
 }
 
@@ -127,12 +127,12 @@ while [ -z "$NO_CONTINUE" ]; do
     # ingrement the count
     count=$(( count + 1 ))
     # the duty cycle of this daemon is 5 iterations per second
-    # this is fast enough to feel responsive to signales, yet not hog
+    # this is fast enough to feel responsive to signals, yet not hog
     # resources, mainly cpu
     sleep 0.2
 done
 
-write_log "no continue recieved"
+write_log "no continue received"
 
 kill "$xsslock_pid"
 write_log "xss-lock killed"

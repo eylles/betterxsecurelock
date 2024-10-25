@@ -26,7 +26,7 @@ wrangled to work on my setup.
 
 you don't, at least for now as this hasn't even had a v0.0.0 release, but if
 you insist be warned you'll have to use this almost like suckless software,
-ie: modifiying the source code directly.
+ie: modifying the source code directly.
 
 first and foremost satisfy the dependencies, you need to have the following
 software installed:
@@ -45,7 +45,7 @@ software installed:
 |[fire](https://github.com/kiedtl/fire):|for the fire screensaver (optional)|
 |btop:|for the btop screensaver|
 |pywal16:|for the theme|
-|xdg-screensaver:|very necesary|
+|xdg-screensaver:|very necessary|
 |brightnessctl:|to dim the screen before lock and during screensaver|
 |psmisc:|for pgrep and pstree|
 |noto sans cjk jp:|font for the auth dialog|
