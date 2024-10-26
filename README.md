@@ -38,6 +38,7 @@ software installed:
 |nsxiv:| for displaying images.|
 |mpv:| for video|
 |xterm:|statusbar and terminal screensavers|
+|xdotool:|statusbar|
 |unimatrix:|matrix screensaver (optional)|
 |cmatrix:|matrix screensaver|
 |[pipes.sh](https://github.com/pipeseroni/pipes.sh):|pipes screensaver (optional)|
