@@ -64,9 +64,11 @@ dimmer_pid=""
 kill_orphan_sleeps () {
     for process_pid in $(pgrep -a sleep | grep 2147483647 | cut -d ' ' -f 1); do
         process=$(ps -p "$process_pid" -o command=)
-        if pstree -Aps "$process_pid" | grep "init(1)---sleep(${process_pid})" >/dev/null; then
+        if pstree -Aps "$process_pid" | grep "init(1)---sleep(${process_pid})" \
+            >/dev/null; then
             kill "$process_pid"
-            printf '%s %s: orphan "%s" PID: %s killed.\n' "$(date +"%F %T")" "${myname}" "${process##*/}" "$process_pid"
+            printf '%s %s: orphan "%s" PID: %s killed.\n' \
+                "$(date +"%F %T")" "${myname}" "${process##*/}" "$process_pid"
         fi
     done
 }
@@ -80,7 +82,10 @@ kill_dangling_dimmers () {
     if [ -n "$dangling_dim_screen" ]; then
         dangling_dim_screen_pid="${dangling_dim_screen%% *}"
         kill "$dangling_dim_screen_pid"
-        printf '%s %s: dangling "%s" PID: %s killed.\n' "$(date +"%F %T")" "${myname}" "${dangling_dim_screen##*/}" "$dangling_dim_screen_pid"
+        printf '%s %s: dangling "%s" PID: %s killed.\n' \
+            "$(date +"%F %T")" "${myname}" \
+            "${dangling_dim_screen##*/}" \
+            "$dangling_dim_screen_pid"
         kill_orphan_sleeps
     fi
 }
@@ -110,22 +115,38 @@ start_xsecurelock () {
     xsecurelock_pid=$!
     sleep 1
     if ps -p "$xsecurelock_pid" -o cmd | grep -q "xsecurelock" ; then
-        printf '%s %s: xsecurelock %s launched.\n' "$(date +"%F %T")" "${myname}" "$xsecurelock_pid" >> "${HOME}/.cache/xsecurelock"
-        printf '%s %s: launched %s PID: %s \n' "$(date +"%F %T")" "${myname}" "$(ps -p $xsecurelock_pid -o command=)" "$xsecurelock_pid"
+        printf '%s %s: xsecurelock %s launched.\n' \
+            "$(date +"%F %T")" \
+            "${myname}" \
+            "$xsecurelock_pid" >> "${HOME}/.cache/xsecurelock"
+        printf '%s %s: launched %s PID: %s \n' \
+            "$(date +"%F %T")" \
+            "${myname}" \
+            "$(ps -p $xsecurelock_pid -o command=)" "$xsecurelock_pid"
     else
-        printf '%s %s: xsecurelock start failed, trying again.\n' "$(date +"%F %T")" "${myname}"
+        printf '%s %s: xsecurelock start failed, trying again.\n' \
+            "$(date +"%F %T")" "${myname}"
         start_xsecurelock
     fi
 }
 
 if pidof xsecurelock >/dev/null ; then
     instance_pid=$(pidof xsecurelock)
-    printf '%s %s: xsecurelock instance %s already running, no new instance will be launched.\n' "$(date +"%F %T")" "${myname}" "$instance_pid"
-    printf '%s %s: xsecurelock %s already running.\n' "$(date +"%F %T")" "${myname}" "$instance_pid" >> "${HOME}/.cache/xsecurelock"
+    printf '%s %s: %s %s %s\n' \
+        "$(date +"%F %T")"  "${myname}" \
+        "xsecurelock instance" \
+        "$instance_pid" \
+        "already running, no new instance will be launched."
+    printf '%s %s: xsecurelock %s already running.\n' \
+        "$(date +"%F %T")" \
+        "${myname}" \
+        "$instance_pid" >> "${HOME}/.cache/xsecurelock"
     exit
 else
-    printf '%s %s: no xsecurelock instance running.\n' "$(date +"%F %T")" "${myname}"
-    printf '%s %s: starting screenlocking.\n' "$(date +"%F %T")" "${myname}"
+    printf '%s %s: no xsecurelock instance running.\n' \
+        "$(date +"%F %T")" "${myname}"
+    printf '%s %s: starting screenlocking.\n' \
+        "$(date +"%F %T")" "${myname}"
     . "${HOME}/.cache/wal/colors.sh"
     export SAVER_OPT="$COLO_OPT"
     case "${COLO_OPT}" in
@@ -153,7 +174,11 @@ else
             if kill -0 "$dimmer_pid" 2>/dev/null; then
                 dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
                 kill "$dimmer_pid"
-                printf '%s %s: "%s" PID: %s killed.\n' "$(date +"%F %T")" "${myname}" "${dimmer_comm##*/}" "$dimmer_pid"
+                printf '%s %s: "%s" PID: %s killed.\n' \
+                    "$(date +"%F %T")" \
+                    "${myname}" \
+                    "${dimmer_comm##*/}" \
+                    "$dimmer_pid"
             fi
         else
             if ! pgrep dim-screen.sh >/dev/null; then
@@ -166,5 +191,7 @@ else
     done
     kill_dangling_dimmers
 fi
-printf '%s %s: screen unlocked.\n' "$(date +"%F %T")" "${myname}"
-printf '%s %s: screen unlocked.\n' "$(date +"%F %T")" "${myname}" >> "${HOME}/.cache/xsecurelock"
+printf '%s %s: screen unlocked.\n' \
+    "$(date +"%F %T")" "${myname}"
+printf '%s %s: screen unlocked.\n' \
+    "$(date +"%F %T")" "${myname}" >> "${HOME}/.cache/xsecurelock"

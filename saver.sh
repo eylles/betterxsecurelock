@@ -67,7 +67,8 @@ ssbar_pid=""
 # description:
 #   splits string on pattern returns
 #   a newline separated list.
-# taken from: https://github.com/dylanaraps/pure-sh-bible#split-a-string-on-a-delimiter
+# taken from:
+#   https://github.com/dylanaraps/pure-sh-bible#split-a-string-on-a-delimiter
 split_str() {
     # Disable globbing.
     # This ensures that the word-splitting is safe.
@@ -132,7 +133,8 @@ run_saver() {
         # printf '%s\n' "${myname}: saver module $Screen_Saver selected."
         case "$Screen_Saver" in
         matrix)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
             # try to use unimatrix first
             matrix_cmd=$(command -v unimatrix)
             # fallback to cmatrix
@@ -148,39 +150,54 @@ run_saver() {
                         flags="-ba"
                     ;;
                 esac
-                xterm -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e $matrix_cmd "$flags" &
+                xterm \
+                    -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
+                    -g "$geometry" -e $matrix_cmd "$flags" &
                 saver_pid=$!
                 [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             fi
             ;;
         pipes)
             np=$(shuf -n 1 -e 1 2 3 4)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            xterm \
+                -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" \
+                -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         btop)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e btop &
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            xterm \
+                -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
+                -g "$geometry" -e btop &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         snake)
             sl=$(shuf -n 1 -e fancy dots)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            xterm \
+                -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" \
+                -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         fire)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            xterm -into "$XSCREENSAVER_WINDOW" -g "$geometry" -e fire -l 300 -t -s 10 -f 3 &
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            xterm \
+                -into "$XSCREENSAVER_WINDOW" \
+                -g "$geometry" -e fire -l 300 -t -s 10 -f 3 &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             ;;
         walldir)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
             delay=$(shuf -n 1 -e 0.5 1 1.5 2 2.5 3)
             find "$wall_dir" -type f | shuf | nsxiv -i -bfq -S "$delay"\
             -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
@@ -192,7 +209,8 @@ run_saver() {
             # --vo=gpu --image-display-duration="$delay"
             ;;
         currwall)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
             nsxiv -bfq -e "$XSCREENSAVER_WINDOW" -g "$geometry"\
             -s F "$wallpaper" 2>/dev/null &
             saver_pid=$!
@@ -202,10 +220,11 @@ run_saver() {
             # --vo=gpu --video-unscaled=yes ~/.local/share/bg
             ;;
         livewall)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: starting saver $Screen_Saver"
-            mpv --no-input-terminal --loop=inf --no-stop-screensaver\
-            --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
-            --really-quiet --no-audio\
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            mpv --no-input-terminal --loop=inf --no-stop-screensaver \
+            --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto \
+            --really-quiet --no-audio \
             --vo=gpu "$(shuf -n 1 -e "${live_walls}"/* )" 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
@@ -223,7 +242,10 @@ run_saver() {
                         #   bar_font="BlexMono Nerd Font Mono"
                         # fi
                         bar_font="BlexMono Nerd Font Mono"
-                        xterm -into "$XSCREENSAVER_WINDOW" -g "98x1" -fa "$bar_font" -fs 20 -b 0 -e screensaverbar &
+                        xterm \
+                            -into "$XSCREENSAVER_WINDOW" \
+                            -g "98x1" -fa "$bar_font" -fs 20 -b 0 \
+                            -e screensaverbar &
                         ssbar_pid=$!
                     fi
                     # wait
