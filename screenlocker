@@ -80,22 +80,6 @@ pid_tree_search () {
 
 # return type: void
 # description:
-#   kill orphaned sleep processes
-#   that may linger after dim-screen.sh
-kill_orphan_sleeps () {
-    for process_pid in $(pgrep -a sleep | grep 2147483647 | cut -d ' ' -f 1); do
-        process=$(ps -p "$process_pid" -o command=)
-        if pstree -Aps "$process_pid" | grep "init(1)---sleep(${process_pid})" \
-            >/dev/null; then
-            kill "$process_pid"
-            printf '[%s] %s: orphan "%s" PID: %s killed.\n' \
-                "$(date +"%F %T")" "${myname}" "${process##*/}" "$process_pid"
-        fi
-    done
-}
-
-# return type: void
-# description:
 #   kill dim-screen.sh process
 #   that may be dangling from previous instances
 kill_dangling_dimmers () {
@@ -107,7 +91,6 @@ kill_dangling_dimmers () {
             "$(date +"%F %T")" "${myname}" \
             "${dangling_dim_screen##*/}" \
             "$dangling_dim_screen_pid"
-        kill_orphan_sleeps
     fi
 }
 
