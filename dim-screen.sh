@@ -76,6 +76,14 @@ set_brightness() {
     fi
 }
 
+# type: int
+# def: current_brightness=$(get_brightness)
+# description:
+#    The current brightness value.
+#    Brightness will be restored to this value.
+# default: 255
+current_brightness=255
+
 # return type: void
 # usage: reset_brightness
 # description:
