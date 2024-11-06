@@ -48,7 +48,8 @@ software installed:
 |pywal16:|for the theme|
 |xdg-screensaver:|very necessary|
 |brightnessctl:|to dim the screen before lock and during screensaver|
-|psmisc:|for pgrep and pstree|
+|psmisc:|for pstree|
+|procps:|for pgrep|
 |noto sans cjk jp:|font for the auth dialog|
 |python dbus| dbus-screenlock-freedesktop.py |
 |python xlib| dbus-screenlock-freedesktop.py |
