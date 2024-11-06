@@ -31,6 +31,27 @@ write_log () {
         >> "$logfile"
 }
 
+# usage: pid_tree_search PID NAME
+#      PID: the parent pid among whose ps tree we will search
+#     NAME: the name of the program whose pid we want
+# return type: integer
+pid_tree_search () {
+    search_pid="$1"
+    search_name="$2"
+    word_length=$(printf '%s' "$search_name" | wc -c)
+    pstree -Aps "${search_pid}" \
+        | awk \
+            -v name="$search_name" \
+            -v wlen="$word_length" \
+            '\
+                BEGIN { search=name"\\([[:digit:]]*\\)" } \
+                match( $0, search )\
+                {\
+                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
+                }\
+            '
+}
+
 write_log "started with pid: ${mypid}."
 
 # default 600 seconds
@@ -99,13 +120,7 @@ xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
     | sed -e "s/^/\[$(date +'%Y-%m-%d %H:%M:%S')\] xss-lock: /" >> "$logfile" &
 # capture pid
 # a simple $! is not enough thanks to using sed...
-xsslock_pid=$(pstree -Aps "${mypid}" \
-    | awk '\
-        match($0, /xss-lock\([[:digit:]]*)/)\
-        {\
-            print substr($0,RSTART+9,RLENGTH-10) \
-        }\
-    ')
+xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
 write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap hupHandler HUP
