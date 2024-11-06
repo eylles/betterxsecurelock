@@ -2,18 +2,51 @@
 
 _cols=$(tput cols)
 halfcol=$(( _cols / 2 ))
-getbat() {
-    bat_icon=""
-    # bat1i=
-    # bat2i=
-    # bat3i=
-    # bat4i=
-    # bat5i=
+
+# Usage: getval "KEY" file
+# Return: string
+# Description:
+#   Read a KEY=VALUE file and retrieve the Value of the passed KEY
+getval(){
+  # Setting 'IFS' tells 'read' where to split the string.
+  while IFS='=' read -r key val; do
+    # Skip over lines containing comments.
+    # (Lines starting with '#').
+    [ "${key##\#*}" ] || continue
+
+    # '$key' stores the key.
+    # '$val' stores the value.
+    if [ "$key" = "$1" ]; then
+      printf '%s\n' "$val"
+    fi
+  done < "$2"
+}
+
+# ~/.config/better-xsecurelock/
+CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}/better-xsecurelock"
+#config file
+CONF="${CONFIG_DIR}/config"
+
+bat_icon=""
+FANCY_BAT_ICON=""
+
+FANCY_BAT_ICON=$(getval "FANCY_BAT_ICON" "$CONF")
+
+if [ -n "$FANCY_BAT_ICON" ]; then
+    bat1i=
+    bat2i=
+    bat3i=
+    bat4i=
+    bat5i=
+else
     bat1i=▁
     bat2i=▂
     bat3i=▄
     bat4i=▆
     bat5i=█
+fi
+
+getbat() {
     bat_level=$(cat /sys/class/power_supply/BAT0/capacity)
     case "$bat_level" in
         [0-9]|1[0-9])
