@@ -10,6 +10,8 @@ myname="${0##*/}"
 #   current running pid of the script
 mypid="$$"
 
+export LOCKERD_PID=$mypid
+
 DBGOUT=""
 TIME_TO_LOCK=""
 xsslock_pid=""
