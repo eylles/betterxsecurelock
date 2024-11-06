@@ -5,6 +5,8 @@
 #   script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
+NO_CONTINUE=""
+
 # Example notifier script -- lowers screen brightness, then waits to be killed
 # and restores previous brightness on exit.
 
@@ -124,13 +126,11 @@ fade_brightness() {
 }
 
 sig_handler() {
-    if kill -0 "$sleep_pid" 2>/dev/null; then
-        kill "$sleep_pid"
+    NO_CONTINUE=1
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-            printf "%s %s: sleep %s killed.\n" \
-                "$(date +"%F %T")" "${myname}" "$sleep_pid"
+            printf "\n%s %s: received signal %s, terminating.\n" \
+                "$(date +"%F %T")" "${myname}" "$1"
         fi
-    fi
     exit 0
 }
 
@@ -173,14 +173,34 @@ if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
     printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
 fi
 
-trap 'sig_handler' TERM INT HUP
+trap 'sig_handler TERM' TERM
+trap 'sig_handler INT' INT
+trap 'sig_handler HUP' HUP
 trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
 fade_brightness $min_brightness
-sleep 2147483647 &
-sleep_pid=$!
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf "%s %s: waiting for %s sleep.\n" \
-        "$(date +"%F %T")" "${myname}" "$sleep_pid"
-fi
-wait "$sleep_pid"
+
+printf "%s %s: waiting.\n" "$(date +"%F %T")" "${myname}"
+
+count=0
+while [ -z "$NO_CONTINUE" ]; do
+    # 5 cycles per second, 60 seconds per minute, 1 minute
+    INTERVAL=$(( 5 * 60 ))
+    # is the count of cycle iterations the same as the interval?
+    if [ "$count" = "$INTERVAL" ]; then
+        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+            printf "%s %s: waiting for signal.\n" \
+                "$(date +"%F %T")" "${myname}"
+        fi
+        # reset the count to 0
+        count=0
+    fi
+    # ingrement the count
+    count=$(( count + 1 ))
+    # the duty cycle of this daemon is 5 iterations per second
+    # this is fast enough to feel responsive to signals, yet not hog
+    # resources, mainly cpu
+    sleep 0.2
+done
+
+printf "%s %s: termnating.\n" "$(date +"%F %T")" "${myname}"
