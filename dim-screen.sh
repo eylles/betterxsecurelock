@@ -128,7 +128,7 @@ fade_brightness() {
 sig_handler() {
     NO_CONTINUE=1
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-            printf "\n%s %s: received signal %s, terminating.\n" \
+            printf "\n[%s] %s: received signal %s, terminating.\n" \
                 "$(date +"%F %T")" "${myname}" "$1"
         fi
     exit 0
@@ -170,7 +170,7 @@ case $dim_step in
 esac
 
 if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf "%s %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
+    printf "[%s] %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
 fi
 
 trap 'sig_handler TERM' TERM
@@ -180,7 +180,7 @@ trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
 fade_brightness $min_brightness
 
-printf "%s %s: waiting.\n" "$(date +"%F %T")" "${myname}"
+printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
 
 count=0
 while [ -z "$NO_CONTINUE" ]; do
@@ -189,7 +189,7 @@ while [ -z "$NO_CONTINUE" ]; do
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-            printf "%s %s: waiting for signal.\n" \
+            printf "[%s] %s: waiting for signal.\n" \
                 "$(date +"%F %T")" "${myname}"
         fi
         # reset the count to 0
@@ -203,4 +203,4 @@ while [ -z "$NO_CONTINUE" ]; do
     sleep 0.2
 done
 
-printf "%s %s: termnating.\n" "$(date +"%F %T")" "${myname}"
+printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
