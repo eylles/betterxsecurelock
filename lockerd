@@ -94,7 +94,8 @@ load_config () {
     if [ -r "$CONF" ]; then
         # . "$CONF"
         [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config loaded"
-        TIME=$(getval "TIME_TO_LOCK" "$CONF")
+        TIME_TO_LOCK=$(getval "TIME_TO_LOCK" "$CONF")
+        [ -n "$TIME_TO_LOCK" ] && TIME=$TIME_TO_LOCK
     fi
 }
 
