@@ -194,7 +194,8 @@ else
             # kill_dangling_dimmers
             if kill -0 "$dimmer_pid" 2>/dev/null; then
                 dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
-                kill "$dimmer_pid"
+                kill -0 "$dimmer_pid" 2>/dev/null && \
+                kill "$dimmer_pid" 2>/dev/null && \
                 printf '[%s] %s: "%s" PID: %s killed.\n' \
                     "$(date +"%F %T")" \
                     "${myname}" \
