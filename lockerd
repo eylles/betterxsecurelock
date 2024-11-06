@@ -139,7 +139,7 @@ done
 set_time
 
 xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
-    | sed -e "s/^/\[$(date +'%Y-%m-%d %H:%M:%S')\] xss-lock: /" >> "$logfile" &
+    | cat >> "$logfile" &
 # capture pid
 # a simple $! is not enough thanks to using sed...
 xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
