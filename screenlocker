@@ -57,6 +57,27 @@ dimmer_pid=""
 # --- functions --- #
 #####################
 
+# return type: integer
+# usage: pid_tree_search PID NAME
+#      PID: the parent pid among whose ps tree we will search
+#     NAME: the name of the program whose pid we want
+pid_tree_search () {
+    search_pid="$1"
+    search_name="$2"
+    word_length="${#search_name}"
+    pstree -Aps "${search_pid}" \
+        | awk \
+            -v name="$search_name" \
+            -v wlen="$word_length" \
+            '\
+                BEGIN { search=name"\\([[:digit:]]*\\)" } \
+                match( $0, search )\
+                {\
+                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
+                }\
+            '
+}
+
 # return type: void
 # description:
 #   kill orphaned sleep processes
@@ -184,7 +205,7 @@ else
             if ! pgrep dim-screen.sh >/dev/null; then
                 sleep 1
                 dim-screen.sh -step-time 0.2 &
-                dimmer_pid=$!
+                dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen.sh")
             fi
         fi
         sleep 0.1
