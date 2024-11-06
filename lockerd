@@ -38,7 +38,7 @@ write_log () {
 pid_tree_search () {
     search_pid="$1"
     search_name="$2"
-    word_length=$(printf '%s' "$search_name" | wc -c)
+    word_length="${#search_name}"
     pstree -Aps "${search_pid}" \
         | awk \
             -v name="$search_name" \
