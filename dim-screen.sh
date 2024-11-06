@@ -26,9 +26,6 @@ is_num() {
 #    Brightness will be lowered to this value.
 min_brightness=0
 
-# type: int
-sleep_pid=""
-
 # If your video driver works with xbacklight, set -time and -steps for fading
 # to $min_brightness here. Setting steps to 1 disables fading.
 # fade_time=200
