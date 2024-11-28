@@ -122,7 +122,7 @@ set_time () {
     write_log "set time s as: ${time_ss} and dpms as: ${time_dpms}"
 }
 
-hupHandler () {
+sigHandler () {
     [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} received signal" "$1"
     write_log "$1 received"
     set_time
@@ -146,7 +146,8 @@ xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
 xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
 write_log "xss-lock pid captured as ${xsslock_pid}"
 
-trap 'hupHandler "HUP"' HUP
+trap 'sigHandler "HUP"' HUP
+trap 'sigHandler "USR1"' USR1
 trap 'outHandler "EXIT"' EXIT
 trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
