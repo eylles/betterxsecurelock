@@ -153,15 +153,35 @@ trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
 
+should_set_time () {
+    xset q | \
+        awk  \
+        '
+            /timeout/ {
+            if (($2!=0) && ($2==$4)) print "1";
+            else print "0";
+            }
+        '
+}
+
 write_log "waiting for xss-lock"
 # 5 cycles per second, 60 seconds per minute, 60 minutes
 INTERVAL=$(( 5 * 60 * 60 ))
+# 5 cycles per second, 20 seconds
+cyc=$(( 5 * 20 ))
 while [ -z "$NO_CONTINUE" ]; do
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
         write_log "running"
         # reset the count to 0
         count=0
+    fi
+    # check if we need to set time
+    if [ $(( count % cyc )) -eq 0 ]; then
+        if [ "$(should_set_time)" -eq "1" ]; then
+            write_log "incorrect time setting detected"
+            set_time
+        fi
     fi
     # ingrement the count
     count=$(( count + 1 ))

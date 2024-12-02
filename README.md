@@ -84,6 +84,6 @@ TODO:
 - [ ] make the dbus-screenlock-freedesktop search window that inhibits the
       screensaver by caller name and pid instead of just using whatever is
       focused at the time
-- [ ] make lockerd set the x_screen_saver_extension and dpms times from config
+- [x] make lockerd set the x_screen_saver_extension and dpms times from config
       when the screensaver isn't being inhibited
 - [ ] eliminate usage of pgrep
