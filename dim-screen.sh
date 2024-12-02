@@ -180,9 +180,9 @@ fade_brightness $min_brightness
 printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
 
 count=0
+# 5 cycles per second, 60 seconds per minute, 1 minute
+INTERVAL=$(( 5 * 60 ))
 while [ -z "$NO_CONTINUE" ]; do
-    # 5 cycles per second, 60 seconds per minute, 1 minute
-    INTERVAL=$(( 5 * 60 ))
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
