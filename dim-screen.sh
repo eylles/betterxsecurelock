@@ -177,7 +177,9 @@ trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
 fade_brightness $min_brightness
 
-printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+    printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
+fi
 
 count=0
 # 5 cycles per second, 60 seconds per minute, 1 minute
@@ -200,4 +202,6 @@ while [ -z "$NO_CONTINUE" ]; do
     sleep 0.2
 done
 
-printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+    printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
+fi
