@@ -154,9 +154,9 @@ trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
 
 write_log "waiting for xss-lock"
+# 5 cycles per second, 60 seconds per minute, 60 minutes
+INTERVAL=$(( 5 * 60 * 60 ))
 while [ -z "$NO_CONTINUE" ]; do
-    # 5 cycles per second, 60 seconds per minute, 60 minutes
-    INTERVAL=$(( 5 * 60 * 60 ))
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
         write_log "running"
