@@ -57,6 +57,17 @@ dimmer_pid=""
 # --- functions --- #
 #####################
 
+# return type: boolean
+# usage: is_int "value"
+# description: check if passed value is a number
+is_int() {
+    if [ -n "$1" ]; then
+        printf %d "$1" >/dev/null 2>&1
+    else
+        return 1
+    fi
+}
+
 # return type: integer
 # usage: pid_tree_search PID NAME
 #      PID: the parent pid among whose ps tree we will search
