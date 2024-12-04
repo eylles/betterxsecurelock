@@ -5,7 +5,7 @@
 #   script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
-# type:        string
+# type:        int
 # description
 #   current running pid of the script
 mypid="$$"
