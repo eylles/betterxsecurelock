@@ -48,11 +48,13 @@ is_int() {
 #      PID: the parent pid among whose ps tree we will search
 #     NAME: the name of the program whose pid we want
 # return type: integer
+# return error: standard error return value 1
 pid_tree_search () {
     search_pid="$1"
     search_name="$2"
     word_length="${#search_name}"
-    pstree -Aps "${search_pid}" \
+    rval=$(
+        pstree -Aps "${search_pid}" \
         | awk \
             -v name="$search_name" \
             -v wlen="$word_length" \
@@ -63,6 +65,12 @@ pid_tree_search () {
                     print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
                 }\
             '
+        )
+    if is_int "$rval"; then
+        printf '%s\n' "$rval"
+    else
+        return 1
+    fi
 }
 
 write_log "started with pid: ${mypid}."
