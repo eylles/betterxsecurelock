@@ -107,13 +107,13 @@ pid_tree_search () {
 #   kill dim-screen.sh process
 #   that may be dangling from previous instances
 kill_dangling_dimmers () {
-    dangling_dim_screen=$(pgrep -a dim-screen.sh)
-    if [ -n "$dangling_dim_screen" ]; then
-        dangling_dim_screen_pid="${dangling_dim_screen%% *}"
+    if pid_tree_search "$mypid" "dim-screen.sh" > /dev/null; then
+        dangling_dim_screen_pid=$(pid_tree_search "$mypid" dim-screen.sh)
+        dimmer_comm=$(ps -p "$dangling_dim_screen_pid" -o command=)
         kill "$dangling_dim_screen_pid"
         printf '[%s] %s: dangling "%s" PID: %s killed.\n' \
             "$(date +"%F %T")" "${myname}" \
-            "${dangling_dim_screen##*/}" \
+            "${dimmer_comm##*/}" \
             "$dangling_dim_screen_pid"
     fi
 }
@@ -196,8 +196,8 @@ else
 
     kill_dangling_dimmers
     # auth watcher
-    while pidof xsecurelock >/dev/null; do
-        if pgrep auth_x11 >/dev/null; then
+    while pid_tree_search "$mypid" xsecurelock >/dev/null; do
+        if pid_tree_search "$mypid" auth_x11 >/dev/null; then
             # kill_dangling_dimmers
             if kill -0 "$dimmer_pid" 2>/dev/null; then
                 dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
@@ -210,8 +210,7 @@ else
                     "$dimmer_pid"
             fi
         else
-            if ! pgrep dim-screen.sh >/dev/null; then
-                sleep 1
+            if ! pid_tree_search "$mypid" dim-screen.sh >/dev/null; then
                 dim-screen.sh -step-time 0.2 &
                 dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen.sh")
             fi
