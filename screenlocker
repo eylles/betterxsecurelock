@@ -9,6 +9,11 @@
 #   script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
+# type:        int
+# description
+#   current running pid of the script
+mypid="$$"
+
 # color  0
 # type: hex string
  color0=""
