@@ -44,6 +44,12 @@ is_int() {
     fi
 }
 
+# thin awk wrapper that will prefer mawk over gawk
+u_awk () { awk "$@"; }
+if command -v mawk >/dev/null; then
+    u_awk () { mawk "$@"; }
+fi
+
 # usage: pid_tree_search PID NAME
 #      PID: the parent pid among whose ps tree we will search
 #     NAME: the name of the program whose pid we want
@@ -55,7 +61,7 @@ pid_tree_search () {
     word_length="${#search_name}"
     rval=$(
         pstree -Aps "${search_pid}" \
-        | awk \
+        | u_awk \
             -v name="$search_name" \
             -v wlen="$word_length" \
             '\
@@ -174,7 +180,7 @@ trap 'outHandler "QUIT"' QUIT
 
 should_set_time () {
     xset q | \
-        awk  \
+        u_awk  \
         '
             /timeout/ {
             if (($2!=0) && ($2==$4)) print "1";
