@@ -124,11 +124,10 @@ fade_brightness() {
 
 sig_handler() {
     NO_CONTINUE=1
-        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-            printf "\n[%s] %s: received signal %s, terminating.\n" \
-                "$(date +"%F %T")" "${myname}" "$1"
-        fi
-    exit 0
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf "\n[%s] %s: received signal %s, terminating.\n" \
+            "$(date +"%F %T")" "${myname}" "$1"
+    fi
 }
 
 ################
