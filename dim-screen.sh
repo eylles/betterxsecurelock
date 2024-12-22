@@ -204,3 +204,5 @@ done
 if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
     printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
 fi
+
+reset_brightness
