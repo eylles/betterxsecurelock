@@ -107,7 +107,7 @@ fade_brightness() {
         # description:
         #    the return value of get_brightness
         level=$(get_brightness)
-        while [ "$level" -gt "$min_brightness" ]; do
+        while [ "$level" -gt "$min_brightness" ] && [ -z "$NO_CONTINUE" ]; do
             # type: int
             # def: level=$((level-dim_step))
             # description:
@@ -176,7 +176,7 @@ trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
 fade_brightness $min_brightness
 
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ] && [ -z "$NO_CONTINUE" ]; then
     printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
 fi
 
