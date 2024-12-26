@@ -128,6 +128,7 @@ sig_handler() {
         printf "\n[%s] %s: received signal %s, terminating.\n" \
             "$(date +"%F %T")" "${myname}" "$1"
     fi
+    reset_brightness
 }
 
 ################
