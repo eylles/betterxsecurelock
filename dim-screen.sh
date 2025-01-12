@@ -141,18 +141,18 @@ while [ $# -gt 0 ]; do
             if is_num "$2"; then
                 fade_step_time=$2
             fi
-            ;;
+        ;;
         -dim-step)
             if is_num "$2"; then
                 dim_step=$2
             fi
-            ;;
+        ;;
         -debug)
             dbgOUT=1
-            ;;
+        ;;
         -verbose)
             VERB=1
-            ;;
+        ;;
     esac
     shift
 done
