@@ -176,6 +176,15 @@ run_saver() {
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
+        htop)
+            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+                "${myname}: starting saver $Screen_Saver"
+            xterm \
+                -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
+                -g "$geometry" -e htop &
+            saver_pid=$!
+            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+        ;;
         snake)
             sl=$(shuf -n 1 -e fancy dots)
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
