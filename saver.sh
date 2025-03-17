@@ -144,15 +144,15 @@ run_saver() {
             else
                 case "$matrix_cmd" in
                     *unimatrix)
-                        flags="-af -s 95"
+                        matrix_cmd="${matrix_cmd} -af -s 95"
                     ;;
                     *cmatrix)
-                        flags="-ba"
+                        matrix_cmd="${matrix_cmd} -ba"
                     ;;
                 esac
                 xterm \
                     -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
-                    -g "$geometry" -e $matrix_cmd "$flags" &
+                    -g "$geometry" -e $matrix_cmd &
                 saver_pid=$!
                 [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             fi
