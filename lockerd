@@ -86,8 +86,8 @@ write_log "started with pid: ${mypid}."
 # be used if set
 TIME=600
 
-# ~/.config/better-xsecurelock/
-CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}/better-xsecurelock"
+# ${HOME}/.config/better-xsecurelock/
+CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
 #config file
 CONF="${CONFIG_DIR}/config"
 

@@ -130,7 +130,7 @@ kill_dangling_dimmers () {
 start_xsecurelock () {
     XSECURELOCK_FONT="Noto Sans CJK JP" \
     XSECURELOCK_PASSWORD_PROMPT="disco" \
-    XSECURELOCK_SAVER=~/.local/bin/saver.sh \
+    XSECURELOCK_SAVER=${HOME}/.local/bin/saver.sh \
     XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1 \
     XSECURELOCK_SHOW_HOSTNAME=0 \
     XSECURELOCK_SHOW_USERNAME=1 \
