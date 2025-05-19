@@ -4,8 +4,7 @@
 
 import dbus
 import dbus.service
-import dbus.glib
-from gi.repository import GObject
+from gi.repository import GLib
 import subprocess
 
 import Xlib
@@ -13,6 +12,10 @@ import Xlib.display
 import signal
 import sys
 import os
+from dbus.mainloop.glib import DBusGMainLoop
+
+DBusGMainLoop(set_as_default=True)
+
 
 myname = "{}:".format(os.path.basename(sys.argv[0]))
 
@@ -96,4 +99,4 @@ if __name__ == "__main__":
     signal.signal(signal.SIGHUP, readConfiguration)
 
     object = ScreenDbusObj()
-    GObject.MainLoop().run()
+    GLib.MainLoop().run()
