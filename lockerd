@@ -189,7 +189,7 @@ should_set_time () {
     ss_cycle="${t_and_c##*x}"
 
     if [ "$ss_timeout" -ne 0 ] && [ "$ss_timeout" -eq "$ss_cycle" ]; then
-            retval=1
+        retval=1
     fi
     return "$retval"
 }
