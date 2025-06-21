@@ -178,15 +178,20 @@ trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
 
+fetch_screensaver_vars () {
+    xset q | u_awk '/timeout/ { print $2"x"$4 }'
+}
+
 should_set_time () {
-    xset q | \
-        u_awk  \
-        '
-            /timeout/ {
-            if (($2!=0) && ($2==$4)) print "1";
-            else print "0";
-            }
-        '
+    retval=0
+    t_and_c=$(fetch_screensaver_vars)
+    ss_timeout="${t_and_c%%x*}"
+    ss_cycle="${t_and_c##*x}"
+
+    if [ "$ss_timeout" -ne 0 ] && [ "$ss_timeout" -eq "$ss_cycle" ]; then
+            retval=1
+    fi
+    return "$retval"
 }
 
 write_log "waiting for xss-lock"
