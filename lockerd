@@ -197,8 +197,14 @@ should_set_time () {
     ss_timeout="${t_and_c%%x*}"
     ss_cycle="${t_and_c##*x}"
 
-    if [ "$ss_timeout" -ne 0 ] && [ "$ss_timeout" -eq "$ss_cycle" ]; then
-        retval=1
+    if [ "$ss_timeout" -ne 0 ]; then
+        if [ "$ss_timeout" -eq "$ss_cycle" ]; then
+            retval=1
+        fi
+    else
+        if ! find_suspenders_in_session; then
+            retval=1
+        fi
     fi
     return "$retval"
 }
