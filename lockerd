@@ -182,6 +182,15 @@ fetch_screensaver_vars () {
     xset q | u_awk '/timeout/ { print $2"x"$4 }'
 }
 
+find_suspenders_in_session () {
+    ps ax -o'cgroup,user,cmd=CMD' \
+        | grep -v "grep" \
+        | grep "0::/${XDG_SESSION_ID}" \
+        | grep " $USER " \
+        | grep "xdg-screensaver" \
+        | grep -q "suspend"
+}
+
 should_set_time () {
     retval=0
     t_and_c=$(fetch_screensaver_vars)
