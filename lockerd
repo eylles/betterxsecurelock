@@ -30,9 +30,10 @@ logfile="${logdir}/${myname}"
 write_log () {
     name="$myname"
     message="$1"
-    printf '[%s] %s: %s\n' \
+    printf '[%s] %s [%s]: %s\n' \
         "$(date +'%Y-%m-%d %H:%M:%S')" \
         "$name" \
+        "$mypid" \
         "$message" \
         >> "$logfile"
 }
@@ -83,7 +84,7 @@ pid_tree_search () {
     fi
 }
 
-write_log "started with pid: ${mypid}."
+write_log "started."
 
 # default 600 seconds
 # but config value will
