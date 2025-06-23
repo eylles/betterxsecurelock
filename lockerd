@@ -23,6 +23,10 @@ if [ ! -f "$logdir" ]; then
 fi
 logfile="${logdir}/${myname}"
 
+# Usage: write_log "message text"
+# Return: void
+# Description:
+#   Write message to log file
 write_log () {
     name="$myname"
     message="$1"
@@ -91,6 +95,11 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
 #config file
 CONF="${CONFIG_DIR}/config"
 
+# Usage: outHandler "SIG"
+# Return: void
+# Description:
+#   Handle signals to terminate the program, sets NO_CONTINUE to 1 so that the
+#   waiter cycle can terminate.
 outHandler () {
     [ "$DBGOUT" = 1 ] && echo "exiting on signal: $1"
     # kill "$xsslock_pid"
@@ -117,6 +126,10 @@ getval(){
   done < "$2"
 }
 
+# Usage: load_config
+# Return: void
+# Description:
+#   Load values from the configuration file if it exists.
 load_config () {
     if [ -r "$CONF" ]; then
         # . "$CONF"
@@ -126,6 +139,10 @@ load_config () {
     fi
 }
 
+# Usage: set_time
+# Return: void
+# Description:
+#   Sets the screen saver activation and dpms parameters via xset.
 set_time () {
     load_config
     [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} time" "$TIME"
@@ -147,6 +164,12 @@ set_time () {
     write_log "set time s as: ${time_ss} and dpms as: ${time_dpms}"
 }
 
+# Usage: sigHandler "SIG"
+# Return: void
+# Description:
+#   Handles external signals to the program to reload config and set the screen
+#   saver activation times.
+#   Writes to log.
 sigHandler () {
     [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} received signal" "$1"
     write_log "$1 received"
@@ -178,10 +201,20 @@ trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
 trap 'outHandler "QUIT"' QUIT
 
+# Usage: fetch_screensaver_vars
+# Return: string
+# Description:
+#   Returns the current screen saver activation times in a string as
+#   TIMEOUTxCYCLE, example: 480x120
 fetch_screensaver_vars () {
     xset q | u_awk '/timeout/ { print $2"x"$4 }'
 }
 
+# Usage: find_suspenders_in_session
+# Return: boolean
+# Description:
+#   Searches the process list for instances of xdg-screensaver that are running
+#   with the suspend argument in the current desktop session.
 find_suspenders_in_session () {
     ps ax -o'cgroup,user,cmd=CMD' \
         | grep -v "grep" \
@@ -191,6 +224,13 @@ find_suspenders_in_session () {
         | grep -q "suspend"
 }
 
+# Usage: should_set_time
+# Return: boolean
+# Description:
+#   Returns 0 when the screen saver activation time is a "correct" value and
+#   there's no need to set it again.
+#   Returns 1 when the screen saver activation time is a "wrong" value and has
+#   to be set again.
 should_set_time () {
     retval=0
     t_and_c=$(fetch_screensaver_vars)
