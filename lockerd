@@ -46,6 +46,15 @@ while [ "$#" -gt 0 ]; do
                     "invalid logfile location '${1}', using default: ${logfile}"
             fi
             ;;
+        config|-c)
+            shift
+            if [ -r "$1" ]; then
+                CONF="$1"
+            else
+                printf '%s: %s\n' "${myname}" \
+                    "invalid config location '${1}', using default: ${CONF}"
+            fi
+            ;;
         *) echo "${myname}: error, invalid argument: ${1}" ;;
     esac
     shift
