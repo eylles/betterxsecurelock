@@ -37,6 +37,15 @@ CONF="${CONFIG_DIR}/config"
 while [ "$#" -gt 0 ]; do
     case "$1" in
         debug|-d)   DBGOUT=1  ;;
+        logfile|-l)
+            shift
+            if [ -w "$1" ]; then
+                logfile="$1"
+            else
+                printf '%s: %s\n' "${myname}" \
+                    "invalid logfile location '${1}', using default: ${logfile}"
+            fi
+            ;;
         *) echo "${myname}: error, invalid argument: ${1}" ;;
     esac
     shift
