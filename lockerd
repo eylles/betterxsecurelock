@@ -23,6 +23,25 @@ if [ ! -f "$logdir" ]; then
 fi
 logfile="${logdir}/${myname}"
 
+# default 600 seconds
+# but config value will
+# be used if set
+TIME=600
+
+# ${HOME}/.config/better-xsecurelock/
+CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
+#config file
+CONF="${CONFIG_DIR}/config"
+
+# input parsing
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        debug)   DBGOUT=1  ;;
+        *) echo "${myname}: error, invalid argument: ${1}" ;;
+    esac
+    shift
+done
+
 # Usage: write_log "message text"
 # Return: void
 # Description:
@@ -86,45 +105,23 @@ pid_tree_search () {
 
 write_log "started."
 
-# default 600 seconds
-# but config value will
-# be used if set
-TIME=600
-
-# ${HOME}/.config/better-xsecurelock/
-CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
-#config file
-CONF="${CONFIG_DIR}/config"
-
-# Usage: outHandler "SIG"
-# Return: void
-# Description:
-#   Handle signals to terminate the program, sets NO_CONTINUE to 1 so that the
-#   waiter cycle can terminate.
-outHandler () {
-    [ "$DBGOUT" = 1 ] && echo "exiting on signal: $1"
-    # kill "$xsslock_pid"
-    NO_CONTINUE=1
-    # exit
-}
-
 # Usage: getval "KEY" file
 # Return: string
 # Description:
 #   Read a KEY=VALUE file and retrieve the Value of the passed KEY
 getval(){
-  # Setting 'IFS' tells 'read' where to split the string.
-  while IFS='=' read -r key val; do
-    # Skip over lines containing comments.
-    # (Lines starting with '#').
-    [ "${key##\#*}" ] || continue
+    # Setting 'IFS' tells 'read' where to split the string.
+    while IFS='=' read -r key val; do
+        # Skip over lines containing comments.
+        # (Lines starting with '#').
+        [ "${key##\#*}" ] || continue
 
-    # '$key' stores the key.
-    # '$val' stores the value.
-    if [ "$key" = "$1" ]; then
-      printf '%s\n' "$val"
-    fi
-  done < "$2"
+        # '$key' stores the key.
+        # '$val' stores the value.
+        if [ "$key" = "$1" ]; then
+            printf '%s\n' "$val"
+        fi
+    done < "$2"
 }
 
 # Usage: load_config
@@ -165,6 +162,18 @@ set_time () {
     write_log "set time s as: ${time_ss} and dpms as: ${time_dpms}"
 }
 
+# Usage: outHandler "SIG"
+# Return: void
+# Description:
+#   Handle signals to terminate the program, sets NO_CONTINUE to 1 so that the
+#   waiter cycle can terminate.
+outHandler () {
+    [ "$DBGOUT" = 1 ] && echo "exiting on signal: $1"
+    # kill "$xsslock_pid"
+    NO_CONTINUE=1
+    # exit
+}
+
 # Usage: sigHandler "SIG"
 # Return: void
 # Description:
@@ -176,15 +185,6 @@ sigHandler () {
     write_log "$1 received"
     set_time
 }
-
-# input parsing
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        debug)   DBGOUT=1  ;;
-        *) echo "${myname}: error, invalid argument: ${1}" ;;
-    esac
-    shift
-done
 
 set_time
 
