@@ -36,7 +36,7 @@ CONF="${CONFIG_DIR}/config"
 # input parsing
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        debug)   DBGOUT=1  ;;
+        debug|-d)   DBGOUT=1  ;;
         *) echo "${myname}: error, invalid argument: ${1}" ;;
     esac
     shift
