@@ -264,7 +264,7 @@ while [ -z "$NO_CONTINUE" ]; do
     fi
     # check if we need to set time
     if [ $(( count % cyc )) -eq 0 ]; then
-        if [ "$(should_set_time)" -eq 1 ]; then
+        if ! should_set_time ; then
             write_log "incorrect time setting detected"
             set_time
         fi
