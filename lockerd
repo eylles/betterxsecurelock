@@ -33,6 +33,10 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
 #config file
 CONF="${CONFIG_DIR}/config"
 
+show_usage () {
+    printf '%s\n' "Usage: ${myname} [debug|-d] [-l LOGFILE] [-c CONFIG]"
+}
+
 # input parsing
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -55,7 +59,11 @@ while [ "$#" -gt 0 ]; do
                     "invalid config location '${1}', using default: ${CONF}"
             fi
             ;;
-        *) echo "${myname}: error, invalid argument: ${1}" ;;
+        *)
+            printf '%s\n' "${myname}: error, invalid argument: ${1}"
+            show_usage
+            exit 1
+            ;;
     esac
     shift
 done
