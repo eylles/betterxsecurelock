@@ -34,7 +34,20 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
 CONF="${CONFIG_DIR}/config"
 
 show_usage () {
-    printf '%s\n' "Usage: ${myname} [debug|-d] [-l LOGFILE] [-c CONFIG]"
+    printf '%s\n' "Usage: ${myname} [debug|-d] [-l LOGFILE] [-c CONFIG] | [-h]"
+}
+
+show_help () {
+    show_usage
+    printf '%s\n'   "OPTIONS"
+    printf '  %s\n' "debug, -d"
+    printf '\t%s\n' "Show debug output."
+    printf '  %s\n' "logfile <LOGFILE>, -l <LOGFILE>"
+    printf '\t%s\n' "Specify LOGFILE, it must be a valid writeable file."
+    printf '  %s\n' "config <CONFIG>, -c <CONFIG>"
+    printf '\t%s\n' "Specify CONFIG file, it must be a valid readable file."
+    printf '  %s\n' "help, -h"
+    printf '\t%s\n' "Show this help message."
 }
 
 # input parsing
@@ -58,6 +71,10 @@ while [ "$#" -gt 0 ]; do
                 printf '%s: %s\n' "${myname}" \
                     "invalid config location '${1}', using default: ${CONF}"
             fi
+            ;;
+        help|-h)
+            show_help
+            exit 0
             ;;
         *)
             printf '%s\n' "${myname}: error, invalid argument: ${1}"
