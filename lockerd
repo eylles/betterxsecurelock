@@ -250,7 +250,7 @@ write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap 'sigHandler "HUP"' HUP
 trap 'sigHandler "USR1"' USR1
-trap 'reloadHandler "USR2"' USR1
+trap 'reloadHandler "USR2"' USR2
 trap 'outHandler "EXIT"' EXIT
 trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
