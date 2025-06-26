@@ -217,6 +217,16 @@ outHandler () {
     # exit
 }
 
+# Usage: reloadHandler "SIG"
+# Return: void
+# Description:
+#   Handle signals to terminate the program, sets NO_CONTINUE to 2 so that the
+#   waiter cycle can terminate and the program can exec "$0" to reload.
+reloadHandler () {
+    [ "$DBGOUT" = 1 ] && echo "reloading on signal: $1"
+    NO_CONTINUE=2
+}
+
 # Usage: sigHandler "SIG"
 # Return: void
 # Description:
