@@ -250,6 +250,7 @@ write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap 'sigHandler "HUP"' HUP
 trap 'sigHandler "USR1"' USR1
+trap 'reloadHandler "USR2"' USR1
 trap 'outHandler "EXIT"' EXIT
 trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
@@ -335,4 +336,13 @@ write_log "no continue received"
 kill "$xsslock_pid"
 write_log "xss-lock killed"
 [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
-write_log "terminating."
+case "$NO_CONTINUE" in
+    1)
+        write_log "terminating."
+        exit 0
+        ;;
+    2)
+        write_log "reloading."
+        exec $0
+        ;;
+esac
