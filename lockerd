@@ -217,12 +217,12 @@ outHandler () {
     # exit
 }
 
-# Usage: reloadHandler "SIG"
+# Usage: relHandler "SIG"
 # Return: void
 # Description:
 #   Handle signals to terminate the program, sets NO_CONTINUE to 2 so that the
 #   waiter cycle can terminate and the program can exec "$0" to reload.
-reloadHandler () {
+relHandler () {
     [ "$DBGOUT" = 1 ] && echo "reloading on signal: $1"
     NO_CONTINUE=2
 }
@@ -250,7 +250,7 @@ write_log "xss-lock pid captured as ${xsslock_pid}"
 
 trap 'sigHandler "HUP"' HUP
 trap 'sigHandler "USR1"' USR1
-trap 'reloadHandler "USR2"' USR2
+trap 'relHandler "USR2"' USR2
 trap 'outHandler "EXIT"' EXIT
 trap 'outHandler "TERM"' TERM
 trap 'outHandler "INT"' INT
