@@ -153,6 +153,11 @@ while [ $# -gt 0 ]; do
         -verbose)
             VERB=1
         ;;
+        *)
+            printf '%s: %s\n' "$myname" \
+                "unknown argument '${1}'"
+            exit 1
+        ;;
     esac
     shift
 done
