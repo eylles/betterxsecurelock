@@ -231,7 +231,7 @@ run_saver() {
         livewall)
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
-            mpv --no-input-terminal --loop=inf --no-stop-screensaver \
+            mpv --no-input-terminal --loop=inf --stop-screensaver=no \
             --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto \
             --really-quiet --no-audio \
             --vo=gpu "$(shuf -n 1 -e "${live_walls}"/* )" 2>/dev/null &
