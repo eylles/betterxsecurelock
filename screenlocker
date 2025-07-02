@@ -113,8 +113,8 @@ pid_tree_search () {
 #   kill dim-screen.sh process
 #   that may be dangling from previous instances
 kill_dangling_dimmers () {
-    if pid_tree_search "$mypid" "dim-screen.sh" > /dev/null; then
-        dangling_dim_screen_pid=$(pid_tree_search "$mypid" dim-screen.sh)
+    if pid_tree_search "$LOCKERD_PID" "dim-screen.sh" > /dev/null; then
+        dangling_dim_screen_pid=$(pid_tree_search "$LOCKERD_PID" dim-screen.sh)
         dimmer_comm=$(ps -p "$dangling_dim_screen_pid" -o command=)
         kill "$dangling_dim_screen_pid"
         printf '[%s] %s: dangling "%s" PID: %s killed.\n' \
