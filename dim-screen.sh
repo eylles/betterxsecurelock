@@ -133,7 +133,20 @@ sig_handler() {
 
 show_usage () {
     printf '%s %s\n' "Usage: ${myname}" \
-        "[-debug] [-verbose] [-step-time FLOAT] [-dim-step INT]"
+        "[-debug] [-verbose] [-step-time FLOAT] [-dim-step INT] | [-help]"
+}
+
+show_help () {
+    show_usage
+    printf '%s\n'   "OPTIONS"
+    printf '  %s\n' "-debug, -verbose"
+    printf '\t%s\n' "Show debug output."
+    printf '  %s\n' "-step-time <FLOAT>"
+    printf '\t%s\n' "time between steps in seconds, floats are accepted."
+    printf '  %s\n' "-dim-step <INT>"
+    printf '\t%s\n' "step size, default 1."
+    printf '  %s\n' "help, -help, --help, -h"
+    printf '\t%s\n' "Show this help message."
 }
 
 ################
@@ -157,6 +170,10 @@ while [ $# -gt 0 ]; do
         ;;
         -verbose)
             VERB=1
+        ;;
+        "help"|"-help"|"--help"|"-h")
+            show_help
+            exit 0
         ;;
         *)
             printf '%s: %s\n' "$myname" \
