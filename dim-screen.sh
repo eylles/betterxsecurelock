@@ -131,6 +131,11 @@ sig_handler() {
     reset_brightness
 }
 
+show_usage () {
+    printf '%s %s\n' "Usage: ${myname}" \
+        "[-debug] [-verbose] [-step-time FLOAT] [-dim-step INT]"
+}
+
 ################
 # --- main --- #
 ################
@@ -156,6 +161,7 @@ while [ $# -gt 0 ]; do
         *)
             printf '%s: %s\n' "$myname" \
                 "unknown argument '${1}'"
+            show_usage
             exit 1
         ;;
     esac
