@@ -201,6 +201,8 @@ fi
 trap 'sig_handler TERM' TERM
 trap 'sig_handler INT' INT
 trap 'sig_handler HUP' HUP
+trap 'sig_handler USR1' USR1
+trap 'sig_handler USR2' USR2
 trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
 fade_brightness $min_brightness
