@@ -149,10 +149,6 @@ start_xsecurelock () {
     xsecurelock_pid=$!
     sleep 1
     if ps -p "$xsecurelock_pid" -o cmd | grep -q "xsecurelock" ; then
-        printf '[%s] %s: xsecurelock %s launched.\n' \
-            "$(date +"%F %T")" \
-            "${myname}" \
-            "$xsecurelock_pid" >> "${HOME}/.cache/xsecurelock"
         printf '[%s] %s: launched %s PID: %s \n' \
             "$(date +"%F %T")" \
             "${myname}" \
@@ -171,10 +167,6 @@ if pid_tree_search "$LOCKERD_PID" "xsecurelock" >/dev/null; then
         "xsecurelock instance" \
         "$instance_pid" \
         "already running, no new instance will be launched."
-    printf '[%s] %s: xsecurelock %s already running.\n' \
-        "$(date +"%F %T")" \
-        "${myname}" \
-        "$instance_pid" >> "${HOME}/.cache/xsecurelock"
     exit
 else
     printf '[%s] %s: no xsecurelock instance running.\n' \
@@ -227,5 +219,3 @@ else
 fi
 printf '[%s] %s: screen unlocked.\n' \
     "$(date +"%F %T")" "${myname}"
-printf '[%s] %s: screen unlocked.\n' \
-    "$(date +"%F %T")" "${myname}" >> "${HOME}/.cache/xsecurelock"
