@@ -108,11 +108,11 @@ roll_saver() {
     fi
   else
     case "${SAVER_OPT}" in
-      0)  Screen_Saver=$(split_str "$saver_list_1" "," | shuf -n 1) ;;
-      2)  Screen_Saver=$(split_str "$saver_list_2" "," | shuf -n 1) ;;
-      10) Screen_Saver=$(split_str "$saver_list_3" "," | shuf -n 1) ;;
-      8)  Screen_Saver=$(split_str "$saver_list_4" "," | shuf -n 1) ;;
-      15) Screen_Saver=$(split_str "$saver_list_5" "," | shuf -n 1) ;;
+      1) Screen_Saver=$(split_str "$saver_list_1" "," | shuf -n 1) ;;
+      2) Screen_Saver=$(split_str "$saver_list_2" "," | shuf -n 1) ;;
+      3) Screen_Saver=$(split_str "$saver_list_3" "," | shuf -n 1) ;;
+      4) Screen_Saver=$(split_str "$saver_list_4" "," | shuf -n 1) ;;
+      5) Screen_Saver=$(split_str "$saver_list_5" "," | shuf -n 1) ;;
     esac
   fi
   [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"

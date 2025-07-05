@@ -36,7 +36,7 @@ color15=""
 # type:        int
 # description:
 #   randomly chosen color index
-COLO_OPT=$(shuf -n 1 -e 0 2 8 10 15)
+COLO_OPT=$(shuf -n 1 -e 1 2 3 4 5)
 
 # type:        hex string
 # description:
@@ -176,18 +176,18 @@ else
     . "${HOME}/.cache/wal/colors.sh"
     export SAVER_OPT="$COLO_OPT"
     case "${COLO_OPT}" in
-        0)  export AuthBgColor="$color0" ;;
-        2)  export AuthBgColor="$color2" ;;
-        8)  export AuthBgColor="$color8" ;;
-        10) export AuthBgColor="$color10" ;;
-        15) export AuthBgColor="$color15" ;;
+        1) export AuthBgColor="$color0" ;;
+        2) export AuthBgColor="$color2" ;;
+        3) export AuthBgColor="$color8" ;;
+        4) export AuthBgColor="$color10" ;;
+        5) export AuthBgColor="$color15" ;;
     esac
     case "${COLO_OPT}" in
-        0)  export AuthFgColor="$color12" ;;
-        2)  export AuthFgColor="$color15" ;;
-        8)  export AuthFgColor="$color15" ;;
-        10) export AuthFgColor="$color0" ;;
-        15) export AuthFgColor="$color8" ;;
+        1) export AuthFgColor="$color12" ;;
+        2) export AuthFgColor="$color15" ;;
+        3) export AuthFgColor="$color15" ;;
+        4) export AuthFgColor="$color0" ;;
+        5) export AuthFgColor="$color8" ;;
     esac
 
     start_xsecurelock
