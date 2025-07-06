@@ -182,7 +182,8 @@ getval(){
 load_config () {
     if [ -r "$CONF" ]; then
         # . "$CONF"
-        [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config loaded"
+        export CONF
+        [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config $CONF loaded"
         TIME_TO_LOCK=$(getval "TIME_TO_LOCK" "$CONF")
         [ -n "$TIME_TO_LOCK" ] && TIME=$TIME_TO_LOCK
     fi
