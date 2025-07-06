@@ -38,7 +38,14 @@ min_brightness=0
 #
 #     m /sys/class/backlight/acpi_video0/brightness 0664 root users - -
 #
-# sysfs_path="/sys/class/backlight/*/brightness"
+# Another option is to just rely on the udev rules from the brightnessctl
+# package, in distros like debian the udev rules are a separate package so you
+# can install them and just ensure your user is on the video group
+#
+# Making this work with external displays requires the usage of the
+# ddcci-driver-linux kernel module
+#
+sysfs_path="/sys/class/backlight/*/brightness"
 
 # Time to sleep (in seconds) between increments. If unset or
 # empty, fading is disabled.
@@ -57,7 +64,14 @@ get_brightness() {
     if [ -z "$sysfs_path" ]; then
         brightnessctl g
     else
-        cat "$sysfs_path"
+        c=0
+        # get brightness just from the first screen we can find
+        for screen_path in $sysfs_path; do
+            out=$(cat "$screen_path")
+            c=$(( c + 1 ))
+            [ "$c" -gt 0 ] && break
+        done
+        printf '%d\n' "$out"
     fi
 }
 
@@ -71,7 +85,10 @@ set_brightness() {
     if [ -z "$sysfs_path" ]; then
         brightnessctl s "$1" >/dev/null
     else
-        echo "$1" > "$sysfs_path"
+        # set brightness for every screen we can find
+        for screen_path in $sysfs_path; do
+            printf '%d' "$1" > "$screen_path"
+        done
     fi
 }
 
