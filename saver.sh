@@ -1,18 +1,10 @@
 #!/bin/sh
 
 #####################
-# --- variables --- #
+# -- config vars -- #
 #####################
 
-# type:        string
-# description
-#   script base name through the idiom "${0##*/}"
-myname="${0##*/}"
-
-# type:        string
-# description:
-#   screen saver module to use
-Screen_Saver=""
+# to be overwritten by config
 
 saver_list_1="walldir,livewall"
 saver_list_2="currwall,snake"
@@ -27,6 +19,39 @@ wallpaper="${HOME}/.local/share/bg"
 live_walls="${HOME}/Videos/live-walls"
 
 wall_dir="${HOME}/Pictures/wallpapers"
+# delay between images
+delay=""
+# list of delay values, leave delay blank to pick from list with shuf
+delays_list="0.5 1 1.5 2 2.5 3"
+# number of pipes
+np=""
+# number of pipes list, leave np blank to pick from list with shuf
+np_list="1 2 3 4"
+# snake look
+sl=""
+# snake look list, leave sl blaknk to pick from list with shuf
+sl_l="fancy dots full ascii"
+
+if [ -r "$CONF" ]; then
+    # yes, we just outright source the config file without caring...
+    # you can only override things written before this, so no arbitrary
+    # functions from config
+    . "$CONF"
+fi
+
+#####################
+# --- variables --- #
+#####################
+
+# type:        string
+# description
+#   script base name through the idiom "${0##*/}"
+myname="${0##*/}"
+
+# type:        string
+# description:
+#   screen saver module to use
+Screen_Saver=""
 
 # type:        int bool
 # description:
@@ -158,7 +183,9 @@ run_saver() {
             fi
         ;;
         pipes)
-            np=$(shuf -n 1 -e 1 2 3 4)
+            if [ -z "$np" ]; then
+                np=$(shuf -n 1 -e $np_list)
+            fi
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
@@ -186,7 +213,9 @@ run_saver() {
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         snake)
-            sl=$(shuf -n 1 -e fancy dots)
+            if [ -z "$sl" ]; then
+                sl=$(shuf -n 1 -e $sl_l)
+            fi
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
@@ -207,7 +236,9 @@ run_saver() {
         walldir)
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
-            delay=$(shuf -n 1 -e 0.5 1 1.5 2 2.5 3)
+            if [ -z "$delay" ]; then
+                delay=$(shuf -n 1 -e $delays_list)
+            fi
             find "$wall_dir" -type f | shuf | nsxiv -i -bfq -S "$delay"\
             -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
             saver_pid=$!
