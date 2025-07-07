@@ -49,7 +49,6 @@ software installed:
 |xdg-screensaver:|very necessary|
 |brightnessctl:|to dim the screen before lock and during screensaver|
 |psmisc:|for pstree|
-|procps:|for pgrep|
 |noto sans cjk jp:|font for the auth dialog|
 |python dbus| dbus-screenlock-freedesktop.py |
 |python xlib| dbus-screenlock-freedesktop.py |
@@ -86,4 +85,4 @@ TODO:
       focused at the time
 - [x] make lockerd set the x_screen_saver_extension and dpms times from config
       when the screensaver isn't being inhibited
-- [ ] eliminate usage of pgrep
+- [x] eliminate usage of pgrep

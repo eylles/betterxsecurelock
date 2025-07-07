@@ -87,6 +87,52 @@ ssbar_pid=""
 # --- functions --- #
 #####################
 
+# return type: boolean
+# usage: is_int "value"
+# description: check if passed value is a number
+is_int() {
+    if [ -n "$1" ]; then
+        printf %d "$1" >/dev/null 2>&1
+    else
+        return 1
+    fi
+}
+
+# thin awk wrapper that will prefer mawk over gawk
+u_awk () { awk "$@"; }
+if command -v mawk >/dev/null; then
+    u_awk () { mawk "$@"; }
+fi
+
+# usage: pid_tree_search PID NAME
+#      PID: the parent pid among whose ps tree we will search
+#     NAME: the name of the program whose pid we want
+# return type: integer
+# return error: standard error return value 1
+pid_tree_search () {
+    search_pid="$1"
+    search_name="$2"
+    word_length="${#search_name}"
+    rval=$(
+        pstree -Aps "${search_pid}" \
+        | u_awk \
+            -v name="$search_name" \
+            -v wlen="$word_length" \
+            '\
+                BEGIN { search=name"\\([[:digit:]]*\\)" } \
+                match( $0, search )\
+                {\
+                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
+                }\
+            '
+        )
+    if is_int "$rval"; then
+        printf '%s\n' "$rval"
+    else
+        return 1
+    fi
+}
+
 # return type: string
 # usage: split_str "string" "pattern"
 # description:
@@ -274,7 +320,7 @@ run_saver() {
             # show screensaver bar
             while kill -0 "$saver_pid"; do
                 sleep 0.1
-                if pgrep auth_x11 >/dev/null; then
+                if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid"; then
                         # if [ -n "$XSECURELOCK_FONT" ]; then
                         #   bar_font="$XSECURELOCK_FONT"
