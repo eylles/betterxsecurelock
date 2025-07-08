@@ -230,6 +230,8 @@ run_saver() {
         ;;
         pipes)
             if [ -z "$np" ]; then
+                # we want word splitting here
+                # shellcheck disable=2086
                 np=$(shuf -n 1 -e $np_list)
             fi
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
@@ -260,6 +262,8 @@ run_saver() {
         ;;
         snake)
             if [ -z "$sl" ]; then
+                # we want word splitting here
+                # shellcheck disable=2086
                 sl=$(shuf -n 1 -e $sl_l)
             fi
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
@@ -283,6 +287,8 @@ run_saver() {
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             if [ -z "$delay" ]; then
+                # we want word splitting here
+                # shellcheck disable=2086
                 delay=$(shuf -n 1 -e $delays_list)
             fi
             find "$wall_dir" -type f | shuf | nsxiv -i -bfq -S "$delay"\
