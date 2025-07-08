@@ -226,6 +226,8 @@ run_saver() {
                         matrix_cmd="${matrix_cmd} -ba"
                     ;;
                 esac
+                # we want word splitting here for correct command expansion
+                # shellcheck disable=2086
                 xterm \
                     -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
                     -g "$geometry" -e $matrix_cmd &
@@ -300,10 +302,6 @@ run_saver() {
             -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
-            # find ~/Pictures/wallpapers -type f | shuf |\
-            # mpv --no-input-terminal --loop=inf --no-stop-screensaver\
-            # --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
-            # --vo=gpu --image-display-duration="$delay"
         ;;
         currwall)
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
@@ -312,9 +310,6 @@ run_saver() {
             -s F "$wallpaper" 2>/dev/null &
             saver_pid=$!
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
-            # mpv --no-input-terminal --loop=inf --no-stop-screensaver\
-            # --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto\
-            # --vo=gpu --video-unscaled=yes ~/.local/share/bg
         ;;
         livewall)
             [ "$DBGOUT" = 1 ] && printf '%s\n' \
@@ -333,11 +328,6 @@ run_saver() {
                 sleep 0.1
                 if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid"; then
-                        # if [ -n "$XSECURELOCK_FONT" ]; then
-                        #   bar_font="$XSECURELOCK_FONT"
-                        # else
-                        #   bar_font="BlexMono Nerd Font Mono"
-                        # fi
                         xterm \
                             -into "$XSCREENSAVER_WINDOW" \
                             -g "98x1" -fa "$bar_font" -fs 20 -b 0 \
