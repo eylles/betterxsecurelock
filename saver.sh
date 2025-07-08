@@ -13,6 +13,7 @@ saver_list_4="walldir,livewall"
 saver_list_5="livewall"
 
 term_font="BlexMono Nerd Font Mono"
+bar_font=""
 
 wallpaper="${HOME}/.local/share/bg"
 
@@ -37,6 +38,10 @@ if [ -r "$CONF" ]; then
     # you can only override things written before this, so no arbitrary
     # functions from config
     . "$CONF"
+fi
+
+if [ -z "$bar_font" ]; then
+    bar_font="${term_font}"
 fi
 
 #####################
@@ -333,7 +338,6 @@ run_saver() {
                         # else
                         #   bar_font="BlexMono Nerd Font Mono"
                         # fi
-                        bar_font="BlexMono Nerd Font Mono"
                         xterm \
                             -into "$XSCREENSAVER_WINDOW" \
                             -g "98x1" -fa "$bar_font" -fs 20 -b 0 \
