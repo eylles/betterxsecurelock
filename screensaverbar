@@ -22,11 +22,6 @@ getval(){
   done < "$2"
 }
 
-# ${HOME}/.config/better-xsecurelock/
-CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
-#config file
-CONF="${CONFIG_DIR}/config"
-
 bat_icon=""
 FANCY_BAT_ICON=""
 
