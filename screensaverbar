@@ -25,7 +25,9 @@ getval(){
 bat_icon=""
 FANCY_BAT_ICON=""
 
-FANCY_BAT_ICON=$(getval "FANCY_BAT_ICON" "$CONF")
+if [ -r "$CONF" ]; then
+    FANCY_BAT_ICON=$(getval "FANCY_BAT_ICON" "$CONF")
+fi
 
 if [ -n "$FANCY_BAT_ICON" ]; then
     bat1i=
