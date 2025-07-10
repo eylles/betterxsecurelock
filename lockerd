@@ -202,6 +202,8 @@ set_time () {
     # dpms time
     # <standby> <suspend> <off>
     time_dpms="0 0 $((TIME * 3 / 2))"
+    SAVER_TIMEOUT=$(( TIME / 5 ))
+    export SAVER_TIMEOUT
 
     [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time screensaver" "$time_ss"
     [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time dpms" "$time_dpms"
