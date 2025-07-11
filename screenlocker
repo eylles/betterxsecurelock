@@ -1,6 +1,23 @@
 #!/bin/sh
 
 #####################
+# --- conf vars --- #
+#####################
+
+auth_font="Noto Sans CJK JP"
+password_prompt="disco"
+show_hostname=0
+show_username=1
+burnin_mitigation=50
+
+if [ -r "$CONF" ]; then
+    # yes, we just outright source the config file without caring...
+    # you can only override things written before this, so no arbitrary
+    # functions from config
+    . "$CONF"
+fi
+
+#####################
 # --- variables --- #
 #####################
 
@@ -128,22 +145,24 @@ kill_dangling_dimmers () {
 # description:
 #   start xsecurelock and capture it's pid
 start_xsecurelock () {
-    export XSECURELOCK_FONT="Noto Sans CJK JP"
-    export XSECURELOCK_PASSWORD_PROMPT="disco"
-    export XSECURELOCK_SAVER="${HOME}/.local/bin/saver.sh"
-    export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1
-    export XSECURELOCK_SHOW_HOSTNAME=0
-    export XSECURELOCK_SHOW_USERNAME=1
-    export XSECURELOCK_DATETIME_FORMAT='%A      %T'
-    export XSECURELOCK_COMPOSITE_OBSCURER=0
-    export XSECURELOCK_NO_COMPOSITE=1
+    # from config
+    export XSECURELOCK_FONT="$auth_font"
+    export XSECURELOCK_PASSWORD_PROMPT="$password_prompt"
+    export XSECURELOCK_SHOW_HOSTNAME="$show_hostname"
+    export XSECURELOCK_SHOW_USERNAME="$show_username"
+    export XSECURELOCK_BURNIN_MITIGATION="$burnin_mitigation"
+    # defined at runtime
     export XSECURELOCK_AUTH_TIMEOUT="$SAVER_TIMEOUT"
-    export XSECURELOCK_BLANK_TIMEOUT=-1
-    export XSECURELOCK_SAVER_STOP_ON_BLANK=1
-    export XSECURELOCK_BURNIN_MITIGATION=50
-    export XSECURELOCK_BURNIN_MITIGATION_DYNAMIC=1
     export XSECURELOCK_AUTH_BACKGROUND_COLOR="$AuthBgColor"
     export XSECURELOCK_AUTH_FOREGROUND_COLOR="$AuthFgColor"
+    # constants
+    export XSECURELOCK_SAVER="${HOME}/.local/bin/saver.sh"
+    export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1
+    export XSECURELOCK_COMPOSITE_OBSCURER=0
+    export XSECURELOCK_NO_COMPOSITE=1
+    export XSECURELOCK_BLANK_TIMEOUT=-1
+    export XSECURELOCK_SAVER_STOP_ON_BLANK=1
+    export XSECURELOCK_BURNIN_MITIGATION_DYNAMIC=1
     export XSECURELOCK_BLANK_DPMS_STATE=off
     xsecurelock 2>/dev/null &
     xsecurelock_pid=$!
