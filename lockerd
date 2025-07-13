@@ -196,14 +196,17 @@ load_config () {
 set_time () {
     load_config
     [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} time" "$TIME"
+    c_cycle="$(( TIME / 5 ))"
+    c_timeout="$(( TIME - c_cycle ))"
+    c_off="$(( TIME * 3 / 2 ))"
+    SAVER_TIMEOUT="$c_cycle"
+    export SAVER_TIMEOUT
     # screensaver time
     # <timeout> <cycle>
-    time_ss="$((TIME - (TIME / 5) )) $(( TIME / 5 ))"
+    time_ss="$c_timeout $c_cycle"
     # dpms time
     # <standby> <suspend> <off>
-    time_dpms="0 0 $((TIME * 3 / 2))"
-    SAVER_TIMEOUT=$(( TIME / 5 ))
-    export SAVER_TIMEOUT
+    time_dpms="0 0 $c_off"
 
     [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time screensaver" "$time_ss"
     [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time dpms" "$time_dpms"
