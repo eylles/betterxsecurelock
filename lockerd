@@ -58,27 +58,33 @@ show_help () {
     printf '\t%s\n' "Relaunch the program."
 }
 
+opts=""
 # input parsing
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        debug|-d)   DBGOUT=1  ;;
+        debug|-d)
+            DBGOUT=1
+            opts="${1} ${opts}"
+            ;;
         logfile|-l)
-            shift
-            if [ -w "$1" ]; then
-                logfile="$1"
+            if [ -w "$2" ]; then
+                logfile="$2"
+                opts="${1} ${2} ${opts}"
             else
                 printf '%s: %s\n' "${myname}" \
-                    "invalid logfile location '${1}', using default: ${logfile}"
+                    "invalid logfile location '${2}', using default: ${logfile}"
             fi
+            shift
             ;;
         config|-c)
-            shift
-            if [ -r "$1" ]; then
-                CONF="$1"
+            if [ -r "$2" ]; then
+                CONF="$2"
+                opts="${1} ${2} ${opts}"
             else
                 printf '%s: %s\n' "${myname}" \
-                    "invalid config location '${1}', using default: ${CONF}"
+                    "invalid config location '${2}', using default: ${CONF}"
             fi
+            shift
             ;;
         help|-h)
             show_help
@@ -154,7 +160,11 @@ pid_tree_search () {
     fi
 }
 
-write_log "started."
+started_string="started."
+if [ -n "$opts" ]; then
+    started_string="started with options: ${opts}"
+fi
+write_log "$started_string"
 
 # Usage: getval "KEY" file
 # Return: string
