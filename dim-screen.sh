@@ -176,11 +176,13 @@ while [ $# -gt 0 ]; do
             if is_num "$2"; then
                 fade_step_time=$2
             fi
+            shift
         ;;
         -dim-step)
             if is_num "$2"; then
                 dim_step=$2
             fi
+            shift
         ;;
         -debug)
             dbgOUT=1
