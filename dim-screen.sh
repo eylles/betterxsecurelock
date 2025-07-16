@@ -81,14 +81,19 @@ get_brightness() {
 #    will set the brightness to the passed number
 #    brightness values are from 0 to 255
 set_brightness() {
-    [ -n "$dbgOUT" ] && printf 'brightness level: %s\n' "$1"
     if [ -z "$sysfs_path" ]; then
+        [ -n "$dbgOUT" ] && printf '%s %3d\n' "brightness level:" "$1"
         brightnessctl s "$1" >/dev/null
     else
+        [ -n "$dbgOUT" ] && printf '%s %3d  ' "brightness level:" "$1"
         # set brightness for every screen we can find
         for screen_path in $sysfs_path; do
             printf '%d' "$1" > "$screen_path"
+            scp_t="${screen_path%/*}"
+            scp_t="${scp_t##*/}"
+            [ -n "$dbgOUT" ] && printf '%s ' "$scp_t"
         done
+        [ -n "$dbgOUT" ] && printf '\n'
     fi
 }
 
