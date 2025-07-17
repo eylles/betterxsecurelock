@@ -219,7 +219,9 @@ case $dim_step in
 esac
 
 if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf "[%s] %s: PID: %s dimming.\n" "$(date +"%F %T")" "${myname}" "$$"
+    printf '[%s] %s: PID: %s dimming.\n' "$(date +"%F %T")" "${myname}" "$$"
+    printf '%20s: %s\n' "step time" "$fade_step_time"
+    printf '%20s: %d\n' "dim step" "$dim_step"
 fi
 
 trap 'sig_handler TERM' TERM
@@ -229,6 +231,9 @@ trap 'sig_handler USR1' USR1
 trap 'sig_handler USR2' USR2
 trap 'reset_brightness' EXIT
 current_brightness=$(get_brightness)
+if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+    printf '%20s: %d\n' "starting brightness" "$current_brightness"
+fi
 fade_brightness $min_brightness
 
 if [ -n "$dbgOUT" ] || [ -n "$VERB" ] && [ -z "$NO_CONTINUE" ]; then
