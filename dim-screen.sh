@@ -111,7 +111,13 @@ current_brightness=255
 #    will run set_brightness
 #    on the variable "$current_brightness"
 reset_brightness() {
-    set_brightness "$current_brightness"
+    level="$(get_brightness)"
+    if [ "$level" -ne "$current_brightness" ]; then
+        [ -n "$dbgOUT" ] && printf '%s %3d\n' \
+            "resetting brightness, current level:" \
+            "$level"
+        set_brightness "$current_brightness"
+    fi
 }
 
 # return type: void
