@@ -165,6 +165,8 @@ if [ -n "$opts" ]; then
     started_string="started with options: ${opts}"
 fi
 write_log "$started_string"
+[ -n "$DBGOUT" ] && printf '%s %s\n' "$myname" "$started_string"
+[ -n "$DBGOUT" ] && printf '%s %s\n' "$myname pid:" "$mypid"
 
 # Usage: getval "KEY" file
 # Return: string
