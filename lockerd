@@ -235,7 +235,7 @@ set_time () {
 #   Handle signals to terminate the program, sets NO_CONTINUE to 1 so that the
 #   waiter cycle can terminate.
 outHandler () {
-    [ "$DBGOUT" = 1 ] && echo "exiting on signal: $1"
+    [ "$DBGOUT" = 1 ] && printf '\n%s\n' "exiting on signal: $1"
     # kill "$xsslock_pid"
     NO_CONTINUE=1
     # exit
@@ -247,7 +247,7 @@ outHandler () {
 #   Handle signals to terminate the program, sets NO_CONTINUE to 2 so that the
 #   waiter cycle can terminate and the program can exec "$0" to reload.
 relHandler () {
-    [ "$DBGOUT" = 1 ] && echo "reloading on signal: $1"
+    [ "$DBGOUT" = 1 ] && printf '\n%s\n' "reloading on signal: $1"
     NO_CONTINUE=2
 }
 
