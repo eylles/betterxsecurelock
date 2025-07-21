@@ -371,6 +371,9 @@ case "$NO_CONTINUE" in
         ;;
     2)
         write_log "reloading."
-        exec $0
+        if [ -n "$opts" ]; then
+            set -- ${opts}
+        fi
+        exec $0 "$@"
         ;;
 esac
