@@ -359,8 +359,10 @@ done
 
 write_log "no continue received"
 
-kill "$xsslock_pid"
-write_log "xss-lock killed"
+if kill -0 "$xsslock_pid" >/dev/null; then
+    kill "$xsslock_pid"
+    write_log "xss-lock killed"
+fi
 [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
 case "$NO_CONTINUE" in
     1)
