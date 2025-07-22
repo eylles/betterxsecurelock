@@ -9,6 +9,7 @@ password_prompt="disco"
 show_hostname=0
 show_username=1
 burnin_mitigation=50
+burnin_mitigation_pixels=1
 
 if [ -r "$CONF" ]; then
     # yes, we just outright source the config file without caring...
@@ -151,6 +152,7 @@ start_xsecurelock () {
     export XSECURELOCK_SHOW_HOSTNAME="$show_hostname"
     export XSECURELOCK_SHOW_USERNAME="$show_username"
     export XSECURELOCK_BURNIN_MITIGATION="$burnin_mitigation"
+    export XSECURELOCK_BURNIN_MITIGATION_DYNAMIC="$burnin_mitigation_pixels"
     # defined at runtime
     export XSECURELOCK_AUTH_TIMEOUT="$SAVER_TIMEOUT"
     export XSECURELOCK_AUTH_BACKGROUND_COLOR="$AuthBgColor"
@@ -162,7 +164,6 @@ start_xsecurelock () {
     export XSECURELOCK_NO_COMPOSITE=1
     export XSECURELOCK_BLANK_TIMEOUT=-1
     export XSECURELOCK_SAVER_STOP_ON_BLANK=1
-    export XSECURELOCK_BURNIN_MITIGATION_DYNAMIC=1
     export XSECURELOCK_BLANK_DPMS_STATE=off
     xsecurelock 2>/dev/null &
     xsecurelock_pid=$!
