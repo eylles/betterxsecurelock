@@ -126,6 +126,21 @@ pid_tree_search () {
     fi
 }
 
+# Usage: write_log "message text"
+# Return: void
+# Description:
+#   Write message to log file
+write_log () {
+    name="$myname"
+    message="$*"
+    printf '[%s] %s [%s]: %s\n' \
+        "$(date +'%Y-%m-%d %H:%M:%S')" \
+        "$name" \
+        "$mypid" \
+        "$message" \
+        >> "$LOGFILE"
+}
+
 # return type: void
 # description:
 #   kill dim-screen.sh process
@@ -135,10 +150,8 @@ kill_dangling_dimmers () {
         dangling_dim_screen_pid=$(pid_tree_search "$LOCKERD_PID" dim-screen.sh)
         dimmer_comm=$(ps -p "$dangling_dim_screen_pid" -o command=)
         kill "$dangling_dim_screen_pid"
-        printf '[%s] %s: dangling "%s" PID: %s killed.\n' \
-            "$(date +"%F %T")" "${myname}" \
-            "${dimmer_comm##*/}" \
-            "$dangling_dim_screen_pid"
+        write_log \
+            "dangling ${dimmer_comm##*/} PID: $dangling_dim_screen_pid killed."
     fi
 }
 
@@ -169,30 +182,24 @@ start_xsecurelock () {
     xsecurelock_pid=$!
     sleep 1
     if ps -p "$xsecurelock_pid" -o cmd | grep -q "xsecurelock" ; then
-        printf '[%s] %s: launched %s PID: %s \n' \
-            "$(date +"%F %T")" \
-            "${myname}" \
-            "$(ps -p $xsecurelock_pid -o command=)" "$xsecurelock_pid"
+        write_log \
+            "launched xsecurelock PID: $xsecurelock_pid"
     else
-        printf '[%s] %s: xsecurelock start failed, trying again.\n' \
-            "$(date +"%F %T")" "${myname}"
+        write_log "xsecurelock start failed, trying again."
         start_xsecurelock
     fi
 }
 
 if pid_tree_search "$LOCKERD_PID" "xsecurelock" >/dev/null; then
     instance_pid=$(pid_tree_search "$LOCKERD_PID" "xsecurelock")
-    printf '[%s] %s: %s %s %s\n' \
-        "$(date +"%F %T")"  "${myname}" \
+    write_log \
         "xsecurelock instance" \
         "$instance_pid" \
         "already running, no new instance will be launched."
     exit
 else
-    printf '[%s] %s: no xsecurelock instance running.\n' \
-        "$(date +"%F %T")" "${myname}"
-    printf '[%s] %s: starting screenlocking.\n' \
-        "$(date +"%F %T")" "${myname}"
+    write_log "no xsecurelock instance running."
+    write_log "starting screenlocking."
     . "${HOME}/.cache/wal/colors.sh"
     export SAVER_OPT="$COLO_OPT"
     case "${COLO_OPT}" in
@@ -221,11 +228,7 @@ else
                 dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
                 kill -0 "$dimmer_pid" 2>/dev/null && \
                 kill "$dimmer_pid" 2>/dev/null && \
-                printf '[%s] %s: "%s" PID: %s killed.\n' \
-                    "$(date +"%F %T")" \
-                    "${myname}" \
-                    "${dimmer_comm##*/}" \
-                    "$dimmer_pid"
+                write_log "${dimmer_comm##*/} PID: $dimmer_pid killed."
             fi
         else
             if ! pid_tree_search "$mypid" dim-screen.sh >/dev/null; then
@@ -237,5 +240,4 @@ else
     done
     kill_dangling_dimmers
 fi
-printf '[%s] %s: screen unlocked.\n' \
-    "$(date +"%F %T")" "${myname}"
+write_log "screen unlocked."

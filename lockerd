@@ -21,7 +21,7 @@ logdir="${HOME}/.local/state/better-xsecurelock"
 if [ ! -f "$logdir" ]; then
     mkdir -p "$logdir"
 fi
-logfile="${logdir}/${myname}"
+LOGFILE="${logdir}/${myname}"
 
 # default 600 seconds
 # but config value will
@@ -68,11 +68,11 @@ while [ "$#" -gt 0 ]; do
             ;;
         logfile|-l)
             if [ -w "$2" ]; then
-                logfile="$2"
+                LOGFILE="$2"
                 opts="${1} ${2} ${opts}"
             else
                 printf '%s: %s\n' "${myname}" \
-                    "invalid logfile location '${2}', using default: ${logfile}"
+                    "invalid logfile location '${2}', using default: ${LOGFILE}"
             fi
             shift
             ;;
@@ -98,6 +98,7 @@ while [ "$#" -gt 0 ]; do
     esac
     shift
 done
+export CONF LOGFILE
 
 # Usage: write_log "message text"
 # Return: void
@@ -105,13 +106,13 @@ done
 #   Write message to log file
 write_log () {
     name="$myname"
-    message="$1"
+    message="$*"
     printf '[%s] %s [%s]: %s\n' \
         "$(date +'%Y-%m-%d %H:%M:%S')" \
         "$name" \
         "$mypid" \
         "$message" \
-        >> "$logfile"
+        >> "$LOGFILE"
 }
 
 # return type: boolean
@@ -193,8 +194,6 @@ getval(){
 #   Load values from the configuration file if it exists.
 load_config () {
     if [ -r "$CONF" ]; then
-        # . "$CONF"
-        export CONF
         [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config $CONF loaded"
         TIME_TO_LOCK=$(getval "TIME_TO_LOCK" "$CONF")
         [ -n "$TIME_TO_LOCK" ] && TIME=$TIME_TO_LOCK
@@ -268,7 +267,7 @@ sigHandler () {
 set_time
 
 xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
-    | cat >> "$logfile" &
+    | cat >> "$LOGFILE" &
 # capture pid
 # a simple $! is not enough thanks to using sed...
 xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
