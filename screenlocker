@@ -133,10 +133,10 @@ pid_tree_search () {
 write_log () {
     name="$myname"
     message="$*"
-    printf '[%s] %s [%s]: %s\n' \
+    printf '[%s] %12s %*s: %s\n' \
         "$(date +'%Y-%m-%d %H:%M:%S')" \
         "$name" \
-        "$mypid" \
+        "$PIDWIDTH" "[$mypid]" \
         "$message" \
         >> "$LOGFILE"
 }
