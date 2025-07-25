@@ -322,12 +322,12 @@ run_saver() {
             [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         esac
-        if kill -0 "$saver_pid"; then
+        if kill -0 "$saver_pid" 2>/dev/null; then
             # show screensaver bar
-            while kill -0 "$saver_pid"; do
+            while kill -0 "$saver_pid" 2>/dev/null; do
                 sleep 0.1
                 if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
-                    if ! kill -0 "$ssbar_pid"; then
+                    if ! kill -0 "$ssbar_pid" 2>/dev/null ; then
                         xterm \
                             -into "$XSCREENSAVER_WINDOW" \
                             -g "98x1" -fa "$bar_font" -fs 20 -b 0 \
@@ -351,9 +351,9 @@ run_saver() {
 #   and then calls the run_saver function.
 #   it is called on the USR1 signal
 sig_handler() {
-    kill $saver_pid
+    kill $saver_pid 2>/dev/null
     if [ -n "$ssbar_pid" ]; then
-        kill $ssbar_pid
+        kill $ssbar_pid 2>/dev/null
         ssbar_pid=""
     fi
     roll_saver
