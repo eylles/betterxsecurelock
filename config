@@ -1,0 +1,46 @@
+################
+# lockerd opts #
+################
+
+TIME_TO_LOCK=600
+
+######################
+# screen locker opts #
+######################
+
+auth_font="Noto Sans CJK JP"
+password_prompt="disco"
+show_hostname=0
+show_username=1
+burnin_mitigation=50
+burnin_mitigation_pixels=1
+
+##############
+# saver opts #
+##############
+
+saver_list_1="walldir,livewall"
+saver_list_2="currwall,snake"
+saver_list_3="matrix,pipes,snake"
+saver_list_4="walldir,livewall"
+saver_list_5="livewall"
+
+term_font="BlexMono Nerd Font Mono"
+
+wallpaper="${HOME}/.local/share/bg"
+
+live_walls="${HOME}/Videos/live-walls"
+
+wall_dir="${HOME}/Pictures/wallpapers"
+# list of possible delay values between images
+delays_list="0.5 1 1.5 2 2.5 3"
+# possible number of pipes list
+np_list="1 2 3 4"
+# possible snake looks list
+sl_l="fancy dots full ascii"
+
+##################
+# saver bar opts #
+##################
+
+FANCY_BAT_ICON=""
