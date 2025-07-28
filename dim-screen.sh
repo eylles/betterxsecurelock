@@ -17,6 +17,13 @@ is_num() {
     printf %f "$1" >/dev/null 2>&1
 }
 
+# return type: boolean
+# usage: is_int "value"
+# description: check if passed value is an integer number
+is_int() {
+    printf %d "$1" >/dev/null 2>&1
+}
+
 ## CONFIGURATION ##############################################################
 
 # type: int
@@ -190,7 +197,7 @@ while [ $# -gt 0 ]; do
             shift
         ;;
         -dim-step)
-            if is_num "$2"; then
+            if is_int "$2"; then
                 dim_step=$2
             fi
             shift
