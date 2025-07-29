@@ -62,6 +62,14 @@ dim_step=1
 
 ###############################################################################
 
+# type: int
+# def: initial_brightness=$(get_brightness)
+# description:
+#    The initial brightness value.
+#    Brightness will be restored to this value upon exit.
+# default: 255
+initial_brightness=255
+
 # return type: int
 # usage: get_brightness
 # description:
@@ -104,26 +112,18 @@ set_brightness() {
     fi
 }
 
-# type: int
-# def: current_brightness=$(get_brightness)
-# description:
-#    The current brightness value.
-#    Brightness will be restored to this value.
-# default: 255
-current_brightness=255
-
 # return type: void
 # usage: reset_brightness
 # description:
 #    will run set_brightness
-#    on the variable "$current_brightness"
+#    on the variable "$initial_brightness"
 reset_brightness() {
-    level="$(get_brightness)"
-    if [ "$level" -ne "$current_brightness" ]; then
+    current_brightness="$(get_brightness)"
+    if [ "$current_brightness" -ne "$initial_brightness" ]; then
         [ -n "$dbgOUT" ] && printf '%s %3d\n' \
             "resetting brightness, current level:" \
-            "$level"
-        set_brightness "$current_brightness"
+            "$current_brightness"
+        set_brightness "$initial_brightness"
     fi
 }
 
@@ -188,94 +188,98 @@ show_help () {
 # --- main --- #
 ################
 
-while [ $# -gt 0 ]; do
-    case $1 in
-        -step-time)
-            if is_num "$2"; then
-                fade_step_time=$2
-            fi
-            shift
-        ;;
-        -dim-step)
-            if is_int "$2"; then
-                dim_step=$2
-            fi
-            shift
-        ;;
-        -debug)
-            dbgOUT=1
-        ;;
-        -verbose)
-            VERB=1
-        ;;
-        "help"|"-help"|"--help"|"-h")
-            show_help
-            exit 0
-        ;;
-        *)
-            printf '%s: %s\n' "$myname" \
-                "unknown argument '${1}'"
-            show_usage
-            exit 1
-        ;;
+main () {
+    while [ $# -gt 0 ]; do
+        case $1 in
+            -step-time)
+                if is_num "$2"; then
+                    fade_step_time=$2
+                fi
+                shift
+            ;;
+            -dim-step)
+                if is_int "$2"; then
+                    dim_step=$2
+                fi
+                shift
+            ;;
+            -debug)
+                dbgOUT=1
+            ;;
+            -verbose)
+                VERB=1
+            ;;
+            "help"|"-help"|"--help"|"-h")
+                show_help
+                exit 0
+            ;;
+            *)
+                printf '%s: %s\n' "$myname" \
+                    "unknown argument '${1}'"
+                show_usage
+                exit 1
+            ;;
+        esac
+        shift
+    done
+    # ${fade_step_time:-0.1}
+    case $fade_step_time in
+        0) fade_step_time=0.1 ;;
+        0.0*) fade_step_time=0.1 ;;
     esac
-    shift
-done
-# ${fade_step_time:-0.1}
-case $fade_step_time in
-    0) fade_step_time=0.1 ;;
-    0.0*) fade_step_time=0.1 ;;
-esac
 
-case $dim_step in
-    0) dim_step=1 ;;
-esac
+    case $dim_step in
+        0) dim_step=1 ;;
+    esac
 
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf '[%s] %s: PID: %s dimming.\n' "$(date +"%F %T")" "${myname}" "$$"
-    printf '%20s: %s\n' "step time" "$fade_step_time"
-    printf '%20s: %d\n' "dim step" "$dim_step"
-fi
-
-trap 'sig_handler TERM' TERM
-trap 'sig_handler INT' INT
-trap 'sig_handler HUP' HUP
-trap 'sig_handler USR1' USR1
-trap 'sig_handler USR2' USR2
-trap 'reset_brightness' EXIT
-current_brightness=$(get_brightness)
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf '%20s: %d\n' "starting brightness" "$current_brightness"
-fi
-fade_brightness $min_brightness
-
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ] && [ -z "$NO_CONTINUE" ]; then
-    printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
-fi
-
-count=0
-# 5 cycles per second, 60 seconds per minute, 1 minute
-INTERVAL=$(( 5 * 60 ))
-while [ -z "$NO_CONTINUE" ]; do
-    # is the count of cycle iterations the same as the interval?
-    if [ "$count" = "$INTERVAL" ]; then
-        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-            printf "[%s] %s: waiting for signal.\n" \
-                "$(date +"%F %T")" "${myname}"
-        fi
-        # reset the count to 0
-        count=0
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf '[%s] %s: PID: %s dimming.\n' "$(date +"%F %T")" "${myname}" "$$"
+        printf '%20s: %s\n' "step time" "$fade_step_time"
+        printf '%20s: %d\n' "dim step" "$dim_step"
     fi
-    # ingrement the count
-    count=$(( count + 1 ))
-    # the duty cycle of this daemon is 5 iterations per second
-    # this is fast enough to feel responsive to signals, yet not hog
-    # resources, mainly cpu
-    sleep 0.2
-done
 
-if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-    printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
-fi
+    trap 'sig_handler TERM' TERM
+    trap 'sig_handler INT' INT
+    trap 'sig_handler HUP' HUP
+    trap 'sig_handler USR1' USR1
+    trap 'sig_handler USR2' USR2
+    trap 'reset_brightness' EXIT
+    initial_brightness=$(get_brightness)
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf '%20s: %d\n' "starting brightness" "$initial_brightness"
+    fi
+    fade_brightness $min_brightness
 
-reset_brightness
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ] && [ -z "$NO_CONTINUE" ]; then
+        printf "[%s] %s: waiting.\n" "$(date +"%F %T")" "${myname}"
+    fi
+
+    count=0
+    # 5 cycles per second, 60 seconds per minute, 1 minute
+    INTERVAL=$(( 5 * 60 ))
+    while [ -z "$NO_CONTINUE" ]; do
+        # is the count of cycle iterations the same as the interval?
+        if [ "$count" = "$INTERVAL" ]; then
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                printf "[%s] %s: waiting for signal.\n" \
+                    "$(date +"%F %T")" "${myname}"
+            fi
+            # reset the count to 0
+            count=0
+        fi
+        # ingrement the count
+        count=$(( count + 1 ))
+        # the duty cycle of this daemon is 5 iterations per second
+        # this is fast enough to feel responsive to signals, yet not hog
+        # resources, mainly cpu
+        sleep 0.2
+    done
+
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf "[%s] %s: termnating.\n" "$(date +"%F %T")" "${myname}"
+    fi
+
+    reset_brightness
+}
+
+main "$@"
