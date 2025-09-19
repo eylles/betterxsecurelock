@@ -7,6 +7,10 @@ myname="${0##*/}"
 
 NO_CONTINUE=""
 
+# type: string
+# description: usleep path if available
+has_usleep=""
+
 # Example notifier script -- lowers screen brightness, then waits to be killed
 # and restores previous brightness on exit.
 
@@ -152,7 +156,7 @@ fade_brightness() {
                 level=0
             fi
             set_brightness "$level"
-            sleep "$fade_step_time"
+            msleep "$fade_step_time"
         done
     fi
 }
@@ -182,6 +186,27 @@ show_help () {
     printf '\t%s\n' "step size, default 1."
     printf '  %s\n' "help, -help, --help, -h"
     printf '\t%s\n' "Show this help message."
+}
+
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
 }
 
 ################
@@ -227,15 +252,22 @@ main () {
         0) fade_step_time=0.1 ;;
         0.0*) fade_step_time=0.1 ;;
     esac
+    fade_step_time=$(awk -v s="$fade_step_time" 'BEGIN {printf "%d", s*1000}')
 
     case $dim_step in
         0) dim_step=1 ;;
     esac
 
+    has_usleep=$(command -v usleep)
+    [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
         printf '[%s] %s: PID: %s dimming.\n' "$(date +"%F %T")" "${myname}" "$$"
-        printf '%20s: %s\n' "step time" "$fade_step_time"
+        printf '%20s: %s\n' "step time" "$fade_step_time milliseconds"
         printf '%20s: %d\n' "dim step" "$dim_step"
+        if [ -n "$has_usleep" ]; then
+            printf '%20s: %s\n' "usleep" "$has_usleep"
+        fi
     fi
 
     trap 'sig_handler TERM' TERM
@@ -272,7 +304,7 @@ main () {
         # the duty cycle of this daemon is 5 iterations per second
         # this is fast enough to feel responsive to signals, yet not hog
         # resources, mainly cpu
-        sleep 0.2
+        msleep 200
     done
 
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then

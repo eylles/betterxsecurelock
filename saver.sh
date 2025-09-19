@@ -88,6 +88,10 @@ saver_pid=""
 #   used by auth watcher to kill the running screen saver bar.
 ssbar_pid=""
 
+# type: string
+# description: usleep path if available
+has_usleep=""
+
 #####################
 # --- functions --- #
 #####################
@@ -192,6 +196,27 @@ roll_saver() {
     esac
   fi
   [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
+}
+
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
 }
 
 # return type: void
@@ -325,7 +350,7 @@ run_saver() {
         if kill -0 "$saver_pid" 2>/dev/null; then
             # show screensaver bar
             while kill -0 "$saver_pid" 2>/dev/null; do
-                sleep 0.1
+                msleep 100
                 if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid" 2>/dev/null ; then
                         xterm \
@@ -386,5 +411,8 @@ done
 [ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 5: $saver_list_5"
 
 trap 'sig_handler' USR1
+
+has_usleep=$(command -v usleep)
+[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
 
 run_saver

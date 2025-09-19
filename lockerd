@@ -36,6 +36,10 @@ myname="${0##*/}"
 #   current running pid of the script
 mypid="$$"
 
+# type: string
+# description: usleep path if available
+has_usleep=""
+
 export LOCKERD_PID=$mypid
 
 DBGOUT=""
@@ -355,6 +359,30 @@ should_set_time () {
     return "$retval"
 }
 
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
+}
+
+has_usleep=$(command -v usleep)
+[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+
 write_log "waiting for xss-lock"
 # 5 cycles per second, 60 seconds per minute, 60 minutes
 INTERVAL=$(( 5 * 60 * 60 ))
@@ -379,7 +407,7 @@ while [ -z "$NO_CONTINUE" ]; do
     # the duty cycle of this daemon is 5 iterations per second
     # this is fast enough to feel responsive to signals, yet not hog
     # resources, mainly cpu
-    sleep 0.2
+    msleep 200
 done
 
 write_log "no continue received"

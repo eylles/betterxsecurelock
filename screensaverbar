@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# type: string
+# description: usleep path if available
+has_usleep=""
+
 _cols=$(tput cols)
 halfcol=$(( _cols / 2 ))
 
@@ -105,6 +109,29 @@ ontop () {
     xdotool windowraise "$hex_wid"
 }
 
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
+}
+
+has_usleep=$(command -v usleep)
+[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
 
 printf '\33[?25l'
 cont=1
@@ -122,7 +149,7 @@ while [ "$cont" = 1 ]; do
     printf '%*s' "$padding" " "
     printf ' %*s ' "$wbat" "$cbat"
     printf '\r'
-    sleep 0.5
+    msleep 500
 done
 
 trap 'exit_handler' EXIT

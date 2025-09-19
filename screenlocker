@@ -76,6 +76,10 @@ xsecurelock_pid=""
 #   pid of launched dimmer
 dimmer_pid=""
 
+# type: string
+# description: usleep path if available
+has_usleep=""
+
 #####################
 # --- functions --- #
 #####################
@@ -190,6 +194,27 @@ start_xsecurelock () {
     fi
 }
 
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
+}
+
 if pid_tree_search "$LOCKERD_PID" "xsecurelock" >/dev/null; then
     instance_pid=$(pid_tree_search "$LOCKERD_PID" "xsecurelock")
     write_log \
@@ -219,6 +244,9 @@ else
 
     start_xsecurelock
 
+    has_usleep=$(command -v usleep)
+    [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+
     kill_dangling_dimmers
     # auth watcher
     while pid_tree_search "$mypid" xsecurelock >/dev/null; do
@@ -236,7 +264,7 @@ else
                 dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen.sh")
             fi
         fi
-        sleep 0.1
+        msleep 100
     done
     kill_dangling_dimmers
 fi
