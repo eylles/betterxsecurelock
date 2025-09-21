@@ -63,6 +63,11 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
 #config file
 CONF="${CONFIG_DIR}/config"
 
+# XDG_SESSION_ID wrapper, so that it can be passed by command line if passing by
+# environment is not possible for whatever reason
+SessionID=""
+[ -n "$XDG_SESSION_ID" ] && SessionID="$XDG_SESSION_ID"
+
 show_usage () {
     printf '%s\n' "Usage: ${myname} [debug|-d] [-l LOGFILE] [-c CONFIG] | [-h]"
 }
@@ -113,6 +118,15 @@ while [ "$#" -gt 0 ]; do
             else
                 printf '%s: %s\n' "${myname}" \
                     "invalid config location '${2}', using default: ${CONF}"
+            fi
+            shift
+            ;;
+        session-id|-s)
+            if is_int "$2"; then
+                SessionID="$2"
+            else
+                printf '%s: %s\n' "${myname}" \
+                    "invalid value type."
             fi
             shift
             ;;
@@ -190,6 +204,11 @@ pid_tree_search () {
         return 1
     fi
 }
+
+if [ -z "$SessionID" ]; then
+    write_log "could not determine Session ID, exiting..."
+    exit 1
+fi
 
 started_string="started."
 if [ -n "$opts" ]; then
@@ -296,7 +315,7 @@ sigHandler () {
 
 set_time
 
-xss-lock -n dim-screen.sh -s "$XDG_SESSION_ID" -l -v -- screenlocker 2>&1 \
+xss-lock -n dim-screen.sh -s "$SessionID" -l -v -- screenlocker 2>&1 \
     | cat >> "$LOGFILE" &
 # capture pid
 # a simple $! is not enough thanks to using sed...
@@ -328,7 +347,7 @@ fetch_screensaver_vars () {
 find_suspenders_in_session () {
     ps ax -o'cgroup,user,cmd=CMD' \
         | grep -v "grep" \
-        | grep "0::/${XDG_SESSION_ID}" \
+        | grep "0::/${SessionID}" \
         | grep " $USER " \
         | grep "xdg-screensaver" \
         | grep -q "suspend"
