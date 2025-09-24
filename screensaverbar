@@ -103,10 +103,8 @@ exit_handler() {
     printf '\33[?25h'
 }
 
-hex_wid=$(printf '0x%08x\n' "$WINDOWID")
-
 ontop () {
-    xdotool windowraise "$hex_wid"
+    xdotool windowraise "$WINDOWID"
 }
 
 # usage: msleep int
