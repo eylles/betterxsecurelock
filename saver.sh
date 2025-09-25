@@ -227,6 +227,7 @@ msleep () {
 #   after that it will wait until the screen saver module
 #   is terminated.
 run_saver() {
+    xdotool windowactive "$XSCREENSAVER_WINDOW"
     roll_saver
     if [ "$DRYRUN" = 1 ]; then
         printf '%s\n' "${myname}: dry run mode, no saver started."
