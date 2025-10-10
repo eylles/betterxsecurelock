@@ -14,6 +14,7 @@ show_hostname=0
 show_username=1
 burnin_mitigation=50
 burnin_mitigation_pixels=1
+blank_timeout=600
 
 ##############
 # saver opts #

@@ -4,6 +4,7 @@
 # --- conf vars --- #
 #####################
 
+blank_timeout="600"
 auth_font="Noto Sans CJK JP"
 password_prompt="disco"
 show_hostname=0
@@ -179,7 +180,7 @@ start_xsecurelock () {
     export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1
     export XSECURELOCK_COMPOSITE_OBSCURER=0
     export XSECURELOCK_NO_COMPOSITE=1
-    export XSECURELOCK_BLANK_TIMEOUT=-1
+    export XSECURELOCK_BLANK_TIMEOUT="$blank_timeout"
     export XSECURELOCK_SAVER_STOP_ON_BLANK=1
     export XSECURELOCK_BLANK_DPMS_STATE=off
     xsecurelock 2>/dev/null &
