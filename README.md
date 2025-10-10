@@ -25,7 +25,9 @@ wrangled to work on my setup.
 ## how do i use this
 
 you don't, at least for now as this hasn't even had a v0.0.0 release, but if
-you insist be warned you'll have to use this almost like suckless software,
+you insist be warned i'm still in the process of implementing config options and
+what is available now in the sample config file is what is available, everything
+else you'll have to use this almost like suckless software,
 ie: modifying the source code directly.
 
 first and foremost satisfy the dependencies, you need to have the following
@@ -53,33 +55,31 @@ software installed:
 |python dbus| dbus-screenlock-freedesktop.py |
 |python xlib| dbus-screenlock-freedesktop.py |
 
-Once you have everyithing you need copy all the scripts to your path, for
-xdg-screensaver just use the bundled one, you need to have a pywal colorscheme
-as those colors will be used for the auth dialog and statusbar, i will
-eventually add proper themes support but for now do this. Then you have to
-edit saver.sh, edit `saver_list_1` to `saver_list_5` to set which screensavers
-will show randomly, then you need to edit the following variables:
-
-|var|default|
-|--|--|
-|term_font| "BlexMono Nerd Font Mono" |
-|wallpaper| "${HOME}/.local/share/bg" |
-|live_walls| "${HOME}/Videos/live-walls" |
-|wall_dir|"${HOME}/Pictures/wallpapers"|
+Once you have everything run make install and the makefile will copy all the
+scripts to your path, for xdg-screensaver just use the bundled one, you need to
+have a pywal colorscheme or edit the code to change the color definitions as
+those colors will be used for the auth dialog and statusbar, i will
+eventually add proper themes support just need to define a format.
+Then you have to copy the sample config file to
+´"${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock/config"´
+and edit the options to your liking, the config is outright sourced by every
+script like any other shell script file despite the lack of extension or
+shebang, it however has a vim modeline just to be explicit about the syntax
 
 now you just have to run lockerd for the screen locker daemon and
-dbus-screenlock-freedesktop.py if you want to allow programs that only speak dbus
-to inhibit the screensaver. add them to either your autostart programs or run them
-somewehre in your xinitrc or xsessionrc.
+dbus-screenlock-freedesktop.py if you want to allow programs that only speak
+dbus to inhibit the screensaver. add them to either your autostart programs or
+run them somewehre in your xinitrc or xsessionrc.
 
-If all goes well you should have a xsecurelock similar to the one on my screenshots.
+If all goes well you should have a xsecurelock similar to the one on my
+screenshots.
 
 
 TODO:
 - [ ] wrap and use the screensaver modules provided by xsecurelock
 - [ ] add a generic xterm screensaver module to run the terminal based savers
 - [ ] define a proper theme format and parse the config for it
-- [ ] add the ability to configure auth and savers options (fonts, timeout, etc)
+- [x] add the ability to configure auth and savers options (fonts, timeout, etc)
 - [ ] make the dbus-screenlock-freedesktop search window that inhibits the
       screensaver by caller name and pid instead of just using whatever is
       focused at the time

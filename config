@@ -44,3 +44,5 @@ sl_l="fancy dots full ascii"
 ##################
 
 FANCY_BAT_ICON=""
+
+# vim: ft=sh
