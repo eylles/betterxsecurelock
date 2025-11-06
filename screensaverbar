@@ -47,26 +47,41 @@ else
     bat5i=█
 fi
 
+batpath=""
+batlocation=/sys/class/power_supply
+usebat=""
+for batpath in "${batlocation}"/BAT*; do
+    if [ -r "$batpath"/capacity  ]; then
+        usebat="$batpath"
+        # yes we really only care about the first battery we can find
+        break
+    fi
+done
+
 getbat() {
-    bat_level=$(cat /sys/class/power_supply/BAT0/capacity)
-    case "$bat_level" in
-        [0-9]|1[0-9])
-            bat_icon="$bat1i"
-        ;;
-        2[0-9]|3[0-9])
-            bat_icon="$bat2i"
-        ;;
-        4[0-9]|5[0-9])
-            bat_icon="$bat3i"
-        ;;
-        6[0-9]|7[0-9])
-            bat_icon="$bat4i"
-        ;;
-        8[0-9]|9[0-9]|100)
-            bat_icon="$bat5i"
-        ;;
-    esac
-    printf '%s %3s' "$bat_icon" "${bat_level}%"
+    if [ -n "${usebat}" ]; then
+        bat_level=$(cat "${usebat}"/capacity)
+        case "$bat_level" in
+            [0-9]|1[0-9])
+                bat_icon="$bat1i"
+                ;;
+            2[0-9]|3[0-9])
+                bat_icon="$bat2i"
+                ;;
+            4[0-9]|5[0-9])
+                bat_icon="$bat3i"
+                ;;
+            6[0-9]|7[0-9])
+                bat_icon="$bat4i"
+                ;;
+            8[0-9]|9[0-9]|100)
+                bat_icon="$bat5i"
+                ;;
+        esac
+        printf '%s %3s' "$bat_icon" "${bat_level}%"
+    else
+        printf '      '
+    fi
 }
 
 wbat=6
