@@ -66,6 +66,26 @@ dim_step=1
 
 ###############################################################################
 
+# usage: scale_val value input_range target_range
+scale_val () {
+    value="$1"
+    range_input="$2"
+    range_target="$3"
+    scale_factor=$(( range_target / range_input ))
+    scaled_value=$(( value * scale_factor ))
+    printf '%s' $scaled_value
+}
+
+# usage: unscale_val value input_range target_range
+unscale_val () {
+    value="$1"
+    range_input="$2"
+    range_output="$3"
+    scale_factor=$(( range_input / range_output ))
+    scaled_value=$(( value / scale_factor ))
+    printf '%s' $scaled_value
+}
+
 # type: int
 # def: initial_brightness=$(get_brightness)
 # description:
