@@ -127,6 +127,21 @@ get_brightness() {
 }
 
 # return type: void
+# usage: set_scaled brightness_file value
+# description:
+#    will write the scaled brightness value onto the brightness_file
+set_scaled () {
+    brightness_file="$1"
+    brightness_path="${brightness_file%/*}"
+    brighntess_max_file="${brightness_path}/max_brightness"
+    max_val=$(head "$brighntess_max_file")
+    value="$2"
+    scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
+    printf '%s' "$scaled_value" > "$brightness_file"
+    [ -n "$dbgOUT" ] && printf '[%s: %6d]   ' "actual value" "$scaled_value"
+}
+
+# return type: void
 # usage: set_brightness num
 # description:
 #    will set the brightness to the passed number
@@ -139,10 +154,12 @@ set_brightness() {
         [ -n "$dbgOUT" ] && printf '%s %3d  ' "brightness level:" "$1"
         # set brightness for every screen we can find
         for screen_path in $sysfs_path; do
-            printf '%d' "$1" > "$screen_path"
-            scp_t="${screen_path%/*}"
-            scp_t="${scp_t##*/}"
-            [ -n "$dbgOUT" ] && printf '%s ' "$scp_t"
+            if [ -n "$dbgOUT" ]; then
+                scp_t="${screen_path%/*}"
+                scp_t="${scp_t##*/}"
+                printf '%s ' "$scp_t"
+            fi
+            set_scaled "$screen_path" "$1"
         done
         [ -n "$dbgOUT" ] && printf '\n'
     fi
