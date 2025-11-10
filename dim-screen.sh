@@ -30,7 +30,7 @@ is_int() {
 
 ## CONFIGURATION ##############################################################
 
-# type: int
+# type: int const
 # def: min_brightness=0
 # description:
 #    The lowest brightness value.
@@ -66,6 +66,17 @@ dim_step=1
 
 ###############################################################################
 
+# type: int const
+# def: 255
+# description:
+#    The maximum range for brightness.
+#    All brightness adjustments are done in the range between min_brightness
+#    and this value, meaning a range of 0 to 255 inclusive.
+#    The actual value written to each backlight device is scaled according to
+#    the device's max_brightness range.
+max_brightness=255
+
+# return type: int
 # usage: scale_val value input_range target_range
 scale_val () {
     value="$1"
@@ -76,6 +87,7 @@ scale_val () {
     printf '%s' $scaled_value
 }
 
+# return type: int
 # usage: unscale_val value input_range target_range
 unscale_val () {
     value="$1"
