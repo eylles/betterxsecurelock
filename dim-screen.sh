@@ -107,6 +107,20 @@ unscale_val () {
 initial_brightness=255
 
 # return type: int
+# usage: get_scaled brightness_file
+# description:
+#    will return the scaled brightness value from the given brightness_file
+get_scaled () {
+    brightness_file="$1"
+    brightness_path="${brightness_file%/*}"
+    brighntess_max_file="${brightness_path}/max_brightness"
+    max_val=$(head "$brighntess_max_file")
+    value=$(head "$brightness_file")
+    scaled_value=$(unscale_val "$value" "$max_val" "$max_brightness" )
+    printf '%d' "$scaled_value"
+}
+
+# return type: int
 # usage: get_brightness
 # description:
 #    will return the current brightness value
@@ -118,7 +132,7 @@ get_brightness() {
         c=0
         # get brightness just from the first screen we can find
         for screen_path in $sysfs_path; do
-            out=$(cat "$screen_path")
+            out=$(get_scaled "$screen_path")
             c=$(( c + 1 ))
             [ "$c" -gt 0 ] && break
         done
