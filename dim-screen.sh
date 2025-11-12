@@ -117,7 +117,11 @@ get_scaled () {
     brightness_path="${brightness_file%/*}"
     brighntess_max_file="${brightness_path}/max_brightness"
     max_val=$(head "$brighntess_max_file")
+    # remove float part if any
+    max_val="${max_val%.*}"
     value=$(head "$brightness_file")
+    # remove float part if any
+    value="${value%.*}"
     scaled_value=$(unscale_val "$value" "$max_val" "$max_brightness" )
     printf '%d' "$scaled_value"
 }
@@ -151,6 +155,8 @@ set_scaled () {
     brightness_path="${brightness_file%/*}"
     brighntess_max_file="${brightness_path}/max_brightness"
     max_val=$(head "$brighntess_max_file")
+    # remove float part if any
+    max_val="${max_val%.*}"
     value="$2"
     scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
     printf '%s' "$scaled_value" > "$brightness_file"
