@@ -364,7 +364,7 @@ main () {
             # reset the count to 0
             count=0
         fi
-        # ingrement the count
+        # increment the count
         count=$(( count + 1 ))
         # the duty cycle of this daemon is 5 iterations per second
         # this is fast enough to feel responsive to signals, yet not hog
