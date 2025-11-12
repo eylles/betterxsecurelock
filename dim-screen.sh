@@ -6,6 +6,8 @@
 myname="${0##*/}"
 
 NO_CONTINUE=""
+dbgOUT=""
+VERB=""
 
 # type: string
 # description: usleep path if available
