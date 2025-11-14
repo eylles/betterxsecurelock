@@ -39,12 +39,14 @@ if [ -n "$FANCY_BAT_ICON" ]; then
     bat3i=
     bat4i=
     bat5i=
+    charg=󱐋
 else
     bat1i=▁
     bat2i=▂
     bat3i=▄
     bat4i=▆
     bat5i=█
+    charg=C
 fi
 
 batpath=""
@@ -66,6 +68,7 @@ getbatlevel() {
 
 getbat() {
     percsymb="%"
+    c_icon=""
     bat_level=$(getbatlevel)
     case "$bat_level" in
         [0-9]|1[0-9])
@@ -89,7 +92,10 @@ getbat() {
             percsymb=""
             ;;
     esac
-    printf '%s %3s%s' "$bat_icon" "${bat_level}" "$percsymb"
+    if [ -n "$bat_level" ] && on_ac_power ; then
+        c_icon="$charg"
+    fi
+    printf '%s%s %3s%s' "$bat_icon" "$c_icon" "${bat_level}" "$percsymb"
 }
 
 wbat=6
