@@ -34,11 +34,11 @@ if [ -r "$CONF" ]; then
 fi
 
 if [ -n "$FANCY_BAT_ICON" ]; then
-    bat1i=
-    bat2i=
-    bat3i=
-    bat4i=
-    bat5i=
+    bat1i=󰂎
+    bat2i=󰁻
+    bat3i=󰁾
+    bat4i=󰂀
+    bat5i=󰁹
     charg=󱐋
 else
     bat1i=▁
