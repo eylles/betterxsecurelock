@@ -16,3 +16,7 @@ uninstall:
 	rm -vf ${DESTDIR}${PREFIX}/bin/screenlocker
 	rm -vf ${DESTDIR}${PREFIX}/bin/screensaverbar
 
+install_on_ac_power:
+	cp -vf on_ac_power  ${DESTDIR}${PREFIX}/bin/
+uninstall_on_ac_power:
+	rm -vf ${DESTDIR}${PREFIX}/bin/on_ac_power
