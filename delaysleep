@@ -1,0 +1,174 @@
+#!/bin/sh
+
+# type:        string
+# description
+#   script base name through the idiom "${0##*/}"
+myname="${0##*/}"
+
+# type:        int
+# description
+#   current running pid of the script
+mypid="$$"
+
+NO_CONTINUE=""
+
+# 1000 milliseconds
+one_second=1000
+
+# 4 cycles per second
+cycles=5
+
+# seconds to wait before suspend
+delay_suspend=900
+
+suspend_method="suspend"
+
+suspend_on_ac=0
+
+# one_second / cycles
+cycle_time=$(( one_second / cycles ))
+
+count=$(( delay_suspend * cycles ))
+
+# return type: boolean
+# usage: is_int "value"
+# description: check if passed value is a number
+is_int() {
+    if [ -n "$1" ]; then
+        printf %d "$1" >/dev/null 2>&1
+    else
+        return 1
+    fi
+}
+
+# thin awk wrapper that will prefer mawk over gawk
+u_awk () { awk "$@"; }
+if command -v mawk >/dev/null; then
+    u_awk () { mawk "$@"; }
+fi
+
+# usage: pid_tree_search PID NAME
+#      PID: the parent pid among whose ps tree we will search
+#     NAME: the name of the program whose pid we want
+# return type: integer
+# return error: standard error return value 1
+pid_tree_search () {
+    search_pid="$1"
+    search_name="$2"
+    word_length="${#search_name}"
+    rval=$(
+        pstree -Aps "${search_pid}" \
+        | u_awk \
+            -v name="$search_name" \
+            -v wlen="$word_length" \
+            '\
+                BEGIN { search=name"\\([[:digit:]]*\\)" } \
+                match( $0, search )\
+                {\
+                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
+                }\
+            '
+        )
+    if is_int "$rval"; then
+        printf '%s\n' "$rval"
+    else
+        return 1
+    fi
+}
+
+# Usage: write_log "message text"
+# Return: void
+# Description:
+#   Write message to log file
+write_log () {
+    name="$myname"
+    message="$*"
+    printf '[%s] %12s %*s: %s\n' \
+        "$(date +'%Y-%m-%d %H:%M:%S')" \
+        "$name" \
+        "$PIDWIDTH" "[$mypid]" \
+        "$message" \
+        >> "$LOGFILE"
+}
+
+# usage: msleep int
+# description: sleep for milliseconds
+# return type: void
+msleep () {
+    milisecs="$1"
+    if [ -n "$has_usleep" ]; then
+        microsecs="${milisecs}000"
+        case "$has_usleep" in
+            */usleep)
+                usleep "$microsecs"
+                ;;
+            */busybox)
+                busybox usleep "$microsecs"
+                ;;
+        esac
+    else
+        secs=$(awk -v s="${milisecs}" 'BEGIN {printf "%.3f", s/1000}')
+        sleep "$secs"
+    fi
+}
+
+do_suspend () {
+    systemctl "$suspend_method"
+}
+
+sig_handler() {
+    NO_CONTINUE=1
+}
+
+can_suspend() {
+    # |on_ac_power|suspend_on_ac|suspend|
+    # |     T     |     T       |   T   |
+    # |     T     |     F       |   F   |
+    # |     F     |     T       |   T   |
+    # |     F     |     F       |   T   |
+    if [ "$suspend_on_ac" -eq 0 ] && on_ac_power; then
+        return 0
+    else
+        if on_ac_power; then
+            return 1
+        else
+            return 0
+        fi
+    fi
+}
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        "help"|"-help"|"--help"|"-h")
+            # show_help
+            exit 0
+        ;;
+        *)
+            printf '%s: %s\n' "$myname" \
+                "unknown argument '${1}'"
+            # show_usage
+            exit 1
+        ;;
+    esac
+done
+
+trap 'sig_handler TERM' TERM
+trap 'sig_handler INT' INT
+trap 'sig_handler HUP' HUP
+trap 'sig_handler USR1' USR1
+trap 'sig_handler USR2' USR2
+
+c=0
+while [ -z "$NO_CONTINUE" ]; do
+    if [ "$c" = "$count" ]; then
+        c=0
+        if can_suspend; then
+            do_suspend
+        fi
+    fi
+    c=$(( c + 1))
+    if [ -n "$VERB" ]; then
+        printf '%s: %3d\n' "$myname" "$c"
+    fi
+    msleep "$cycle_time"
+done
