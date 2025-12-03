@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# Returns 0 (true) if on AC power
+#         1 (false) if not on AC power
+#         255 (false) if can't tell
+#
+# Example shell script:
+#     if on_ac_power; then
+#       echo We're on AC power
+#     else
+#       echo Can't say we're on AC power
+#     fi
+
+set -e
+
+# sysfs
+#
+# This algorithm is complicated by the possibility of multiple AC
+# adapters.  We scan the ac_adapter/power_supply directory looking for adapters
+# that have known states.  If any adapter is on-line, we return 0.  If
+# no adapters are on-line but one or more are off-line, we return 1.
+#
+OFF_LINE_P=no
+USB_IS_SINK=no
+USB_IS_SOURCE=no
+power_type="Mains"
+
+# USB-C sysfs documentation:
+# https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-typec
+#
+# We verify first if there are any USB-C devices in power sink mode to
+# check if we should consider USB as a power source.  If no source ports
+# are found assume they are sink ports.
+#
+if [ -d /sys/class/typec/ ]; then
+	for FN in /sys/class/typec/*; do
+		if test -d "${FN}" && test -r "${FN}/power_role"; then
+			power_role="$(cat "${FN}/power_role")"
+			if echo $power_role | grep -q '\[source\]'; then
+				USB_IS_SOURCE=yes
+			elif echo $power_role | grep -q '\[sink\]'; then
+				USB_IS_SINK=yes
+			fi
+		fi
+	done
+	# Add USB* power type if any USB ports are sink or no source is found
+	if [ "${USB_IS_SINK}" = "yes" ] || [ "${USB_IS_SOURCE}" = "no" ]; then
+		power_type="USB*"
+	fi
+fi
+
+
+if [ -d /sys/class/power_supply/ ]; then
+    for FN in /sys/class/power_supply/*; do
+	if test -d "${FN}" && test -r "${FN}/type"; then
+	    type="$(cat "${FN}/type")"
+	    case "${type}" in
+	    Mains|$power_type|BrickID|Wireless)
+		if [ -r "${FN}/online" ]; then
+		    online="$(cat "${FN}/online")"
+		    [ "$online" = 1 ] && exit 0
+		    [ "$online" = 0 ] && OFF_LINE_P=yes
+		fi;;
+	    esac
+	fi
+    done
+    [ "${OFF_LINE_P}" = "yes" ] && exit 1
+fi
+
+# PMU
+if [ -r /proc/pmu/info ]; then
+    exec awk </proc/pmu/info '
+	BEGIN { FS=":"; ret = 255 }
+	/^AC Power.*1$/ { ret = 0; exit }
+	/^AC Power.*0$/ { ac = 1 }
+        /^Battery.*/ {
+                if ($2 ~/0/ && ac == 1)
+                        ret = 0
+                else
+                        ret = 1
+                exit }
+	END { exit ret }
+    '
+fi
+
+# APM
+if [ -r /proc/apm ]; then
+    exec awk </proc/apm '
+	BEGIN { ret = 255 }
+	/^[0-9.a-zA-Z]* [0-9.]* 0x.. 0x../ {
+		if ($4 == "0x01") { ret = 0; exit }
+		else if ($4 == "0x00") { ret = 1; exit }
+	}
+	END { exit ret }
+    '
+fi
+
+# nothing is available
+exit 255
