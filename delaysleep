@@ -11,6 +11,8 @@ myname="${0##*/}"
 mypid="$$"
 
 NO_CONTINUE=""
+dbgOUT=""
+VERB=""
 
 # 1000 milliseconds
 one_second=1000
@@ -118,6 +120,10 @@ do_suspend () {
 
 sig_handler() {
     NO_CONTINUE=1
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf "\n[%s] %s: received signal %s, terminating.\n" \
+            "$(date +"%F %T")" "${myname}" "$1"
+    fi
 }
 
 can_suspend() {
@@ -127,11 +133,23 @@ can_suspend() {
     # |     F     |     T       |   T   |
     # |     F     |     F       |   T   |
     if [ "$suspend_on_ac" -eq 0 ] && on_ac_power; then
+        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+            echo "suspend on ac is: $suspend_on_ac"
+            echo "returning 0"
+        fi
         return 0
     else
         if on_ac_power; then
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                echo "on ac power is: 0"
+                echo "returning 1"
+            fi
             return 1
         else
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                echo "on ac power is: 1"
+                echo "returning 0"
+            fi
             return 0
         fi
     fi
@@ -139,6 +157,12 @@ can_suspend() {
 
 while [ $# -gt 0 ]; do
     case $1 in
+        -debug)
+            dbgOUT=1
+        ;;
+        -verbose)
+            VERB=1
+        ;;
         "help"|"-help"|"--help"|"-h")
             # show_help
             exit 0
@@ -150,6 +174,7 @@ while [ $# -gt 0 ]; do
             exit 1
         ;;
     esac
+    shift
 done
 
 trap 'sig_handler TERM' TERM
@@ -163,7 +188,14 @@ while [ -z "$NO_CONTINUE" ]; do
     if [ "$c" = "$count" ]; then
         c=0
         if can_suspend; then
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                echo "can suspend"
+            fi
             do_suspend
+        else
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                echo "cannot suspend"
+            fi
         fi
     fi
     c=$(( c + 1))
