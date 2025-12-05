@@ -32,6 +32,16 @@ cycle_time=$(( one_second / cycles ))
 
 count=$(( delay_suspend * cycles ))
 
+# type: int
+# value: 0
+# description: unix shell style boolean
+btrue=0
+# type: int
+# value: 1
+# description: unix shell style boolean
+bfalse=1
+
+
 # return type: boolean
 # usage: is_int "value"
 # description: check if passed value is a number
@@ -39,7 +49,7 @@ is_int() {
     if [ -n "$1" ]; then
         printf %d "$1" >/dev/null 2>&1
     else
-        return 1
+        return $bfalse
     fi
 }
 
@@ -74,7 +84,7 @@ pid_tree_search () {
     if is_int "$rval"; then
         printf '%s\n' "$rval"
     else
-        return 1
+        return $bfalse
     fi
 }
 
@@ -132,25 +142,25 @@ can_suspend() {
     # |     T     |     F       |   F   |
     # |     F     |     T       |   T   |
     # |     F     |     F       |   T   |
-    if [ "$suspend_on_ac" -eq 0 ] && on_ac_power; then
+    if [ "$suspend_on_ac" -eq "$btrue" ] && on_ac_power; then
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
             echo "suspend on ac is: $suspend_on_ac"
-            echo "returning 0"
+            echo "returning $btrue"
         fi
-        return 0
+        return $btrue
     else
         if on_ac_power; then
             if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-                echo "on ac power is: 0"
-                echo "returning 1"
+                echo "on ac power is: $btrue"
+                echo "returning $bfalse"
             fi
-            return 1
+            return $bfalse
         else
             if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-                echo "on ac power is: 1"
-                echo "returning 0"
+                echo "on ac power is: $bfalse"
+                echo "returning $btrue"
             fi
-            return 0
+            return $btrue
         fi
     fi
 }
@@ -165,13 +175,13 @@ while [ $# -gt 0 ]; do
         ;;
         "help"|"-help"|"--help"|"-h")
             # show_help
-            exit 0
+            exit $btrue
         ;;
         *)
             printf '%s: %s\n' "$myname" \
                 "unknown argument '${1}'"
             # show_usage
-            exit 1
+            exit $bfalse
         ;;
     esac
     shift
