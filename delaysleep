@@ -124,8 +124,16 @@ msleep () {
     fi
 }
 
+do_ctl () {
+    ctl=$(command -v systemctl)
+    if [ -z "$ctl" ]; then
+        ctl=$(command -v loginctl)
+    fi
+    $ctl "$@"
+}
+
 do_suspend () {
-    systemctl "$suspend_method"
+    do_ctl "$suspend_method"
 }
 
 sig_handler() {
