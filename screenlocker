@@ -77,6 +77,11 @@ xsecurelock_pid=""
 #   pid of launched dimmer
 dimmer_pid=""
 
+# type:        int
+# description:
+#   pid of delayed sleep
+delaysleep_pid=""
+
 # type: string
 # description: usleep path if available
 has_usleep=""
@@ -259,7 +264,15 @@ else
                 kill "$dimmer_pid" 2>/dev/null && \
                 write_log "${dimmer_comm##*/} PID: $dimmer_pid killed."
             fi
+            if kill -0 "$delaysleep_pid" 2>/dev/null; then
+                kill "$delaysleep_pid" 2>/dev/null && \
+                    write_log "delaysleep PID: $delaysleep_pid killed."
+            fi
         else
+            if ! pid_tree_search "$mypid" delaysleep >/dev/null; then
+                delaysleep &
+                delaysleep_pid=$(pid_tree_search "$LOCKERD_PID" "delaysleep")
+            fi
             if ! pid_tree_search "$mypid" dim-screen.sh >/dev/null; then
                 dim-screen.sh -step-time 0.2 &
                 dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen.sh")
