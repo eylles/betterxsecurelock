@@ -50,7 +50,8 @@ software installed:
 |pywal16:|for the theme|
 |[on_ac_power](https://salsa.debian.org/debian/powermgmt-base):|show the charge icon on the statusbar|
 |xdg-screensaver:|very necessary|
-|brightnessctl:|to dim the screen before lock and during screensaver|
+|brightnessctl:|to dim the screen before lock and during screensaver (optional)|
+|[systemact](https://github.com/eylles/systemact)|automatic system suspend some time after lock|
 |psmisc:|for pstree|
 |noto sans cjk jp:|font for the auth dialog|
 |python dbus| dbus-screenlock-freedesktop.py |
@@ -59,7 +60,8 @@ software installed:
 Once you have everything run make install and the makefile will copy all the
 scripts to your path, for xdg-screensaver just use the bundled one, for
 on_ac_power if you are not on a debian based distro this repo bundles the script
-into the tree just run make install_on_ac_power, you need to
+into the tree just run make install_on_ac_power, on debian and derivates just
+install the powermgmt-base package if not already installed, you need to
 have a pywal colorscheme or edit the code to change the color definitions as
 those colors will be used for the auth dialog and statusbar, i will
 eventually add proper themes support just need to define a format.
