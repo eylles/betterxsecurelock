@@ -1,5 +1,25 @@
 #!/bin/sh
 
+#####################
+# -- config vars -- #
+#####################
+
+# seconds to wait before suspend
+delay_suspend=900
+
+suspend_on_ac=0
+
+if [ -r "$CONF" ]; then
+    # yes, we just outright source the config file without caring...
+    # you can only override things written before this, so no arbitrary
+    # functions from config
+    . "$CONF"
+fi
+
+#####################
+# --- variables --- #
+#####################
+
 # type:        string
 # description
 #   script base name through the idiom "${0##*/}"
@@ -18,14 +38,7 @@ VERB=""
 one_second=1000
 
 # 4 cycles per second
-cycles=5
-
-# seconds to wait before suspend
-delay_suspend=900
-
-suspend_method="suspend"
-
-suspend_on_ac=0
+cycles=4
 
 # one_second / cycles
 cycle_time=$(( one_second / cycles ))
