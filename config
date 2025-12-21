@@ -46,4 +46,12 @@ sl_l="fancy dots full ascii"
 
 FANCY_BAT_ICON=""
 
+########################
+# delayed suspend opts #
+########################
+
+delay_suspend=900
+
+suspend_on_ac=0
+
 # vim: ft=sh
