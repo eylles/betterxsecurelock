@@ -270,7 +270,7 @@ else
             fi
         else
             if ! pid_tree_search "$mypid" delaysleep >/dev/null; then
-                delaysleep &
+                delaysleep -watch "$mypid" &
                 delaysleep_pid=$(pid_tree_search "$LOCKERD_PID" "delaysleep")
             fi
             if ! pid_tree_search "$mypid" dim-screen.sh >/dev/null; then

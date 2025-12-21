@@ -33,6 +33,7 @@ mypid="$$"
 NO_CONTINUE=""
 dbgOUT=""
 VERB=""
+watch_pid=""
 
 # 1000 milliseconds
 one_second=1000
@@ -82,7 +83,7 @@ pid_tree_search () {
     search_name="$2"
     word_length="${#search_name}"
     rval=$(
-        pstree -Aps "${search_pid}" \
+        pstree -Aps "${search_pid}" 2>/dev/null \
         | u_awk \
             -v name="$search_name" \
             -v wlen="$word_length" \
@@ -192,6 +193,12 @@ while [ $# -gt 0 ]; do
             # show_help
             exit $btrue
         ;;
+        -watch)
+            shift
+            if is_int "$1"; then
+                watch_pid=$1
+            fi
+        ;;
         *)
             printf '%s: %s\n' "$myname" \
                 "unknown argument '${1}'"
@@ -210,6 +217,18 @@ trap 'sig_handler USR2' USR2
 
 c=0
 while [ -z "$NO_CONTINUE" ]; do
+    if [ -n "$watch_pid" ]; then
+        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+            echo "watching pid $watch_pid"
+        fi
+        if ! pid_tree_search "$watch_pid" "$myname" >/dev/null ; then
+            c=0
+            NO_CONTINUE=1
+            if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+                echo "preparing to exit"
+            fi
+        fi
+    fi
     if [ "$c" = "$count" ]; then
         c=0
         if can_suspend; then
