@@ -7,7 +7,7 @@
 # seconds to wait before suspend
 delay_suspend=900
 
-suspend_on_ac=0
+suspend_on_ac=1
 
 if [ -r "$CONF" ]; then
     # yes, we just outright source the config file without caring...

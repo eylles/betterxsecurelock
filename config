@@ -52,6 +52,6 @@ FANCY_BAT_ICON=""
 
 delay_suspend=900
 
-suspend_on_ac=0
+suspend_on_ac=1
 
 # vim: ft=sh
