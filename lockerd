@@ -404,12 +404,16 @@ msleep () {
 
 has_usleep=$(command -v usleep)
 [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+if sleep 0.01 2>/dev/null; then
+    has_usleep=""
+fi
 
 write_log "waiting for xss-lock"
 # 5 cycles per second, 60 seconds per minute, 60 minutes
 INTERVAL=$(( 5 * 60 * 60 ))
 # 5 cycles per second, 20 seconds
 cyc=$(( 5 * 20 ))
+MiliSecs=$(shuf -i 200-250 -n 1)
 while [ -z "$NO_CONTINUE" ]; do
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
@@ -429,7 +433,7 @@ while [ -z "$NO_CONTINUE" ]; do
     # the duty cycle of this daemon is 5 iterations per second
     # this is fast enough to feel responsive to signals, yet not hog
     # resources, mainly cpu
-    msleep 200
+    msleep "$MiliSecs"
 done
 
 write_log "no continue received"
