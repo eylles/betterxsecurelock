@@ -176,6 +176,9 @@ main() {
                 esac
                 shift
             ;;
+            "g")
+                operation="get"
+                ;;
             "debug"|"-debug"|"--debug")
                 dbgOUT=1
                 ;;
@@ -199,6 +202,9 @@ main() {
         "dec")
             dec_brightness "$value"
             exit 0
+            ;;
+        "get")
+            get_brightness
             ;;
     esac
 }
