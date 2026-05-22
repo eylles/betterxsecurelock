@@ -153,11 +153,11 @@ write_log () {
 
 # return type: void
 # description:
-#   kill dim-screen.sh process
+#   kill dim-screen process
 #   that may be dangling from previous instances
 kill_dangling_dimmers () {
-    if pid_tree_search "$LOCKERD_PID" "dim-screen.sh" > /dev/null; then
-        dangling_dim_screen_pid=$(pid_tree_search "$LOCKERD_PID" dim-screen.sh)
+    if pid_tree_search "$LOCKERD_PID" "dim-screen" > /dev/null; then
+        dangling_dim_screen_pid=$(pid_tree_search "$LOCKERD_PID" dim-screen)
         dimmer_comm=$(ps -p "$dangling_dim_screen_pid" -o command=)
         kill "$dangling_dim_screen_pid"
         write_log \
@@ -181,7 +181,7 @@ start_xsecurelock () {
     export XSECURELOCK_AUTH_BACKGROUND_COLOR="$AuthBgColor"
     export XSECURELOCK_AUTH_FOREGROUND_COLOR="$AuthFgColor"
     # constants
-    export XSECURELOCK_SAVER="${HOME}/.local/bin/saver.sh"
+    export XSECURELOCK_SAVER="${HOME}/.local/bin/saver"
     export XSECURELOCK_SAVER_RESET_ON_AUTH_CLOSE=1
     export XSECURELOCK_COMPOSITE_OBSCURER=0
     export XSECURELOCK_NO_COMPOSITE=1
@@ -280,9 +280,9 @@ else
                 delaysleep -watch "$mypid" &
                 delaysleep_pid=$(pid_tree_search "$LOCKERD_PID" "delaysleep")
             fi
-            if ! pid_tree_search "$mypid" dim-screen.sh >/dev/null; then
-                dim-screen.sh -step-time 0.2 &
-                dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen.sh")
+            if ! pid_tree_search "$mypid" dim-screen >/dev/null; then
+                dim-screen -step-time 0.2 &
+                dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen")
             fi
         fi
         msleep 100

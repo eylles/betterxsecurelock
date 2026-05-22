@@ -318,7 +318,7 @@ sigHandler () {
 
 set_time
 
-xss-lock -n dim-screen.sh -s "$SessionID" -l -v -- screenlocker 2>&1 \
+xss-lock -n dim-screen -s "$SessionID" -l -v -- screenlocker 2>&1 \
     | cat >> "$LOGFILE" &
 # capture pid
 # a simple $! is not enough thanks to using sed...
