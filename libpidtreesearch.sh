@@ -1,10 +1,15 @@
 #!/bin/sh
 
+if [ -z "$HAS_BOOL" ]; then
+    . ./libbool.sh
+fi
+
 # usage: pid_tree_search PID NAME
-#      PID: the parent pid among whose ps tree we will search
-#     NAME: the name of the program whose pid we want
-# return type: integer
-# return error: standard error return value 1
+#          PID: the parent pid among whose ps tree we will search
+#         NAME: the name of the program whose pid we want
+#       return: pid of NAME program
+#  return type: stdout integer
+# return error: retval _false
 pid_tree_search () {
     search_pid="$1"
     search_name="$2"
@@ -25,6 +30,6 @@ pid_tree_search () {
     if is_int "$rval"; then
         printf '%s\n' "$rval"
     else
-        return 1
+        return "$_false"
     fi
 }

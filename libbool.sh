@@ -8,3 +8,5 @@ _true=0
 # Type: int
 # value: 1
 _false=1
+
+HAS_BOOL="$_true"
