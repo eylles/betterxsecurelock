@@ -29,3 +29,21 @@ is_int() {
         return "$_false"
     fi
 }
+
+# Usage: getval "KEY" file
+# description: read a KEY=VALUE file and retrieve the VALUE of the passed KEY
+# return type: stdout string
+getval(){
+    # Setting 'IFS' tells 'read' where to split the string.
+    while IFS='=' read -r key val; do
+        # Skip over lines containing comments.
+        # (Lines starting with '#').
+        [ "${key##\#*}" ] || continue
+
+        # '$key' stores the key.
+        # '$val' stores the value.
+        if [ "$key" = "$1" ]; then
+            printf '%s\n' "$val"
+        fi
+    done < "$2"
+}
