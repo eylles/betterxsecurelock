@@ -4,6 +4,10 @@ if [ -z "$HAS_BOOL" ]; then
     . ./libbool.sh
 fi
 
+if [ -z "$HAS_UTILS" ]; then
+    . ./libutils.sh
+fi
+
 # usage: pid_tree_search PID NAME
 #          PID: the parent pid among whose ps tree we will search
 #         NAME: the name of the program whose pid we want
