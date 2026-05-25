@@ -13,11 +13,11 @@ Linux)
   ;;
 NetBSD)
   pidmax=30000
-  pw=$(printf '%s\n' "$pidmax" | wc -c)
+  pw=${#pidmax}
   ;;
 OpenBSD|FreeBSD|*BSD)
   pidmax=99999
-  pw=$(printf '%s\n' "$pidmax" | wc -c)
+  pw=${#pidmax}
   ;;
 esac
 if [ -n "$pw" ]; then
