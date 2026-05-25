@@ -9,7 +9,8 @@ os_type=$(uname -s)
 pw=""
 case "${os_type}" in
 Linux)
-  pw=$(wc -c /proc/sys/kernel/pid_max | awk '{ print $1 }')
+  pidmax=$(cat /proc/sys/kernel/pid_max)
+  pw=${#pidmax}
   ;;
 NetBSD)
   pidmax=30000
