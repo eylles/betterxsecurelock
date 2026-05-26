@@ -5,44 +5,47 @@ BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 
 all: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 
-blight:
-	cp -f blight.sh $@
+build:
+	mkdir build
 
-delaysleep:
-	cp -f delaysleep.sh $@
+blight: build
+	cp -f blight.sh build/$@
 
-dim-screen:
-	cp -f dim-screen.sh $@
+delaysleep: build
+	cp -f delaysleep.sh build/$@
 
-lockerd:
-	cp -f lockerd.sh $@
+dim-screen: build
+	cp -f dim-screen.sh build/$@
 
-saver:
-	cp -f saver.sh $@
+lockerd: build
+	cp -f lockerd.sh build/$@
 
-screenlocker:
-	cp -f screenlocker.sh $@
+saver: build
+	cp -f saver.sh build/$@
 
-screensaverbar:
-	cp -f screensaverbar.sh $@
+screenlocker: build
+	cp -f screenlocker.sh build/$@
+
+screensaverbar: build
+	cp -f screensaverbar.sh build/$@
 
 clean:
-	rm -f blight
-	rm -f delaysleep
-	rm -f dim-screen
-	rm -f lockerd
-	rm -f saver
-	rm -f screenlocker
-	rm -f screensaverbar
+	rm -f build/blight
+	rm -f build/delaysleep
+	rm -f build/dim-screen
+	rm -f build/lockerd
+	rm -f build/saver
+	rm -f build/screenlocker
+	rm -f build/screensaverbar
 
 install:
 	mkdir -p $(BIN_LOC)
-	cp -vf dim-screen     $(BIN_LOC)/
-	cp -vf lockerd        $(BIN_LOC)/
-	cp -vf saver          $(BIN_LOC)/
-	cp -vf screenlocker   $(BIN_LOC)/
-	cp -vf screensaverbar $(BIN_LOC)/
-	cp -vf delaysleep     $(BIN_LOC)/
+	cp -vf build/dim-screen     $(BIN_LOC)/
+	cp -vf build/lockerd        $(BIN_LOC)/
+	cp -vf build/saver          $(BIN_LOC)/
+	cp -vf build/screenlocker   $(BIN_LOC)/
+	cp -vf build/screensaverbar $(BIN_LOC)/
+	cp -vf build/delaysleep     $(BIN_LOC)/
 
 uninstall:
 	rm -vf $(BIN_LOC)/dim-screen
