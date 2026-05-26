@@ -8,18 +8,18 @@ PIDWIDTH="6"
 os_type=$(uname -s)
 pw=""
 case "${os_type}" in
-Linux)
-  pidmax=$(cat /proc/sys/kernel/pid_max)
-  pw=${#pidmax}
-  ;;
-NetBSD)
-  pidmax=30000
-  pw=${#pidmax}
-  ;;
-OpenBSD|FreeBSD|*BSD)
-  pidmax=99999
-  pw=${#pidmax}
-  ;;
+    Linux)
+        pidmax=$(cat /proc/sys/kernel/pid_max)
+        pw=${#pidmax}
+        ;;
+    NetBSD)
+        pidmax=30000
+        pw=${#pidmax}
+        ;;
+    OpenBSD|FreeBSD|*BSD)
+        pidmax=99999
+        pw=${#pidmax}
+        ;;
 esac
 if [ -n "$pw" ]; then
     PIDWIDTH="$pw"
@@ -40,4 +40,3 @@ write_log () {
         "$message" \
         >> "$LOGFILE"
 }
-
