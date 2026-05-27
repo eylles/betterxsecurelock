@@ -1,9 +1,11 @@
 .POSIX:
 PREFIX = ${HOME}/.local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
-.PHONY: install uninstall all clean
+.PHONY: install uninstall all bin clean
 
-all: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
+all: bin
+
+bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 
 build:
 	mkdir build
