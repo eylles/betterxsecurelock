@@ -1,11 +1,29 @@
 .POSIX:
 PREFIX = ${HOME}/.local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
-.PHONY: install uninstall all bin clean
+LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
+.PHONY: install uninstall all bin lib clean
 
-all: bin
+all: bin lib
 
 bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
+
+lib: libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh
+
+libbool.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" libbool.sh > build/$@
+
+libutils.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" libutils.sh > build/$@
+
+libpidtreesearch.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" libpidtreesearch.sh > build/$@
+
+libmsleep.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" libmsleep.sh > build/$@
+
+liblog.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" liblog.sh > build/$@
 
 build:
 	mkdir build
