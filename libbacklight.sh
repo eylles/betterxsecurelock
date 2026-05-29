@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -z "$HAS_UTILS" ]; then
+    . ./libutils.sh
+fi
+
 # Making this work with external displays requires the usage of the
 # ddcci-driver-linux kernel module
 sysfs_path="/sys/class/backlight/*/brightness"
