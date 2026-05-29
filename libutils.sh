@@ -90,3 +90,6 @@ u_awk () { awk "$@"; }
 if command -v mawk >/dev/null; then
     u_awk () { mawk "$@"; }
 fi
+
+dbgOUT=""
+NO_CONTINUE=""

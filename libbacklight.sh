@@ -20,8 +20,6 @@ min_brightness=0
 #    the device's max_brightness range.
 max_brightness=255
 
-dbgOUT=""
-
 # return type: int
 # usage: scale_val value input_range target_range
 scale_val () {
