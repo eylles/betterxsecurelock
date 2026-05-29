@@ -1,7 +1,1 @@
-blight
-delaysleep
-dim-screen
-lockerd
-saver
-screenlocker
-screensaverbar
+build/*
