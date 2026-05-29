@@ -62,6 +62,7 @@ clean:
 	rm -f build/libpidtreesearch.sh
 	rm -f build/libmsleep.sh
 	rm -f build/liblog.sh
+	rm -rf build
 
 install:
 	mkdir -p $(BIN_LOC)
