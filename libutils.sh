@@ -83,3 +83,10 @@ split_str() {
     # Re-enable globbing.
     set +f
 }
+
+# thin awk wrapper that will prefer mawk over the system's default awk
+# implementation
+u_awk () { awk "$@"; }
+if command -v mawk >/dev/null; then
+    u_awk () { mawk "$@"; }
+fi
