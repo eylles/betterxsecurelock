@@ -8,7 +8,8 @@ all: bin lib
 
 bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 
-lib: libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh
+lib: libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
+	libbacklight.sh
 
 libbool.sh: build
 	sed "s| ./| $(LIB_LOC)/|g" libbool.sh > build/$@
@@ -24,6 +25,9 @@ libmsleep.sh: build
 
 liblog.sh: build
 	sed "s| ./| $(LIB_LOC)/|g" liblog.sh > build/$@
+
+libbacklight.sh: build
+	sed "s| ./| $(LIB_LOC)/|g" libbacklight.sh > build/$@
 
 build:
 	mkdir build
@@ -62,6 +66,7 @@ clean:
 	rm -f build/libpidtreesearch.sh
 	rm -f build/libmsleep.sh
 	rm -f build/liblog.sh
+	rm -f build/libbacklight.sh
 	rm -rf build
 
 install:
@@ -77,6 +82,7 @@ install:
 	cp -vf build/libpidtreesearch.sh $(LIB_LOC)/
 	cp -vf build/libmsleep.sh        $(LIB_LOC)/
 	cp -vf build/liblog.sh           $(LIB_LOC)/
+	cp -vf build/libbacklight.sh     $(LIB_LOC)/
 
 uninstall:
 	rm -vf $(BIN_LOC)/dim-screen
@@ -90,6 +96,7 @@ uninstall:
 	rm -vf $(LIB_LOC)/libpidtreesearch.sh
 	rm -vf $(LIB_LOC)/libmsleep.sh
 	rm -vf $(LIB_LOC)/liblog.sh
+	rm -vf $(LIB_LOC)/libbacklight.sh
 
 install_on_ac_power:
 	cp -vf on_ac_power  $(BIN_LOC)/
