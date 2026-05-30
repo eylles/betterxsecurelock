@@ -33,25 +33,32 @@ build:
 	mkdir build
 
 blight: build
-	cp -f blight.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" blight.sh > build/$@
+	chmod 755 build/$@
 
 delaysleep: build
-	cp -f delaysleep.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" delaysleep.sh > build/$@
+	chmod 755 build/$@
 
 dim-screen: build
-	cp -f dim-screen.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" dim-screen.sh > build/$@
+	chmod 755 build/$@
 
 lockerd: build
-	cp -f lockerd.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" lockerd.sh > build/$@
+	chmod 755 build/$@
 
 saver: build
-	cp -f saver.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" saver.sh > build/$@
+	chmod 755 build/$@
 
 screenlocker: build
-	cp -f screenlocker.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" screenlocker.sh > build/$@
+	chmod 755 build/$@
 
 screensaverbar: build
-	cp -f screensaverbar.sh build/$@
+	sed "s| ./| $(LIB_LOC)/|g" screensaverbar.sh > build/$@
+	chmod 755 build/$@
 
 clean:
 	rm -f build/blight
