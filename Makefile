@@ -78,12 +78,14 @@ clean:
 
 install:
 	mkdir -p $(BIN_LOC)
+	cp -vf build/blight              $(BIN_LOC)/
 	cp -vf build/dim-screen          $(BIN_LOC)/
 	cp -vf build/lockerd             $(BIN_LOC)/
 	cp -vf build/saver               $(BIN_LOC)/
 	cp -vf build/screenlocker        $(BIN_LOC)/
 	cp -vf build/screensaverbar      $(BIN_LOC)/
 	cp -vf build/delaysleep          $(BIN_LOC)/
+	mkdir -p $(LIB_LOC)
 	cp -vf build/libbool.sh          $(LIB_LOC)/
 	cp -vf build/libutils.sh         $(LIB_LOC)/
 	cp -vf build/libpidtreesearch.sh $(LIB_LOC)/
@@ -92,6 +94,7 @@ install:
 	cp -vf build/libbacklight.sh     $(LIB_LOC)/
 
 uninstall:
+	rm -vf $(BIN_LOC)/blight
 	rm -vf $(BIN_LOC)/dim-screen
 	rm -vf $(BIN_LOC)/lockerd
 	rm -vf $(BIN_LOC)/saver
