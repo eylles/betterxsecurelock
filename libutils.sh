@@ -84,10 +84,14 @@ split_str() {
     set +f
 }
 
+is_comm() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 # thin awk wrapper that will prefer mawk over the system's default awk
 # implementation
 u_awk () {
-    if command -v mawk >/dev/null; then
+    if is_comm mawk; then
         mawk "$@"
     else
         awk "$@"
