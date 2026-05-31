@@ -86,10 +86,13 @@ split_str() {
 
 # thin awk wrapper that will prefer mawk over the system's default awk
 # implementation
-u_awk () { awk "$@"; }
-if command -v mawk >/dev/null; then
-    u_awk () { mawk "$@"; }
-fi
+u_awk () {
+    if command -v mawk >/dev/null; then
+        mawk "$@"
+    else
+        awk "$@"
+    fi
+}
 
 dbgOUT=""
 NO_CONTINUE=""
