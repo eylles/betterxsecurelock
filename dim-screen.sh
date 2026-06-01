@@ -1,64 +1,17 @@
 #!/bin/sh
 
+. ./libbacklight.sh
+
+. ./libmsleep.sh
+
 # type:        string
 # description
 #   script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
-NO_CONTINUE=""
-dbgOUT=""
 VERB=""
 
-# type: string
-# description: usleep path if available
-has_usleep=""
-
-# Example notifier script -- lowers screen brightness, then waits to be killed
-# and restores previous brightness on exit.
-
-# return type: boolean
-# usage: is_num "value"
-# description: check if passed value is a number
-is_num() {
-    printf %f "$1" >/dev/null 2>&1
-}
-
-# return type: boolean
-# usage: is_int "value"
-# description: check if passed value is an integer number
-is_int() {
-    printf %d "$1" >/dev/null 2>&1
-}
-
 ## CONFIGURATION ##############################################################
-
-# type: int const
-# def: min_brightness=0
-# description:
-#    The lowest brightness value.
-#    Brightness will be lowered to this value.
-min_brightness=0
-
-# If your video driver works with xbacklight, set -time and -steps for fading
-# to $min_brightness here. Setting steps to 1 disables fading.
-# fade_time=200
-# fade_steps=10
-
-# If you have a driver without RandR backlight property (e.g. radeon), set this
-# to use the sysfs interface and create a .conf file in /etc/tmpfiles.d/
-# containing the following line to make the sysfs file writable for group
-# "users":
-#
-#     m /sys/class/backlight/acpi_video0/brightness 0664 root users - -
-#
-# Another option is to just rely on the udev rules from the brightnessctl
-# package, in distros like debian the udev rules are a separate package so you
-# can install them and just ensure your user is on the video group
-#
-# Making this work with external displays requires the usage of the
-# ddcci-driver-linux kernel module
-#
-sysfs_path="/sys/class/backlight/*/brightness"
 
 # Time to sleep (in seconds) between increments. If unset or
 # empty, fading is disabled.
@@ -68,38 +21,6 @@ dim_step=1
 
 ###############################################################################
 
-# type: int const
-# def: 255
-# description:
-#    The maximum range for brightness.
-#    All brightness adjustments are done in the range between min_brightness
-#    and this value, meaning a range of 0 to 255 inclusive.
-#    The actual value written to each backlight device is scaled according to
-#    the device's max_brightness range.
-max_brightness=255
-
-# return type: int
-# usage: scale_val value input_range target_range
-scale_val () {
-    value="$1"
-    range_input="$2"
-    range_target="$3"
-    scale_factor=$(( range_target / range_input ))
-    scaled_value=$(( value * scale_factor ))
-    printf '%s' $scaled_value
-}
-
-# return type: int
-# usage: unscale_val value input_range target_range
-unscale_val () {
-    value="$1"
-    range_input="$2"
-    range_output="$3"
-    scale_factor=$(( range_input / range_output ))
-    scaled_value=$(( value / scale_factor ))
-    printf '%s' $scaled_value
-}
-
 # type: int
 # def: initial_brightness=$(get_brightness)
 # description:
@@ -107,85 +28,6 @@ unscale_val () {
 #    Brightness will be restored to this value upon exit.
 # default: 255
 initial_brightness=255
-
-# return type: int
-# usage: get_scaled brightness_file
-# description:
-#    will return the scaled brightness value from the given brightness_file
-get_scaled () {
-    brightness_file="$1"
-    brightness_path="${brightness_file%/*}"
-    brighntess_max_file="${brightness_path}/max_brightness"
-    max_val=$(head "$brighntess_max_file")
-    # remove float part if any
-    max_val="${max_val%.*}"
-    value=$(head "$brightness_file")
-    # remove float part if any
-    value="${value%.*}"
-    scaled_value=$(unscale_val "$value" "$max_val" "$max_brightness" )
-    printf '%d' "$scaled_value"
-}
-
-# return type: int
-# usage: get_brightness
-# description:
-#    will return the current brightness value
-#    brightness values are from 0 to 255
-get_brightness() {
-    if [ -z "$sysfs_path" ]; then
-        brightnessctl g
-    else
-        c=0
-        # get brightness just from the first screen we can find
-        for screen_path in $sysfs_path; do
-            out=$(get_scaled "$screen_path")
-            c=$(( c + 1 ))
-            [ "$c" -gt 0 ] && break
-        done
-        printf '%d\n' "$out"
-    fi
-}
-
-# return type: void
-# usage: set_scaled brightness_file value
-# description:
-#    will write the scaled brightness value onto the brightness_file
-set_scaled () {
-    brightness_file="$1"
-    brightness_path="${brightness_file%/*}"
-    brighntess_max_file="${brightness_path}/max_brightness"
-    max_val=$(head "$brighntess_max_file")
-    # remove float part if any
-    max_val="${max_val%.*}"
-    value="$2"
-    scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
-    printf '%s' "$scaled_value" > "$brightness_file"
-    [ -n "$dbgOUT" ] && printf '[%s: %6d]   ' "actual value" "$scaled_value"
-}
-
-# return type: void
-# usage: set_brightness num
-# description:
-#    will set the brightness to the passed number
-#    brightness values are from 0 to 255
-set_brightness() {
-    if [ -z "$sysfs_path" ]; then
-        [ -n "$dbgOUT" ] && printf '%s %3d\n' "brightness level:" "$1"
-        brightnessctl s "$1" >/dev/null
-    else
-        [ -n "$dbgOUT" ] && printf '%s %3d  ' "brightness level:" "$1"
-        # set brightness for every screen we can find
-        for screen_path in $sysfs_path; do
-            if [ -n "$dbgOUT" ]; then
-                scp_t="${screen_path%/*}"
-                scp_t="${scp_t##*/}"
-                printf '%s ' "$scp_t"
-            fi
-            set_scaled "$screen_path" "$1"
-        done
-        [ -n "$dbgOUT" ] && printf '\n'
-    fi
-}
 
 # return type: void
 # usage: reset_brightness
@@ -259,34 +101,6 @@ show_help () {
     printf '\t%s\n' "Show this help message."
 }
 
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
-}
-
 ################
 # --- main --- #
 ################
@@ -336,16 +150,10 @@ main () {
         0) dim_step=1 ;;
     esac
 
-    has_usleep=$(command -v usleep)
-    [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
-
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
         printf '[%s] %s: PID: %s dimming.\n' "$(date +"%F %T")" "${myname}" "$$"
         printf '%20s: %s\n' "step time" "$fade_step_time milliseconds"
         printf '%20s: %d\n' "dim step" "$dim_step"
-        if [ -n "$has_usleep" ]; then
-            printf '%20s: %s\n' "usleep" "$has_usleep"
-        fi
     fi
 
     trap 'sig_handler TERM' TERM

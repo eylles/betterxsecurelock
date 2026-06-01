@@ -1,30 +1,6 @@
 #!/bin/sh
 
-# type: int
-# description
-#   digit width of the process id number
-# default: 6
-PIDWIDTH="6"
-# use per OS pid length
-os_type=$(uname -s)
-pw=""
-case "${os_type}" in
-Linux)
-  pw=$(wc -c /proc/sys/kernel/pid_max | awk '{ print $1 }')
-  ;;
-NetBSD)
-  pidmax=30000
-  pw=$(printf '%s\n' "$pidmax" | wc -c)
-  ;;
-OpenBSD|FreeBSD|*BSD)
-  pidmax=99999
-  pw=$(printf '%s\n' "$pidmax" | wc -c)
-  ;;
-esac
-if [ -n "$pw" ]; then
-    PIDWIDTH="$pw"
-fi
-PIDWIDTH="$(( PIDWIDTH + 2 ))"
+. ./libutils.sh
 
 # type:        string
 # description
@@ -36,16 +12,11 @@ myname="${0##*/}"
 #   current running pid of the script
 mypid="$$"
 
-# type: string
-# description: usleep path if available
-has_usleep=""
-
 export LOCKERD_PID=$mypid
 
 DBGOUT=""
 TIME_TO_LOCK=""
 xsslock_pid=""
-NO_CONTINUE=""
 
 logdir="${HOME}/.local/state/better-xsecurelock"
 if [ ! -f "$logdir" ]; then
@@ -147,66 +118,7 @@ while [ "$#" -gt 0 ]; do
 done
 export CONF LOGFILE PIDWIDTH
 
-# Usage: write_log "message text"
-# Return: void
-# Description:
-#   Write message to log file
-write_log () {
-    name="$myname"
-    message="$*"
-    printf '[%s] %12s %*s: %s\n' \
-        "$(date +'%Y-%m-%d %H:%M:%S')" \
-        "$name" \
-        "$PIDWIDTH" "[$mypid]" \
-        "$message" \
-        >> "$LOGFILE"
-}
-
-# return type: boolean
-# usage: is_int "value"
-# description: check if passed value is a number
-is_int() {
-    if [ -n "$1" ]; then
-        printf %d "$1" >/dev/null 2>&1
-    else
-        return 1
-    fi
-}
-
-# thin awk wrapper that will prefer mawk over gawk
-u_awk () { awk "$@"; }
-if command -v mawk >/dev/null; then
-    u_awk () { mawk "$@"; }
-fi
-
-# usage: pid_tree_search PID NAME
-#      PID: the parent pid among whose ps tree we will search
-#     NAME: the name of the program whose pid we want
-# return type: integer
-# return error: standard error return value 1
-pid_tree_search () {
-    search_pid="$1"
-    search_name="$2"
-    word_length="${#search_name}"
-    rval=$(
-        pstree -Aps "${search_pid}" \
-        | u_awk \
-            -v name="$search_name" \
-            -v wlen="$word_length" \
-            '\
-                BEGIN { search=name"\\([[:digit:]]*\\)" } \
-                match( $0, search )\
-                {\
-                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
-                }\
-            '
-        )
-    if is_int "$rval"; then
-        printf '%s\n' "$rval"
-    else
-        return 1
-    fi
-}
+. ./liblog.sh
 
 if [ -z "$SessionID" ]; then
     write_log "could not determine Session ID, exiting..."
@@ -380,40 +292,6 @@ should_set_time () {
     fi
     return "$retval"
 }
-
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
-}
-
-has_usleep=$(command -v usleep)
-[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
-if sleep 0.01 2>/dev/null; then
-    has_usleep=""
-fi
 
 write_log "waiting for xss-lock"
 # 5 cycles per second, 60 seconds per minute, 60 minutes

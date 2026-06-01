@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# type: string
+# description: usleep path if available
 has_usleep=""
 has_usleep=$(command -v usleep)
 [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)

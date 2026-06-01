@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# type: string
-# description: usleep path if available
-has_usleep=""
-
 _cols=$(tput cols)
 halfcol=$(( _cols / 2 ))
 
@@ -136,36 +132,7 @@ ontop () {
     xdotool windowraise "$WINDOWID"
 }
 
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
-}
-
-has_usleep=$(command -v usleep)
-[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+. ./libmsleep.sh
 
 printf '\33[?25l'
 cont=1

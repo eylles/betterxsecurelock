@@ -88,97 +88,13 @@ saver_pid=""
 #   used by auth watcher to kill the running screen saver bar.
 ssbar_pid=""
 
-# type: string
-# description: usleep path if available
-has_usleep=""
-
 #####################
 # --- functions --- #
 #####################
 
-# return type: boolean
-# usage: is_int "value"
-# description: check if passed value is a number
-is_int() {
-    if [ -n "$1" ]; then
-        printf %d "$1" >/dev/null 2>&1
-    else
-        return 1
-    fi
-}
-
-# thin awk wrapper that will prefer mawk over gawk
-u_awk () { awk "$@"; }
-if command -v mawk >/dev/null; then
-    u_awk () { mawk "$@"; }
-fi
-
-# usage: pid_tree_search PID NAME
-#      PID: the parent pid among whose ps tree we will search
-#     NAME: the name of the program whose pid we want
-# return type: integer
-# return error: standard error return value 1
-pid_tree_search () {
-    search_pid="$1"
-    search_name="$2"
-    word_length="${#search_name}"
-    rval=$(
-        pstree -Aps "${search_pid}" \
-        | u_awk \
-            -v name="$search_name" \
-            -v wlen="$word_length" \
-            '\
-                BEGIN { search=name"\\([[:digit:]]*\\)" } \
-                match( $0, search )\
-                {\
-                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
-                }\
-            '
-        )
-    if is_int "$rval"; then
-        printf '%s\n' "$rval"
-    else
-        return 1
-    fi
-}
-
-# return type: string
-# usage: split_str "string" "pattern"
-# description:
-#   splits string on pattern returns
-#   a newline separated list.
-# taken from:
-#   https://github.com/dylanaraps/pure-sh-bible#split-a-string-on-a-delimiter
-split_str() {
-    # Disable globbing.
-    # This ensures that the word-splitting is safe.
-    set -f
-
-    # Store the current value of 'IFS' so we
-    # can restore it later.
-    old_ifs=$IFS
-
-    # Change the field separator to what we're
-    # splitting on.
-    IFS=$2
-
-    # Create an argument list splitting at each
-    # occurrence of '$2'.
-    #
-    # This is safe to disable as it just warns against
-    # word-splitting which is the behavior we expect.
-    # shellcheck disable=2086
-    set -- $1
-
-    # Print each list value on its own line.
-    printf '%s\n' "$@"
-
-    # Restore the value of 'IFS'.
-    IFS=$old_ifs
-
-    # Re-enable globbing.
-    set +f
-}
+. ./libutils.sh
+. ./libpidtreesearch.sh
+. ./libmsleep.sh
 
 roll_saver() {
   [ "$DBGOUT" = 1 ] && printf '%s\n' "SAVER_OPT: $SAVER_OPT"
@@ -196,34 +112,6 @@ roll_saver() {
     esac
   fi
   [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
-}
-
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
 }
 
 # return type: void
@@ -419,8 +307,5 @@ done
 [ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 5: $saver_list_5"
 
 trap 'sig_handler' USR1
-
-has_usleep=$(command -v usleep)
-[ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
 
 run_saver

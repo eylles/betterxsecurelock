@@ -82,74 +82,14 @@ dimmer_pid=""
 #   pid of delayed sleep
 delaysleep_pid=""
 
-# type: string
-# description: usleep path if available
-has_usleep=""
-
 #####################
 # --- functions --- #
 #####################
 
-# return type: boolean
-# usage: is_int "value"
-# description: check if passed value is a number
-is_int() {
-    if [ -n "$1" ]; then
-        printf %d "$1" >/dev/null 2>&1
-    else
-        return 1
-    fi
-}
-
-# thin awk wrapper that will prefer mawk over gawk
-u_awk () { awk "$@"; }
-if command -v mawk >/dev/null; then
-    u_awk () { mawk "$@"; }
-fi
-
-# usage: pid_tree_search PID NAME
-#      PID: the parent pid among whose ps tree we will search
-#     NAME: the name of the program whose pid we want
-# return type: integer
-# return error: standard error return value 1
-pid_tree_search () {
-    search_pid="$1"
-    search_name="$2"
-    word_length="${#search_name}"
-    rval=$(
-        pstree -Aps "${search_pid}" \
-        | u_awk \
-            -v name="$search_name" \
-            -v wlen="$word_length" \
-            '\
-                BEGIN { search=name"\\([[:digit:]]*\\)" } \
-                match( $0, search )\
-                {\
-                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
-                }\
-            '
-        )
-    if is_int "$rval"; then
-        printf '%s\n' "$rval"
-    else
-        return 1
-    fi
-}
-
-# Usage: write_log "message text"
-# Return: void
-# Description:
-#   Write message to log file
-write_log () {
-    name="$myname"
-    message="$*"
-    printf '[%s] %12s %*s: %s\n' \
-        "$(date +'%Y-%m-%d %H:%M:%S')" \
-        "$name" \
-        "$PIDWIDTH" "[$mypid]" \
-        "$message" \
-        >> "$LOGFILE"
-}
+. ./libutils.sh
+. ./libpidtreesearch.sh
+. ./libmsleep.sh
+. ./liblog.sh
 
 # return type: void
 # description:
@@ -200,34 +140,6 @@ start_xsecurelock () {
     fi
 }
 
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
-}
-
 if pid_tree_search "$LOCKERD_PID" "xsecurelock" >/dev/null; then
     instance_pid=$(pid_tree_search "$LOCKERD_PID" "xsecurelock")
     write_log \
@@ -256,9 +168,6 @@ else
     esac
 
     start_xsecurelock
-
-    has_usleep=$(command -v usleep)
-    [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
 
     kill_dangling_dimmers
     # auth watcher

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+. ./libbool.sh
+. ./libutils.sh
+. ./libpidtreesearch.sh
+. ./libmsleep.sh
+
 #####################
 # -- config vars -- #
 #####################
@@ -30,8 +35,8 @@ myname="${0##*/}"
 #   current running pid of the script
 mypid="$$"
 
-NO_CONTINUE=""
-dbgOUT=""
+. ./liblog.sh
+
 VERB=""
 watch_pid=""
 
@@ -45,105 +50,6 @@ cycles=4
 cycle_time=$(( one_second / cycles ))
 
 count=$(( delay_suspend * cycles ))
-
-# type: int
-# value: 0
-# description: unix shell style boolean
-btrue=0
-# type: int
-# value: 1
-# description: unix shell style boolean
-bfalse=1
-
-
-# return type: boolean
-# usage: is_int "value"
-# description: check if passed value is a number
-is_int() {
-    if [ -n "$1" ]; then
-        printf %d "$1" >/dev/null 2>&1
-    else
-        return $bfalse
-    fi
-}
-
-# thin awk wrapper that will prefer mawk over gawk
-u_awk () { awk "$@"; }
-if command -v mawk >/dev/null; then
-    u_awk () { mawk "$@"; }
-fi
-
-# usage: pid_tree_search PID NAME
-#      PID: the parent pid among whose ps tree we will search
-#     NAME: the name of the program whose pid we want
-# return type: integer
-# return error: standard error return value 1
-pid_tree_search () {
-    search_pid="$1"
-    search_name="$2"
-    word_length="${#search_name}"
-    rval=$(
-        pstree -Aps "${search_pid}" 2>/dev/null \
-        | u_awk \
-            -v name="$search_name" \
-            -v wlen="$word_length" \
-            '\
-                BEGIN { search=name"\\([[:digit:]]*\\)" } \
-                match( $0, search )\
-                {\
-                    print substr($0,RSTART+wlen+1,RLENGTH-wlen-2) \
-                }\
-            '
-        )
-    if is_int "$rval"; then
-        printf '%s\n' "$rval"
-    else
-        return $bfalse
-    fi
-}
-
-# Usage: write_log "message text"
-# Return: void
-# Description:
-#   Write message to log file
-write_log () {
-    name="$myname"
-    message="$*"
-    printf '[%s] %12s %*s: %s\n' \
-        "$(date +'%Y-%m-%d %H:%M:%S')" \
-        "$name" \
-        "$PIDWIDTH" "[$mypid]" \
-        "$message" \
-        >> "$LOGFILE"
-}
-
-# usage: msleep int
-# description: sleep for milliseconds
-# return type: void
-msleep () {
-    milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
-    fi
-}
 
 do_suspend () {
     if [ -x "$(command -v systemact)" ]; then
