@@ -88,15 +88,19 @@ is_comm() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# thin awk wrapper that will prefer mawk over the system's default awk
-# implementation
-u_awk () {
-    if is_comm mawk; then
-        mawk "$@"
-    else
-        awk "$@"
-    fi
-}
+which_awk="$(command -v mawk)"
+case "$which_awk" in
+    *mawk)
+        # thin awk wrapper that will prefer mawk over the system's default awk
+        # implementation
+        u_awk () { mawk "$@"; }
+        ;;
+    *)
+        # thin awk wrapper that will prefer mawk over the system's default awk
+        # implementation
+        u_awk () { awk "$@"; }
+        ;;
+esac
 
 dbgOUT=""
 NO_CONTINUE=""
