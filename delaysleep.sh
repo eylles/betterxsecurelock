@@ -71,25 +71,25 @@ can_suspend() {
     # |     T     |     F       |   F   |
     # |     F     |     T       |   T   |
     # |     F     |     F       |   T   |
-    if [ "$suspend_on_ac" -eq "$btrue" ] && on_ac_power; then
+    if [ "$suspend_on_ac" -eq "$_true" ] && on_ac_power; then
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
             echo "suspend on ac is: $suspend_on_ac"
-            echo "returning $btrue"
+            echo "returning $_true"
         fi
-        return $btrue
+        return $_true
     else
         if on_ac_power; then
             if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-                echo "on ac power is: $btrue"
-                echo "returning $bfalse"
+                echo "on ac power is: $_true"
+                echo "returning $_false"
             fi
-            return $bfalse
+            return $_false
         else
             if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
-                echo "on ac power is: $bfalse"
-                echo "returning $btrue"
+                echo "on ac power is: $_false"
+                echo "returning $_true"
             fi
-            return $btrue
+            return $_true
         fi
     fi
 }
@@ -104,7 +104,7 @@ while [ $# -gt 0 ]; do
         ;;
         "help"|"-help"|"--help"|"-h")
             # show_help
-            exit $btrue
+            exit $_true
         ;;
         -watch)
             shift
@@ -116,7 +116,7 @@ while [ $# -gt 0 ]; do
             printf '%s: %s\n' "$myname" \
                 "unknown argument '${1}'"
             # show_usage
-            exit $bfalse
+            exit $_false
         ;;
     esac
     shift
