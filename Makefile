@@ -12,52 +12,52 @@ lib: libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
 	libbacklight.sh
 
 libbool.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" libbool.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" libbool.sh > build/$@
 
 libutils.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" libutils.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" libutils.sh > build/$@
 
 libpidtreesearch.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" libpidtreesearch.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" libpidtreesearch.sh > build/$@
 
 libmsleep.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" libmsleep.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" libmsleep.sh > build/$@
 
 liblog.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" liblog.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" liblog.sh > build/$@
 
 libbacklight.sh: build
-	sed "s| ./| $(LIB_LOC)/|g" libbacklight.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" libbacklight.sh > build/$@
 
 build:
 	mkdir build
 
 blight: build
-	sed "s| ./| $(LIB_LOC)/|g" blight.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" blight.sh > build/$@
 	chmod 755 build/$@
 
 delaysleep: build
-	sed "s| ./| $(LIB_LOC)/|g" delaysleep.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" delaysleep.sh > build/$@
 	chmod 755 build/$@
 
 dim-screen: build
-	sed "s| ./| $(LIB_LOC)/|g" dim-screen.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" dim-screen.sh > build/$@
 	chmod 755 build/$@
 
 lockerd: build
-	sed "s| ./| $(LIB_LOC)/|g" lockerd.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" lockerd.sh > build/$@
 	chmod 755 build/$@
 
 saver: build
-	sed "s| ./| $(LIB_LOC)/|g" saver.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" saver.sh > build/$@
 	chmod 755 build/$@
 
 screenlocker: build
-	sed "s| ./| $(LIB_LOC)/|g" screenlocker.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" screenlocker.sh > build/$@
 	chmod 755 build/$@
 
 screensaverbar: build
-	sed "s| ./| $(LIB_LOC)/|g" screensaverbar.sh > build/$@
+	sed "s| \./| $(LIB_LOC)/|g" screensaverbar.sh > build/$@
 	chmod 755 build/$@
 
 clean:
