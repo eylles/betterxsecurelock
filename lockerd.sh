@@ -232,8 +232,10 @@ sigHandler () {
 
 set_time
 
-xss-lock -n dim-screen -s "$SessionID" -l -v -- screenlocker 2>&1 \
-    | cat >> "$LOGFILE" &
+if ! pid_tree_search "${mypid}" "xss-lock"; then
+    xss-lock -n dim-screen -s "$SessionID" -l -v -- screenlocker 2>&1 \
+        | cat >> "$LOGFILE" &
+fi
 # capture pid
 # a simple $! is not enough thanks to using sed...
 xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
