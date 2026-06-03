@@ -119,6 +119,8 @@ done
 export CONF LOGFILE PIDWIDTH
 
 . ./liblog.sh
+. ./libmsleep.sh
+. ./libpidtreesearch.sh
 
 if [ -z "$SessionID" ]; then
     write_log "could not determine Session ID, exiting..."
