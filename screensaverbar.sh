@@ -64,7 +64,7 @@ getbatlevel() {
 
 getbat() {
     percsymb="%"
-    c_icon=""
+    c_icon=" "
     bat_level=$(getbatlevel)
     case "$bat_level" in
         [0-9]|1[0-9])
