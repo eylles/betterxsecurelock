@@ -1,26 +1,9 @@
 #!/bin/sh
 
+. ./libutils.sh
+
 _cols=$(tput cols)
 halfcol=$(( _cols / 2 ))
-
-# Usage: getval "KEY" file
-# Return: string
-# Description:
-#   Read a KEY=VALUE file and retrieve the Value of the passed KEY
-getval(){
-  # Setting 'IFS' tells 'read' where to split the string.
-  while IFS='=' read -r key val; do
-    # Skip over lines containing comments.
-    # (Lines starting with '#').
-    [ "${key##\#*}" ] || continue
-
-    # '$key' stores the key.
-    # '$val' stores the value.
-    if [ "$key" = "$1" ]; then
-      printf '%s\n' "$val"
-    fi
-  done < "$2"
-}
 
 bat_icon=""
 FANCY_BAT_ICON=""
