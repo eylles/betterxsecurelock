@@ -26,10 +26,10 @@ msleep () {
     microsecs="${milisecs}000"
     case "$has_usleep" in
       *usleep)
-        $has_usleep "$microsecs"
+        $has_usleep "$microsecs" >/dev/null 2>&1
         ;;
       *busybox)
-        $has_usleep usleep "$microsecs"
+        $has_usleep usleep "$microsecs" >/dev/null 2>&1
         ;;
     esac
   else
@@ -43,10 +43,10 @@ msleep () {
     secs="${sec_whole}.${sec_decim}"
     case "$has_fsleep" in
       *sleep)
-        $has_fsleep "$secs"
+        $has_fsleep "$secs" >/dev/null 2>&1
         ;;
       *python)
-        $has_fsleep -c 'import time; time.sleep('"$secs"')'
+        $has_fsleep -c 'import time; time.sleep('"$secs"')' >/dev/null 2>&1
         ;;
     esac
   fi
