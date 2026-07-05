@@ -5,8 +5,16 @@
 has_usleep=""
 has_usleep=$(command -v usleep)
 [ -z "$has_usleep" ] && has_usleep=$(command -v busybox)
+# type: string
+# description: path if available to sleep that supports floats
+has_fsleep=""
+if [ -z "$has_usleep" ] && is_program "python"; then
+  has_usleep=""
+  has_fsleep=$(command -v python)
+fi
 if sleep 0.001 2>/dev/null; then
     has_usleep=""
+    has_fsleep=$(command -v sleep)
 fi
 
 # usage: msleep int
@@ -14,25 +22,32 @@ fi
 # return type: void
 msleep () {
     milisecs="$1"
-    if [ -n "$has_usleep" ]; then
-        microsecs="${milisecs}000"
-        case "$has_usleep" in
-            */usleep)
-                usleep "$microsecs"
-                ;;
-            */busybox)
-                busybox usleep "$microsecs"
-                ;;
-        esac
-    else
-        sec_whole=$(( milisecs / 1000 ))
-        sec_decim=$(( milisecs % 1000 ))
-        if [ "$sec_decim" -lt 10 ]; then
-            sec_decim="00${sec_decim}"
-        elif [ "$sec_decim" -lt 100 ]; then
-            sec_decim="0${sec_decim}"
-        fi
-        secs="${sec_whole}.${sec_decim}"
-        sleep "$secs"
+      if [ -n "$has_usleep" ]; then
+    microsecs="${milisecs}000"
+    case "$has_usleep" in
+      *usleep)
+        $has_usleep "$microsecs"
+        ;;
+      *busybox)
+        $has_usleep usleep "$microsecs"
+        ;;
+    esac
+  else
+    sec_whole=$(( milisecs / 1000 ))
+    sec_decim=$(( milisecs % 1000 ))
+    if [ "$sec_decim" -lt 10 ]; then
+      sec_decim="00${sec_decim}"
+    elif [ "$sec_decim" -lt 100 ]; then
+      sec_decim="0${sec_decim}"
     fi
+    secs="${sec_whole}.${sec_decim}"
+    case "$has_fsleep" in
+      *sleep)
+        $has_fsleep "$secs"
+        ;;
+      *python)
+        $has_fsleep -c 'import time; time.sleep('"$secs"')'
+        ;;
+    esac
+  fi
 }
