@@ -12,6 +12,10 @@ if [ -z "$has_usleep" ] && is_program "python"; then
   has_usleep=""
   has_fsleep=$(command -v python)
 fi
+if [ -z "$has_usleep" ] && is_program "perl"; then
+  has_usleep=$(command -v perl)
+  has_fsleep=""
+fi
 if sleep 0.001 2>/dev/null; then
     has_usleep=""
     has_fsleep=$(command -v sleep)
@@ -30,6 +34,10 @@ msleep () {
         ;;
       *busybox)
         $has_usleep usleep "$microsecs" >/dev/null 2>&1
+        ;;
+      *perl)
+        $has_usleep -MTime::HiRes=usleep -e 'usleep('"$microsecs"')' \
+          >/dev/null 2>&1
         ;;
     esac
   else
