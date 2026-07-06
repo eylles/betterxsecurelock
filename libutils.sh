@@ -88,7 +88,7 @@ split_str() {
 #       Usage: is_program <program>
 #     program: name of the program to check if is available
 is_program() {
-    command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null || return "$_false"
 }
 
 which_awk="$(command -v mawk)"
