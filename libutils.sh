@@ -84,7 +84,10 @@ split_str() {
     set +f
 }
 
-is_comm() {
+# Return type: int bool
+#       Usage: is_program <program>
+#     program: name of the program to check if is available
+is_program() {
     command -v "$1" >/dev/null 2>&1
 }
 
