@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ -z "$HAS_UTILS" ]; then
+    . ./libutils.sh
+fi
+
 # type: string
 # description: usleep path if available
 has_usleep=""
