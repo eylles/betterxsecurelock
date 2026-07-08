@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
+
 # unix command line compatible booleans
 
 # Type: int

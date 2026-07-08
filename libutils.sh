@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
 
 if [ -z "$HAS_BOOL" ]; then
     . ./libbool.sh

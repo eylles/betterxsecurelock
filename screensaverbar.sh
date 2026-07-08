@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 . ./libutils.sh
 
 _cols=$(tput cols)

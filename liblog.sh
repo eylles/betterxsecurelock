@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
+
 # type: int
 # description: digit width of the process id number
 # default: 6

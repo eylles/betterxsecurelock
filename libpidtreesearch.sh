@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 if [ -z "$HAS_BOOL" ]; then
     . ./libbool.sh
 fi

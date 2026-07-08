@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: Apache-2.0
+
 if [ -z "$HAS_UTILS" ]; then
     . ./libutils.sh
 fi
