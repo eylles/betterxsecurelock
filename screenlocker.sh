@@ -161,7 +161,7 @@ else
     esac
     case "${COLO_OPT}" in
         1) export AuthFgColor="$color12" ;;
-        2) export AuthFgColor="$color15" ;;
+        2) export AuthFgColor="$color10" ;;
         3) export AuthFgColor="$color15" ;;
         4) export AuthFgColor="$color0" ;;
         5) export AuthFgColor="$color8" ;;
