@@ -50,7 +50,7 @@ software installed:
 |pywal16:|for the theme|
 |[on_ac_power](https://salsa.debian.org/debian/powermgmt-base):|show the charge icon on the statusbar|
 |xdg-screensaver:|very necessary|
-|brightnessctl:|to dim the screen before lock and during screensaver (optional)|
+|brightness-udev:|udev rules to allow access to the `/sys/class/backlight/*/brightness` subsystem|
 |[systemact](https://github.com/eylles/systemact)|automatic system suspend some time after lock|
 |psmisc:|for pstree|
 |noto sans cjk jp:|font for the auth dialog|
