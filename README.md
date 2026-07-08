@@ -91,3 +91,8 @@ TODO:
 - [x] make lockerd set the x_screen_saver_extension and dpms times from config
       when the screensaver isn't being inhibited
 - [x] eliminate usage of pgrep
+
+# LICENSE
+
+Unless specified otherwise all files in the repo are licensed under the GPLv2.0
+or later
