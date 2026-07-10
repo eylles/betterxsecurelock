@@ -100,6 +100,9 @@ This repository contains components under different licenses.
   (`LICENSE-GPL-2.0`).
 * Small libraries and utilities are licensed under the **Apache License 2.0**
   (`LICENSE-APACHE-2.0`).
+* The bright-helper as well as the 90-blight.rules file which is a modified
+  version of the debian patched version of the original brightnessctl repo are
+  licensed under the **Expat**/**MIT** (`LICENSE-MIT`)
 * Files vendored from other projects such as on_ac_power and xdg-screensaver are
   available under their specific license terms mentioned on their identifiers.
 
