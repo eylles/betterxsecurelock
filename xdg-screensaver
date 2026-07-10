@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# from https://gitlab.freedesktop.org/xdg/xdg-utils
+# SPDX-License-Identifier: MIT
+
 #---------------------------------------------
 #   xdg-screensaver
 #

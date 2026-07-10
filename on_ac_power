@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# from https://salsa.debian.org/debian/powermgmt-base
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 #
 # Returns 0 (true) if on AC power
 #         1 (false) if not on AC power
