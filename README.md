@@ -94,5 +94,14 @@ TODO:
 
 # LICENSE
 
-Unless specified otherwise all files in the repo are licensed under the GPLv2.0
-or later
+This repository contains components under different licenses.
+
+* The main source files are licensed under the **GNU GPLv2.0 or later**
+  (`LICENSE-GPL-2.0`).
+* Small libraries and utilities are licensed under the **Apache License 2.0**
+  (`LICENSE-APACHE-2.0`).
+* Files vendored from other projects such as on_ac_power and xdg-screensaver are
+  available under their specific license terms mentioned on their identifiers.
+
+Individual files contain explicit `SPDX-License-Identifier` headers indicating
+their respective license terms.
