@@ -1,4 +1,9 @@
 #!/bin/sh -eu
+
+# Copyright: 2017-2020 nicoo <nicoo@debian.org>
+# from https://salsa.debian.org/debian/brightnessctl under dir /debian
+# SPDX-License-Identifier: MIT
+
 die() {
     echo "$@"
     exit 1
