@@ -112,3 +112,8 @@ install_on_ac_power:
 	cp -vf on_ac_power  $(BIN_LOC)/
 uninstall_on_ac_power:
 	rm -vf $(BIN_LOC)/on_ac_power
+
+install_xdg-screensaver:
+	cp -vf xdg-screensaver $(BIN_LOC)/
+uninstall_xdg-screensaver:
+	rm -vf $(BIN_LOC)/xdg-screensaver
