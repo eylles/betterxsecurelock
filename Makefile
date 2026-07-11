@@ -2,6 +2,7 @@
 PREFIX = ${HOME}/.local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
+UDEVLOC = /usr/lib/udev/rules.d
 .PHONY: install uninstall all bin lib clean
 
 all: bin lib
@@ -122,3 +123,8 @@ install_bright-helper:
 	cp -vf bright-helper $(BIN_LOC)/
 uninstall_bright-helper:
 	rm -vf $(BIN_LOC)/bright-helper
+
+install_blight.rules:
+	cp -vf 90-blight.rules $(UDEVLOC)/
+uninstall_blight.rules:
+	rm -vf $(BIN_LOC)/90-blight.rules
