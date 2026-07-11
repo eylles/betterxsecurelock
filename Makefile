@@ -117,3 +117,8 @@ install_xdg-screensaver:
 	cp -vf xdg-screensaver $(BIN_LOC)/
 uninstall_xdg-screensaver:
 	rm -vf $(BIN_LOC)/xdg-screensaver
+
+install_bright-helper:
+	cp -vf bright-helper $(BIN_LOC)/
+uninstall_bright-helper:
+	rm -vf $(BIN_LOC)/bright-helper
