@@ -3,7 +3,8 @@ PREFIX = ${HOME}/.local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
 UDEV_PREFIX = /usr
-UDEV_LOC = $(DESTDIR)$(UDEV_PREFIX)/lib/udev/rules.d
+UDEVDIR = $(UDEV_PREFIX)/lib/udev
+UDEV_LOC = $(DESTDIR)$(UDEVDIR)/rules.d
 .PHONY: install uninstall all bin lib clean
 
 all: bin lib
