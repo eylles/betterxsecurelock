@@ -5,6 +5,7 @@ LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
 UDEV_PREFIX = /usr
 UDEVDIR = $(UDEV_PREFIX)/lib/udev
 UDEV_LOC = $(DESTDIR)$(UDEVDIR)/rules.d
+UBIN_LOC = $(DESTDIR)$(UDEVDIR)
 .PHONY: install uninstall all bin lib clean
 
 all: bin lib
@@ -122,9 +123,9 @@ uninstall_xdg-screensaver:
 	rm -vf $(BIN_LOC)/xdg-screensaver
 
 install_bright-helper:
-	cp -vf bright-helper $(BIN_LOC)/
+	cp -vf bright-helper $(UBIN_LOC)/
 uninstall_bright-helper:
-	rm -vf $(BIN_LOC)/bright-helper
+	rm -vf $(UBIN_LOC)/bright-helper
 
 install_blight.rules:
 	cp -vf 90-blight.rules $(UDEV_LOC)/
