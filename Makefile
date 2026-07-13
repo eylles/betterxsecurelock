@@ -119,15 +119,18 @@ uninstall_on_ac_power:
 
 install_xdg-screensaver:
 	cp -vf xdg-screensaver $(BIN_LOC)/
+	chmod 755 $(BIN_LOC)/xdg-screensaver
 uninstall_xdg-screensaver:
 	rm -vf $(BIN_LOC)/xdg-screensaver
 
 install_bright-helper:
 	cp -vf bright-helper $(UBIN_LOC)/
+	chmod 755 $(UBIN_LOC)/bright-helper
 uninstall_bright-helper:
 	rm -vf $(UBIN_LOC)/bright-helper
 
 install_blight.rules:
 	cp -vf 90-blight.rules $(UDEV_LOC)/
+	chmod 644 $(UDEV_LOC)/90-blight.rules
 uninstall_blight.rules:
 	rm -vf $(UDEV_LOC)/90-blight.rules
