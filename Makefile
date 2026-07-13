@@ -113,23 +113,27 @@ uninstall:
 	rm -vf $(LIB_LOC)/libbacklight.sh
 
 install_on_ac_power:
+	mkdir -p $(BIN_LOC)
 	cp -vf on_ac_power  $(BIN_LOC)/
 uninstall_on_ac_power:
 	rm -vf $(BIN_LOC)/on_ac_power
 
 install_xdg-screensaver:
+	mkdir -p $(BIN_LOC)
 	cp -vf xdg-screensaver $(BIN_LOC)/
 	chmod 755 $(BIN_LOC)/xdg-screensaver
 uninstall_xdg-screensaver:
 	rm -vf $(BIN_LOC)/xdg-screensaver
 
 install_bright-helper:
+	mkdir -p $(UBIN_LOC)
 	cp -vf bright-helper $(UBIN_LOC)/
 	chmod 755 $(UBIN_LOC)/bright-helper
 uninstall_bright-helper:
 	rm -vf $(UBIN_LOC)/bright-helper
 
 install_blight.rules:
+	mkdir -p $(UDEV_LOC)
 	cp -vf 90-blight.rules $(UDEV_LOC)/
 	chmod 644 $(UDEV_LOC)/90-blight.rules
 uninstall_blight.rules:
