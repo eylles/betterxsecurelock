@@ -67,3 +67,41 @@ darken () {
     done
     printf '#%s\n' "$colout"
 }
+
+# return type: hexrgb string
+# usage: foxify "hex color" "factor"
+# description:
+#   pywalfox algorithm to lighten
+#   a color without destroying saturation
+foxify() {
+    python - "$@" <<'___HEREDOC'
+from sys import argv
+
+
+def hex_to_rgb(color):
+    """Convert a hex color to rgb."""
+    return tuple(bytes.fromhex(color.strip("#")))
+
+
+def rgb_to_hex(color):
+    """Convert an rgb color to hex."""
+    return "#%02x%02x%02x" % (*color,)
+
+
+def work(color, f):
+    pwf = float(f)
+    c = hex_to_rgb(color)
+    b = [
+        max(c[0], 10),
+        max(c[1], 10),
+        max(c[2], 10)
+        ]
+    b[0] = (min((max(0, int(b[0] + (b[0] * pwf)))), 255))
+    b[1] = (min((max(0, int(b[1] + (b[1] * pwf)))), 255))
+    b[2] = (min((max(0, int(b[2] + (b[2] * pwf)))), 255))
+    return rgb_to_hex(b)
+
+
+print(work(argv[1],argv[2]))
+___HEREDOC
+}
