@@ -31,6 +31,32 @@ is_int() {
     fi
 }
 
+# usage: min_cap value minimum_value
+# description: prevents the value from
+#     being lower than the minimum_value.
+# return type: stdout int
+min_cap () {
+    if [ "$1" -lt "$2" ]; then
+        result="$2"
+    else
+        result="$1"
+    fi
+    printf '%d\n' "$result"
+}
+
+# usage: max_cap value maximum_value
+# description: prevents the value from
+#     being higher than the maximum_value.
+# return type: stdout int
+max_cap () {
+    if [ "$1" -gt "$2" ]; then
+        result="$2"
+    else
+        result="$1"
+    fi
+    printf '%d\n' "$result"
+}
+
 # Usage: getval "KEY" file
 # description: read a KEY=VALUE file and retrieve the VALUE of the passed KEY
 # return type: stdout string
