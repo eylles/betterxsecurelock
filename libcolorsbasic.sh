@@ -35,11 +35,13 @@ lighten () {
     colout=""
     i=0
     for colbit in $(split_list "$rgbcol" ","); do
+        modbit=""
         modbit=$(( colbit + ( 255 * amount / 100 ) ))
         modbit=$(max_cap "$modbit" 255)
         # printf '%s: %d\n' "$i" "$modbit"
         # printf '%s: %02x\n' "$i" "$modbit"
         colout="${colout}"$(printf '%02x' "$modbit")
+        modbit=""
         i=$(( i + 1))
     done
     printf '#%s\n' "$colout"
@@ -54,11 +56,13 @@ darken () {
     colout=""
     i=0
     for colbit in $(split_list "$rgbcol" ","); do
+        modbit=""
         modbit=$(( colbit - ( 255 * amount / 100 ) ))
         modbit=$(min_cap "$modbit" 0)
         # printf '%s: %d\n'   "$i" "$modbit"
         # printf '%s: %02x\n' "$i" "$modbit"
         colout="${colout}"$(printf '%02x' "$modbit")
+        modbit=""
         i=$(( i + 1))
     done
     printf '#%s\n' "$colout"
