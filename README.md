@@ -79,6 +79,22 @@ run them somewehre in your xinitrc or xsessionrc.
 If all goes well you should have a xsecurelock similar to the one on my
 screenshots.
 
+## quick start
+```sh
+git clone https://github.com/eylles/betterxsecurelock
+cd betterxsecurelock
+# check config.mk and edit as needed
+make
+make install
+# extras
+# to install on_ac_power if not available in your distro
+make install_on_ac_power
+# to install the vendored version of xdg-screensaver
+make install_xdg-screensaver
+# if your distro does not have a package like brightness-udev then
+make install_bright-helper
+make install_blight.rules
+```
 
 TODO:
 - [ ] wrap and use the screensaver modules provided by xsecurelock
