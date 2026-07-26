@@ -28,6 +28,12 @@ dec_brightness() {
     set_brightness "$new_br"
 }
 
+is_perc() {
+    val="$1"
+    trimmed_val="$(rm_all_char "$val" '%')"
+    is_int "$trimmed_val"
+}
+
 main() {
     value=""
     operation=""
