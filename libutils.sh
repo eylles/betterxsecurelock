@@ -33,6 +33,19 @@ has_char() {
     return "$retval"
 }
 
+# Return type: string
+# Usage: rm_all_char <str> <char>
+# Description:
+#   Loops until all occurrences of <char> are removed from string <str>
+rm_all_char() {
+    str="$1"
+    delim="$2"
+    while has_char "$str" "$delim"; do
+        str="$(rm_char_first_occur "$str" "$delim")"
+    done
+    printf '%s' "$str"
+}
+
 # usage: is_num "value"
 # description: check if passed value is a number
 # return type: retval int boolean
