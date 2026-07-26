@@ -8,6 +8,19 @@ fi
 
 HAS_UTILS="$_true"
 
+# Return type: string
+# Usage: rm_char_first_occur <str> <char>
+# Description:
+#   Removes the first (leftmost) occurrence of <char> from string <str>
+rm_char_first_occur() {
+    str="$1"
+    delim="$2"
+    right="${str#*"$delim"}"
+    left="${str%"$delim$right"*}"
+    out="${left}${right}"
+    printf '%s' "$out"
+}
+
 # usage: is_num "value"
 # description: check if passed value is a number
 # return type: retval int boolean
