@@ -34,15 +34,21 @@ is_perc() {
     is_int "$trimmed_val"
 }
 
+is_int_or_perc() {
+    if ! is_int "$1" && ! is_perc "$1"; then
+        return "$_false"
+    fi
+}
+
 main() {
     value=""
     operation=""
     while [ $# -gt 0 ]; do
         case $1 in
             "s")
-                if ! is_int "$2"; then
+                if ! is_int_or_perc "$2"; then
                     printf '%s: %s\n' "$myname" \
-                        "value '${2}' is not an int"
+                        "value '${2}' is not an int or int perc"
                     exit 1
                 else
                     value=$2
