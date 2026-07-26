@@ -21,6 +21,18 @@ rm_char_first_occur() {
     printf '%s' "$out"
 }
 
+# Return type: int bool
+# Usage: has_char <str> <char>
+has_char() {
+    str="$1"
+    char="$2"
+    retval="$_false"
+    case "$str" in
+        *"$char"*) retval="$_true" ;;
+    esac
+    return "$retval"
+}
+
 # usage: is_num "value"
 # description: check if passed value is a number
 # return type: retval int boolean
