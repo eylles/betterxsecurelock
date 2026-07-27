@@ -109,6 +109,10 @@ main() {
         esac
         shift
     done
+    [ -n "$dbgOUT" ] && printf '%9s: %s\n' "Operation" "$operation"
+    if [ -n "$dbgOUT" ] && [ -n "$value" ]; then
+        printf '%9s: %s\n' "Value" "$value"
+    fi
     case "$operation" in
         "set")
             set_brightness "$value"
