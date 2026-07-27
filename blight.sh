@@ -40,6 +40,20 @@ is_int_or_perc() {
     fi
 }
 
+scale=255
+dec_cutoff=50
+perc_to_int() {
+    val="$1"
+    val="$(rm_all_char "$val" '%')"
+    val=$(( val * scale ))
+    valint="${val%??}"
+    valdec="${val#"${valint}"}"
+    if [ "$valdec" -gt "$dec_cutoff" ]; then
+        valint=$(( valint + 1 ))
+    fi
+    printf '%d\n' "$valint"
+}
+
 main() {
     value=""
     operation=""
@@ -52,6 +66,9 @@ main() {
                     exit 1
                 else
                     value=$2
+                    if is_perc "$value"; then
+                        value=$(perc_to_int "$value")
+                    fi
                 fi
                 case "$3" in
                     "+")
