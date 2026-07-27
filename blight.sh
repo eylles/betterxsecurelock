@@ -61,6 +61,11 @@ perc_to_int() {
     printf '%d\n' "$valint"
 }
 
+show_usage() {
+    printf '%s\n' \
+        "Usage: ${myname} [-debug] < g | s < NUM | PERC > [ + | - ] >"
+}
+
 main() {
     value=""
     operation=""
@@ -70,6 +75,7 @@ main() {
                 if ! is_int_or_perc "$2"; then
                     printf '%s: %s\n' "$myname" \
                         "value '${2}' is not an int or int perc"
+                    show_usage
                     exit 1
                 else
                     value=$2
@@ -104,6 +110,7 @@ main() {
             *)
                 printf '%s: %s\n' "$myname" \
                     "unknown argument '${1}'"
+                show_usage
                 exit 1
             ;;
         esac
