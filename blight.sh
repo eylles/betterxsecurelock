@@ -30,8 +30,15 @@ dec_brightness() {
 
 is_perc() {
     val="$1"
-    trimmed_val="$(rm_all_char "$val" '%')"
-    is_int "$trimmed_val"
+    case "$val" in
+        *'%'*)
+            trimmed_val="$(rm_all_char "$val" '%')"
+            is_int "$trimmed_val"
+            ;;
+        *)
+            return "$_false"
+            ;;
+    esac
 }
 
 is_int_or_perc() {
