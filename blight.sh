@@ -69,9 +69,9 @@ show_usage() {
 show_help () {
     show_usage
     printf '%s\n'   "ARGUMENTS"
-    printf '  %s\n' "g"
+    printf '  %s\n' "get, g"
     printf '\t%s\n' "Get current brightness value."
-    printf '  %s\n' "s"
+    printf '  %s\n' "set, s"
     printf '\t%s\n' "Set brightness value, can receive an INT or an INT"
     printf '\t%s\n' "percentage, the '+' and '-' signs can be passed as"
     printf '\t%s\n' "additional arguments to increase/decrease the brightness."
@@ -87,7 +87,7 @@ main() {
     operation=""
     while [ $# -gt 0 ]; do
         case $1 in
-            "s")
+            "set"|"s")
                 if ! is_int_or_perc "$2"; then
                     printf '%s: %s\n' "$myname" \
                         "value '${2}' is not an int or int perc"
@@ -117,7 +117,7 @@ main() {
                 esac
                 shift
             ;;
-            "g")
+            "get"|"g")
                 operation="get"
                 ;;
             "debug"|"-debug"|"--debug"|"-d")
