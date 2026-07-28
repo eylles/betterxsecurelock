@@ -66,6 +66,22 @@ show_usage() {
         "Usage: ${myname} [-debug] < g | s < NUM | PERC > [ + | - ] >"
 }
 
+show_help () {
+    show_usage
+    printf '%s\n'   "ARGUMENTS"
+    printf '  %s\n' "g"
+    printf '\t%s\n' "Get current brightness value."
+    printf '  %s\n' "s"
+    printf '\t%s\n' "Set brightness value, can receive an INT or an INT"
+    printf '\t%s\n' "percentage, the '+' and '-' signs can be passed as"
+    printf '\t%s\n' "additional arguments to increase/decrease the brightness."
+    printf '%s\n'   "OPTIONS"
+    printf '  %s\n' "debug, -debug"
+    printf '\t%s\n' "Show debug output."
+    printf '  %s\n' "help, -h"
+    printf '\t%s\n' "Show this help message."
+}
+
 main() {
     value=""
     operation=""
@@ -106,6 +122,10 @@ main() {
                 ;;
             "debug"|"-debug"|"--debug")
                 dbgOUT=1
+                ;;
+            "help"|"-h")
+                show_help
+                exit 0
                 ;;
             *)
                 printf '%s: %s\n' "$myname" \
