@@ -90,7 +90,7 @@ set_scaled () {
     brightness_file="$1"
     brightness_path="${brightness_file%/*}"
     brighntess_max_file="${brightness_path}/max_brightness"
-    max_val=$(head "$brighntess_max_file")
+    max_val=$(cat "$brighntess_max_file")
     # remove float part if any
     max_val="${max_val%.*}"
     value="$2"
