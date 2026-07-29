@@ -95,8 +95,10 @@ set_scaled () {
     max_val="${max_val%.*}"
     value="$2"
     scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
-    printf '%s' "$scaled_value" > "$brightness_file"
-    [ -n "$dbgOUT" ] && printf '[%s: %6d]   ' "actual value" "$scaled_value"
+    if [ -w "$brightness_file" ]; then
+        printf '%s' "$scaled_value" > "$brightness_file"
+        [ -n "$dbgOUT" ] && printf '[%s: %6d]   ' "actual value" "$scaled_value"
+    fi
 }
 
 # return type: void
