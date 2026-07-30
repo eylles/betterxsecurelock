@@ -116,7 +116,7 @@ main() {
                         ;;
                 esac
                 shift
-            ;;
+                ;;
             "get"|"g")
                 operation="get"
                 ;;
@@ -132,7 +132,7 @@ main() {
                     "unknown argument '${1}'"
                 show_usage
                 exit 1
-            ;;
+                ;;
         esac
         shift
     done
