@@ -143,15 +143,12 @@ main() {
     case "$operation" in
         "set")
             set_brightness "$value"
-            exit 0
             ;;
         "inc")
             inc_brightness "$value"
-            exit 0
             ;;
         "dec")
             dec_brightness "$value"
-            exit 0
             ;;
         "get")
             get_brightness
