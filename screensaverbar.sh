@@ -43,7 +43,7 @@ done
 
 getbatlevel() {
     if [ -n "${usebat}" ]; then
-        head "${usebat}"/capacity
+        cat "${usebat}"/capacity
     fi
 }
 
