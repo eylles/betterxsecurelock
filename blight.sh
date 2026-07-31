@@ -8,6 +8,11 @@
 # description: script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
+# return type: void
+# usage: inc_brightness num
+# description:
+#    will increase the brightness by the passed number
+#    brightness values are from 0 to 255
 inc_brightness() {
     delta="$1"
     cur_br=$(get_brightness)
@@ -18,6 +23,11 @@ inc_brightness() {
     set_brightness "$new_br"
 }
 
+# return type: void
+# usage: dec_brightness num
+# description:
+#    will decrease the brightness by the passed number
+#    brightness values are from 0 to 255
 dec_brightness() {
     delta="$1"
     cur_br=$(get_brightness)
@@ -28,6 +38,9 @@ dec_brightness() {
     set_brightness "$new_br"
 }
 
+# usage: is_perc "value"
+# description: check if passed value is an integer percentage
+# return type: retval int boolean
 is_perc() {
     val="$1"
     case "$val" in
@@ -41,6 +54,9 @@ is_perc() {
     esac
 }
 
+# usage: is_int_or_perc "value"
+# description: check if passed value is an integer or an integer percentage
+# return type: retval int boolean
 is_int_or_perc() {
     if ! is_int "$1" && ! is_perc "$1"; then
         return "$_false"
@@ -49,6 +65,11 @@ is_int_or_perc() {
 
 scale=255
 dec_cutoff=50
+# return type: int
+# usage: perc_to_int "value"
+# description:
+#    will convert a passed integer percentage to the corresponding in value in
+#    range.
 perc_to_int() {
     val="$1"
     val="$(rm_all_char "$val" '%')"
