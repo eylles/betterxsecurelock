@@ -50,33 +50,37 @@ getbatlevel() {
 getbat() {
     percsymb="%"
     c_icon=" "
-    bat_level=$(getbatlevel)
-    case "$bat_level" in
-        [0-9]|1[0-9])
-            bat_icon="$bat1i"
-            ;;
-        2[0-9]|3[0-9])
-            bat_icon="$bat2i"
-            ;;
-        4[0-9]|5[0-9])
-            bat_icon="$bat3i"
-            ;;
-        6[0-9]|7[0-9])
-            bat_icon="$bat4i"
-            ;;
-        8[0-9]|9[0-9]|100)
-            bat_icon="$bat5i"
-            ;;
-        *)
-            bat_level=""
-            bat_icon=""
-            percsymb=""
-            ;;
-    esac
-    if [ -n "$bat_level" ] && on_ac_power ; then
-        c_icon="$charg"
+    if [ -n "$usebat" ]; then
+        bat_level=$(getbatlevel)
+        case "$bat_level" in
+            [0-9]|1[0-9])
+                bat_icon="$bat1i"
+                ;;
+            2[0-9]|3[0-9])
+                bat_icon="$bat2i"
+                ;;
+            4[0-9]|5[0-9])
+                bat_icon="$bat3i"
+                ;;
+            6[0-9]|7[0-9])
+                bat_icon="$bat4i"
+                ;;
+            8[0-9]|9[0-9]|100)
+                bat_icon="$bat5i"
+                ;;
+            *)
+                bat_level=""
+                bat_icon=""
+                percsymb=""
+                ;;
+        esac
+        if [ -n "$bat_level" ] && on_ac_power ; then
+            c_icon="$charg"
+        fi
+        printf '%s%s %3s%s' "$bat_icon" "$c_icon" "${bat_level}" "$percsymb"
+    else
+        printf '%s' "$c_icon"
     fi
-    printf '%s%s %3s%s' "$bat_icon" "$c_icon" "${bat_level}" "$percsymb"
 }
 
 wbat=6
