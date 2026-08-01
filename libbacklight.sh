@@ -123,3 +123,33 @@ set_brightness() {
     done
     [ -z "$dbgOUT" ] || printf '\n'
 }
+
+# return type: void
+# usage: inc_brightness num
+# description:
+#    will increase the brightness by the passed number
+#    brightness values are from 0 to 255
+inc_brightness() {
+    delta="$1"
+    cur_br=$(get_brightness)
+    new_br=$(( cur_br + delta ))
+    if [ "$max_brightness" -lt "$new_br" ]; then
+        new_br="$max_brightness"
+    fi
+    set_brightness "$new_br"
+}
+
+# return type: void
+# usage: dec_brightness num
+# description:
+#    will decrease the brightness by the passed number
+#    brightness values are from 0 to 255
+dec_brightness() {
+    delta="$1"
+    cur_br=$(get_brightness)
+    new_br=$(( cur_br - delta ))
+    if [ "$min_brightness" -gt "$new_br" ]; then
+        new_br="$min_brightness"
+    fi
+    set_brightness "$new_br"
+}
