@@ -69,6 +69,31 @@ is_int() {
     fi
 }
 
+# usage: is_perc "value"
+# description: check if passed value is an integer percentage
+# return type: retval int boolean
+is_perc() {
+    val="$1"
+    case "$val" in
+        *'%'*)
+            trimmed_val="$(rm_all_char "$val" '%')"
+            is_int "$trimmed_val"
+            ;;
+        *)
+            return "$_false"
+            ;;
+    esac
+}
+
+# usage: is_int_or_perc "value"
+# description: check if passed value is an integer or an integer percentage
+# return type: retval int boolean
+is_int_or_perc() {
+    if ! is_int "$1" && ! is_perc "$1"; then
+        return "$_false"
+    fi
+}
+
 # usage: min_cap value minimum_value
 # description: prevents the value from
 #     being lower than the minimum_value.

@@ -8,31 +8,6 @@
 # description: script base name through the idiom "${0##*/}"
 myname="${0##*/}"
 
-# usage: is_perc "value"
-# description: check if passed value is an integer percentage
-# return type: retval int boolean
-is_perc() {
-    val="$1"
-    case "$val" in
-        *'%'*)
-            trimmed_val="$(rm_all_char "$val" '%')"
-            is_int "$trimmed_val"
-            ;;
-        *)
-            return "$_false"
-            ;;
-    esac
-}
-
-# usage: is_int_or_perc "value"
-# description: check if passed value is an integer or an integer percentage
-# return type: retval int boolean
-is_int_or_perc() {
-    if ! is_int "$1" && ! is_perc "$1"; then
-        return "$_false"
-    fi
-}
-
 scale=255
 dec_cutoff=50
 # return type: int
