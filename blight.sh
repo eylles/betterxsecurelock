@@ -26,9 +26,9 @@ show_help () {
     printf '\t%s\n' "percentage, the '+' and '-' signs can be passed as"
     printf '\t%s\n' "additional arguments to increase/decrease the brightness."
     printf '%s\n'   "OPTIONS"
-    printf '  %s\n' "debug, -debug, -d"
+    printf '  %s\n' "debug, --debug, -debug, -d, d"
     printf '\t%s\n' "Show debug output."
-    printf '  %s\n' "help, -help, -h"
+    printf '  %s\n' "help, --help, -help, -h, h"
     printf '\t%s\n' "Show this help message."
 }
 
@@ -70,10 +70,10 @@ main() {
             "get"|"g")
                 operation="get"
                 ;;
-            "debug"|"-debug"|"--debug"|"-d")
+            "debug"|"-debug"|"--debug"|"-d"|"d")
                 dbgOUT=1
                 ;;
-            "help"|"-help"|"--help"|"-h")
+            "help"|"-help"|"--help"|"-h"|"h")
                 show_help
                 exit 0
                 ;;
