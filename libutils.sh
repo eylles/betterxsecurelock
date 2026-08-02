@@ -94,6 +94,29 @@ is_int_or_perc() {
     fi
 }
 
+# return type: int
+# usage: perc_to_int "value" "scale_max" "$dec_cutoff"
+# arguments:
+#       value: integer percentage to convert
+#   scale_max: maximum number to convert by, minimum is assumed 0, ex 255
+#  dec_cutoff: cutoff decimal number at which rounding up starts, ex 50
+# description:
+#    will convert a passed integer percentage to the corresponding in value in
+#    range.
+perc_to_int() {
+    val="$1"
+    scale_max="$2"
+    dec_cutoff="$3"
+    val="$(rm_all_char "$val" '%')"
+    val=$(( val * scale_max ))
+    valint="${val%??}"
+    valdec="${val#"${valint}"}"
+    if [ "$valdec" -gt "$dec_cutoff" ]; then
+        valint=$(( valint + 1 ))
+    fi
+    printf '%d\n' "$valint"
+}
+
 # usage: min_cap value minimum_value
 # description: prevents the value from
 #     being lower than the minimum_value.
