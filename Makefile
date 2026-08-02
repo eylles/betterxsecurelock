@@ -82,7 +82,7 @@ clean:
 	rm -f build/libbacklight.sh
 	rm -rf build
 
-install:
+install: all
 	mkdir -p $(BIN_LOC)
 	cp -vf build/blight              $(BIN_LOC)/
 	cp -vf build/dim-screen          $(BIN_LOC)/
