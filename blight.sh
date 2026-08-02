@@ -9,16 +9,22 @@
 myname="${0##*/}"
 
 scale=255
-dec_cutoff=50
+cutoff=50
 # return type: int
-# usage: perc_to_int "value"
+# usage: perc_to_int "value" "scale_max" "$dec_cutoff"
+# arguments:
+#       value: integer percentage to convert
+#   scale_max: maximum number to convert by, minimum is assumed 0, ex 255
+#  dec_cutoff: cutoff decimal number at which rounding up starts, ex 50
 # description:
 #    will convert a passed integer percentage to the corresponding in value in
 #    range.
 perc_to_int() {
     val="$1"
+    scale_max="$2"
+    dec_cutoff="$3"
     val="$(rm_all_char "$val" '%')"
-    val=$(( val * scale ))
+    val=$(( val * scale_max ))
     valint="${val%??}"
     valdec="${val#"${valint}"}"
     if [ "$valdec" -gt "$dec_cutoff" ]; then
@@ -62,7 +68,7 @@ main() {
                 else
                     value=$2
                     if is_perc "$value"; then
-                        value=$(perc_to_int "$value")
+                        value=$(perc_to_int "$value" "$scale" "$cutoff")
                     fi
                 fi
                 case "$3" in
