@@ -117,6 +117,21 @@ perc_to_int() {
     printf '%d\n' "$valint"
 }
 
+# return type: int
+# usage: int_to_perc "value" "scale_max"
+# arguments:
+#       value: integer to convert to percentage
+#   scale_max: maximum number to convert by, minimum is assumed 0, ex 255
+# description:
+#    will convert a passed integer to an integer percentage off the scale_max
+int_to_perc() {
+    val="$1"
+    scale_max="$2"
+    dec_cutoff="$3"
+    val=$(( val * 100 / scale_max))
+    printf '%d\n' "$val"
+}
+
 # usage: min_cap value minimum_value
 # description: prevents the value from
 #     being lower than the minimum_value.
