@@ -101,7 +101,13 @@ main() {
             dec_brightness "$value"
             ;;
         "get")
-            get_brightness
+            if [ -z "$dbgOUT" ]; then
+                get_brightness
+            else
+                b_level="$(get_brightness)"
+                b_perc="$(int_to_perc "$b_level" "$scale")"
+                printf '%d (%s)\n' "$b_level" "${b_perc}%"
+            fi
             ;;
     esac
 }
