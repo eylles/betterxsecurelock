@@ -111,7 +111,8 @@ set_scaled () {
 #    will set the brightness to the passed number
 #    brightness values are from 0 to 255
 set_brightness() {
-    [ -z "$dbgOUT" ] || printf '%s %3d  ' "brightness level:" "$1"
+    val="$1"
+    [ -z "$dbgOUT" ] || printf '%s %3d  ' "brightness level:" "$val"
     # set brightness for every screen we can find
     for screen_path in $sysfs_path; do
         if [ -n "$dbgOUT" ]; then
@@ -119,7 +120,7 @@ set_brightness() {
             scp_t="${scp_t##*/}"
             printf '%s ' "$scp_t"
         fi
-        set_scaled "$screen_path" "$1"
+        set_scaled "$screen_path" "$val"
     done
     [ -z "$dbgOUT" ] || printf '\n'
 }
