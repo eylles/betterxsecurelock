@@ -37,7 +37,6 @@ mypid="$$"
 
 . ./liblog.sh
 
-VERB=""
 watch_pid=""
 
 # 1000 milliseconds

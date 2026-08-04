@@ -256,4 +256,5 @@ case "$which_awk" in
 esac
 
 dbgOUT=""
+VERB=""
 NO_CONTINUE=""
