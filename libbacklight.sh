@@ -112,7 +112,9 @@ set_scaled () {
 #    brightness values are from 0 to 255
 set_brightness() {
     val="$1"
-    [ -z "$dbgOUT" ] || printf '%s %3d  ' "brightness level:" "$val"
+    perc_val="$(int_to_perc "$val" "$max_brightness")"
+    [ -z "$dbgOUT" ] || printf '%s %3d (%s)  ' \
+        "brightness level:" "$val" "${perc_val}%"
     # set brightness for every screen we can find
     for screen_path in $sysfs_path; do
         if [ -n "$dbgOUT" ]; then
