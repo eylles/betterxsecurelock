@@ -27,28 +27,6 @@ min_brightness=0
 max_brightness=255
 
 # return type: int
-# usage: scale_val value input_range target_range
-scale_val () {
-    value="$1"
-    range_input="$2"
-    range_target="$3"
-    scale_factor=$(( range_target / range_input ))
-    scaled_value=$(( value * scale_factor ))
-    printf '%s' $scaled_value
-}
-
-# return type: int
-# usage: unscale_val value input_range target_range
-unscale_val () {
-    value="$1"
-    range_input="$2"
-    range_output="$3"
-    scale_factor=$(( range_input / range_output ))
-    scaled_value=$(( value / scale_factor ))
-    printf '%s' $scaled_value
-}
-
-# return type: int
 # usage: get_scaled brightness_file
 # description:
 #    will return the scaled brightness value from the given brightness_file
