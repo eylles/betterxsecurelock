@@ -16,7 +16,6 @@ mypid="$$"
 
 export LOCKERD_PID=$mypid
 
-DBGOUT=""
 TIME_TO_LOCK=""
 xsslock_pid=""
 
@@ -74,7 +73,7 @@ opts=""
 while [ "$#" -gt 0 ]; do
     case "$1" in
         debug|-d)
-            DBGOUT=1
+            dbgOUT=1
             opts="${1} ${opts}"
             ;;
         logfile|-l)
@@ -134,8 +133,8 @@ if [ -n "$opts" ]; then
     started_string="started with options: ${opts}"
 fi
 write_log "$started_string"
-[ -n "$DBGOUT" ] && printf '%s %s\n' "$myname" "$started_string"
-[ -n "$DBGOUT" ] && printf '%s %s\n' "$myname pid:" "$mypid"
+[ -n "$dbgOUT" ] && printf '%s %s\n' "$myname" "$started_string"
+[ -n "$dbgOUT" ] && printf '%s %s\n' "$myname pid:" "$mypid"
 
 # Usage: load_config
 # Return: void
@@ -143,7 +142,7 @@ write_log "$started_string"
 #   Load values from the configuration file if it exists.
 load_config () {
     if [ -r "$CONF" ]; then
-        [ -n "$DBGOUT" ] && printf '%s: %s\n' "$myname" "config $CONF loaded"
+        [ -n "$dbgOUT" ] && printf '%s: %s\n' "$myname" "config $CONF loaded"
         TIME_TO_LOCK=$(getval "TIME_TO_LOCK" "$CONF")
         [ -n "$TIME_TO_LOCK" ] && TIME=$TIME_TO_LOCK
     fi
@@ -155,7 +154,7 @@ load_config () {
 #   Sets the screen saver activation and dpms parameters via xset.
 set_time () {
     load_config
-    [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} time" "$TIME"
+    [ -n "$dbgOUT" ] && printf '%s: %s\n' "${myname} time" "$TIME"
     c_cycle="$(( TIME / 5 ))"
     c_timeout="$(( TIME - c_cycle ))"
     c_off="$(( TIME * 3 / 2 ))"
@@ -168,8 +167,8 @@ set_time () {
     # <standby> <suspend> <off>
     time_dpms="0 0 $c_off"
 
-    [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time screensaver" "$time_ss"
-    [ -n "$DBGOUT" ] && printf '%20s: %s\n' "time dpms" "$time_dpms"
+    [ -n "$dbgOUT" ] && printf '%20s: %s\n' "time screensaver" "$time_ss"
+    [ -n "$dbgOUT" ] && printf '%20s: %s\n' "time dpms" "$time_dpms"
 
     # we want word splitting here
     # shellcheck disable=SC2086
@@ -185,7 +184,7 @@ set_time () {
 #   Handle signals to terminate the program, sets NO_CONTINUE to 1 so that the
 #   waiter cycle can terminate.
 outHandler () {
-    [ "$DBGOUT" = 1 ] && printf '\n%s\n' "exiting on signal: $1"
+    [ "$dbgOUT" = 1 ] && printf '\n%s\n' "exiting on signal: $1"
     # kill "$xsslock_pid"
     NO_CONTINUE=1
     # exit
@@ -197,7 +196,7 @@ outHandler () {
 #   Handle signals to terminate the program, sets NO_CONTINUE to 2 so that the
 #   waiter cycle can terminate and the program can exec "$0" to reload.
 relHandler () {
-    [ "$DBGOUT" = 1 ] && printf '\n%s\n' "reloading on signal: $1"
+    [ "$dbgOUT" = 1 ] && printf '\n%s\n' "reloading on signal: $1"
     NO_CONTINUE=2
 }
 
@@ -208,7 +207,7 @@ relHandler () {
 #   saver activation times.
 #   Writes to log.
 sigHandler () {
-    [ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} received signal" "$1"
+    [ -n "$dbgOUT" ] && printf '%s: %s\n' "${myname} received signal" "$1"
     write_log "$1 received"
     set_time
 }
@@ -314,7 +313,7 @@ if kill -0 "$xsslock_pid" >/dev/null; then
     kill "$xsslock_pid"
     write_log "xss-lock killed"
 fi
-[ -n "$DBGOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
+[ -n "$dbgOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
 case "$NO_CONTINUE" in
     1)
         write_log "terminating."
