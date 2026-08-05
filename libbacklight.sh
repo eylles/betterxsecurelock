@@ -79,7 +79,9 @@ set_scaled () {
     scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
     if [ -w "$brightness_file" ]; then
         printf '%s' "$scaled_value" > "$brightness_file"
-        [ -z "$dbgOUT" ] || printf '[%s: %6d]   ' "actual value" "$scaled_value"
+        if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+            printf '[%s: %6d]   ' "actual value" "$scaled_value"
+        fi
     fi
 }
 
@@ -91,8 +93,9 @@ set_scaled () {
 set_brightness() {
     val="$1"
     perc_val="$(int_to_perc "$val" "$max_brightness")"
-    [ -z "$dbgOUT" ] || printf '%s %3d (%s)  ' \
-        "brightness level:" "$val" "${perc_val}%"
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf '%s %3d (%s)  ' "brightness level:" "$val" "${perc_val}%"
+    fi
     # set brightness for every screen we can find
     for screen_path in $sysfs_path; do
         if [ -n "$dbgOUT" ]; then
@@ -102,7 +105,9 @@ set_brightness() {
         fi
         set_scaled "$screen_path" "$val"
     done
-    [ -z "$dbgOUT" ] || printf '\n'
+    if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
+        printf '\n'
+    fi
 }
 
 # return type: void
