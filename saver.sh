@@ -62,12 +62,6 @@ Screen_Saver=""
 
 # type:        int bool
 # description:
-#   C like int bool, whether to print debug output.
-#   0 = false
-#   1 = true
-DBGOUT=""
-# type:        int bool
-# description:
 #   C like int bool, whether to dry run.
 #   0 = false
 #   1 = true
@@ -99,7 +93,7 @@ ssbar_pid=""
 . ./libmsleep.sh
 
 roll_saver() {
-  [ "$DBGOUT" = 1 ] && printf '%s\n' "SAVER_OPT: $SAVER_OPT"
+  [ "$dbgOUT" = 1 ] && printf '%s\n' "SAVER_OPT: $SAVER_OPT"
   if [ -z "$SAVER_OPT" ]; then
     if [ -z "$Screen_Saver" ]; then
       Screen_Saver=$(shuf -n 1 -e walldir currwall livewall)
@@ -113,7 +107,7 @@ roll_saver() {
       5) Screen_Saver=$(split_str "$saver_list_5" "," | shuf -n 1) ;;
     esac
   fi
-  [ "$DBGOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
+  [ "$dbgOUT" = 1 ] && printf '%s\n' "Screen_Saver: $Screen_Saver"
 }
 
 # return type: void
@@ -132,7 +126,7 @@ run_saver() {
         # printf '%s\n' "${myname}: saver module $Screen_Saver selected."
         case "$Screen_Saver" in
         matrix)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             # try to use unimatrix first
             matrix_cmd=$(command -v unimatrix)
@@ -155,7 +149,7 @@ run_saver() {
                     -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
                     -g "$geometry" -e $matrix_cmd &
                 saver_pid=$!
-                [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+                [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
             fi
         ;;
         pipes)
@@ -164,31 +158,31 @@ run_saver() {
                 # shellcheck disable=2086
                 np=$(shuf -n 1 -e $np_list)
             fi
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
                 -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" \
                 -g "$geometry" -e pipes.sh -p "$np" -f 60 -R -r 1000 &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         btop)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
                 -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
                 -g "$geometry" -e btop &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         htop)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
                 -fa "$term_font" -fs 12 -into "$XSCREENSAVER_WINDOW" \
                 -g "$geometry" -e htop &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         snake)
             if [ -z "$sl" ]; then
@@ -196,25 +190,25 @@ run_saver() {
                 # shellcheck disable=2086
                 sl=$(shuf -n 1 -e $sl_l)
             fi
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
                 -fa "$term_font" -fs 30 -into "$XSCREENSAVER_WINDOW" \
                 -g "$geometry" -e sssnake -m screensaver -s 15 -l "$sl" &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         fire)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             xterm \
                 -into "$XSCREENSAVER_WINDOW" \
                 -g "$geometry" -e fire -l 300 -t -s 10 -f 3 &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         walldir)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             if [ -z "$delay" ]; then
                 # we want word splitting here
@@ -224,25 +218,25 @@ run_saver() {
             find "$wall_dir" -type f | shuf | nsxiv -i -bfq -S "$delay"\
             -e "$XSCREENSAVER_WINDOW" -g "$geometry" -s F 2>/dev/null &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         currwall)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             nsxiv -bfq -e "$XSCREENSAVER_WINDOW" -g "$geometry"\
             -s F "$wallpaper" 2>/dev/null &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         livewall)
-            [ "$DBGOUT" = 1 ] && printf '%s\n' \
+            [ "$dbgOUT" = 1 ] && printf '%s\n' \
                 "${myname}: starting saver $Screen_Saver"
             mpv --no-input-terminal --loop=inf --stop-screensaver=no \
             --wid="${XSCREENSAVER_WINDOW}" --no-config --hwdec=auto \
             --really-quiet --no-audio \
             --vo=gpu "$(shuf -n 1 -e "${live_walls}"/* )" 2>/dev/null &
             saver_pid=$!
-            [ "$DBGOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
+            [ "$dbgOUT" = 1 ] && printf '%s\n' "${myname}: saver pid $saver_pid"
         ;;
         esac
         if kill -0 "$saver_pid" 2>/dev/null; then
@@ -289,7 +283,7 @@ sig_handler() {
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        -debug)   DBGOUT=1  ;;
+        -debug)   dbgOUT=1  ;;
         -dryrun)  DRYRUN=1  ;;
         # xsecurelock passes to every saver on /usr/libexec/xsecurelock
         # it is really only used on saver_xscreensaver tho.
@@ -302,11 +296,11 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-[ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 1: $saver_list_1"
-[ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 2: $saver_list_2"
-[ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 3: $saver_list_3"
-[ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 4: $saver_list_4"
-[ "$DBGOUT" = 1 ] && printf '%s\n' "saver list 5: $saver_list_5"
+[ "$dbgOUT" = 1 ] && printf '%s\n' "saver list 1: $saver_list_1"
+[ "$dbgOUT" = 1 ] && printf '%s\n' "saver list 2: $saver_list_2"
+[ "$dbgOUT" = 1 ] && printf '%s\n' "saver list 3: $saver_list_3"
+[ "$dbgOUT" = 1 ] && printf '%s\n' "saver list 4: $saver_list_4"
+[ "$dbgOUT" = 1 ] && printf '%s\n' "saver list 5: $saver_list_5"
 
 trap 'sig_handler' USR1
 
