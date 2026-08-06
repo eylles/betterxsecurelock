@@ -96,6 +96,38 @@ make install_bright-helper
 make install_blight.rules
 ```
 
+## Contents
+
+What is actually in this repo? Well to list the things off:
+
+- lockerd: the locker daemon, a wrapper over xss-lock that solves configuration
+  into a single file, also wrangles xserver screensaver and dpms settings.
+- dim-screen: a screen dimmer to be used by xss-lock, leverages the libbacklight
+  from this same repo.
+- screenlocker: wrapper around xsecurelock, handles starting of xsecurelock as
+  well as managing the screen dimmer and delaysleep utilities, also sets which
+  screensaver list to use.
+- saver: the screen saver program, a wrapper that randomly chooses one of the
+  available screensavers from the current screensaver list, also initiates the
+  screensaverbar when the auth dialog is present.
+- screensaverbar: content provider for the top bar of the screensaver when the
+  auth dialog shows up, the actual bar is just text rendered inside a terminal
+  emulator, at the time that is plain old xterm.
+- delaysleep: a small program that counts the seconds until the system can be
+  suspended due to inactivity, by default 900 seconds, it leverages systemact to
+  do the actual system suspend.
+- blight: a screen backlight setting program leveraging libbacklight, which sets
+  backlight with the `/sys/class/backlight` interface, it supports 256 levels of
+  brightness from 0 to 255 which are scaled for the present screen devices.
+- supporting shell libraries: all these programs being built on shell script
+  have quite the amount of common repeated code which is contained within a set
+  of libraries, every shell file with the `lib` prefix on this repo is one of
+  the libraries needed by the programs.
+- dbus-screenlock-freedesktop.py: a proxy python script that provides the
+  `org.freedesktop.ScreenSaver` interface, provides the methods `Lock`,
+  `Inhibit` and `UnInhibit`, it leverages `xdg-screensaver` for the handling.
+
+## TODO
 TODO:
 - [ ] wrap and use the screensaver modules provided by xsecurelock
 - [ ] add a generic xterm screensaver module to run the terminal based savers
