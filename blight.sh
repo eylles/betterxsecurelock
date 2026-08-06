@@ -73,6 +73,9 @@ main() {
             "debug"|"-debug"|"--debug"|"-d"|"d")
                 dbgOUT=1
                 ;;
+            "verbose"|"-verbose"|"--verbose"|"-v"|"v")
+                VERB=1
+                ;;
             "help"|"-help"|"--help"|"-h"|"h")
                 show_help
                 exit 0
@@ -101,7 +104,7 @@ main() {
             dec_brightness "$value"
             ;;
         "get")
-            if [ -z "$dbgOUT" ]; then
+            if [ -z "$dbgOUT" ] && [ -z "$VERB" ]; then
                 get_brightness
             else
                 b_level="$(get_brightness)"
