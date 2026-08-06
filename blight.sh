@@ -13,7 +13,7 @@ cutoff=50
 
 show_usage() {
     printf '%s\n' \
-        "Usage: ${myname} [-debug] < g | s < NUM | PERC > [ + | - ] >"
+        "Usage: ${myname} [debug] [verbose] < g | s < NUM | PERC > [ + | - ] >"
 }
 
 show_help () {
@@ -28,6 +28,8 @@ show_help () {
     printf '%s\n'   "OPTIONS"
     printf '  %s\n' "debug, --debug, -debug, -d, d"
     printf '\t%s\n' "Show debug output."
+    printf '  %s\n' "verbose, --verbose, -verbose, -v, v"
+    printf '\t%s\n' "Show verbose output."
     printf '  %s\n' "help, --help, -help, -h, h"
     printf '\t%s\n' "Show this help message."
 }
