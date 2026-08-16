@@ -24,7 +24,7 @@ dim_step=1
 ###############################################################################
 
 # type: int
-# def: initial_brightness=$(get_brightness)
+# def: initial_brightness=$(blight g)
 # description:
 #    The initial brightness value.
 #    Brightness will be restored to this value upon exit.
@@ -37,7 +37,7 @@ initial_brightness=255
 #    will run set_brightness
 #    on the variable "$initial_brightness"
 reset_brightness() {
-    current_brightness="$(get_brightness)"
+    current_brightness="$(blight g)"
     if [ "$current_brightness" -ne "$initial_brightness" ]; then
         [ -n "$dbgOUT" ] && printf '%s %3d\n' \
             "resetting brightness, current level:" \
@@ -57,10 +57,10 @@ fade_brightness() {
         set_brightness "$1"
     else
         # type: int
-        # def: level=$(get_brightness)
+        # def: level=$(blight g)
         # description:
-        #    the return value of get_brightness
-        level=$(get_brightness)
+        #    the return value of blight g
+        level=$(blight g)
         while [ "$level" -gt "$min_brightness" ] && [ -z "$NO_CONTINUE" ]; do
             # type: int
             # def: level=$((level-dim_step))
@@ -164,7 +164,7 @@ main () {
     trap 'sig_handler USR1' USR1
     trap 'sig_handler USR2' USR2
     trap 'reset_brightness' EXIT
-    initial_brightness=$(get_brightness)
+    initial_brightness=$(blight g)
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
         printf '%20s: %d\n' "starting brightness" "$initial_brightness"
     fi
