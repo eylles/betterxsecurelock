@@ -34,7 +34,7 @@ initial_brightness=255
 # return type: void
 # usage: reset_brightness
 # description:
-#    will run set_brightness
+#    will run blight s
 #    on the variable "$initial_brightness"
 reset_brightness() {
     current_brightness="$(blight g)"
@@ -42,7 +42,7 @@ reset_brightness() {
         [ -n "$dbgOUT" ] && printf '%s %3d\n' \
             "resetting brightness, current level:" \
             "$current_brightness"
-        set_brightness "$initial_brightness"
+        blight s "$initial_brightness"
     fi
 }
 
@@ -54,7 +54,7 @@ reset_brightness() {
 #    will be faded to.
 fade_brightness() {
     if [ -z "$fade_step_time" ]; then
-        set_brightness "$1"
+        blight s "$1"
     else
         # type: int
         # def: level=$(blight g)
@@ -70,7 +70,7 @@ fade_brightness() {
             if [ "$level" -lt 0 ]; then
                 level=0
             fi
-            set_brightness "$level"
+            blight s "$level"
             msleep "$fade_step_time"
         done
     fi
