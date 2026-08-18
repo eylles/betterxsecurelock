@@ -97,6 +97,8 @@ main() {
     fi
     case "$operation" in
         "set")
+            value=$(min_cap "$value" 0)
+            value=$(max_cap "$value" 255)
             set_brightness "$value"
             ;;
         "inc")
