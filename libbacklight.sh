@@ -11,20 +11,31 @@ fi
 sysfs_path="/sys/class/backlight/*/brightness"
 
 # type: int const
+# def: max_val_cap=255
+# description:
+#    The maximum value to which set_brightness can set
+max_val_cap=255
+# type: int const
+# def: min_val_cap=0
+# description:
+#    The minimum value to which set_brightness can set
+min_val_cap=0
+
+# type: int const
 # def: min_brightness=0
 # description:
 #    The lowest brightness value.
-min_brightness=0
+min_brightness="$min_val_cap"
 
 # type: int const
-# def: 255
+# def: max_brightness=255
 # description:
 #    The maximum range for brightness.
 #    All brightness adjustments are done in the range between min_brightness
 #    and this value, meaning a range of 0 to 255 inclusive.
 #    The actual value written to each backlight device is scaled according to
 #    the device's max_brightness range.
-max_brightness=255
+max_brightness="$max_val_cap"
 
 # return type: int
 # usage: get_scaled brightness_file
