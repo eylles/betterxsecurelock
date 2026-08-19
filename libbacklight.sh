@@ -103,6 +103,8 @@ set_scaled () {
 #    brightness values are from 0 to 255
 set_brightness() {
     val="$1"
+    val="$(max_cap "$val" "$max_val_cap")"
+    val="$(min_cap "$val" "$min_val_cap")"
     perc_val="$(int_to_perc "$val" "$max_brightness")"
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
         printf '%s %3d (%s)  ' "brightness level:" "$val" "${perc_val}%"
