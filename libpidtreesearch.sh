@@ -21,7 +21,7 @@ pid_tree_search () {
     search_name="$2"
     word_length="${#search_name}"
     rval=$(
-        pstree -Aps "${search_pid}" \
+        pstree -Aps "${search_pid}" 2>/dev/null \
         | u_awk \
             -v name="$search_name" \
             -v wlen="$word_length" \
