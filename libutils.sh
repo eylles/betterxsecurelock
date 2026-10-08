@@ -138,8 +138,16 @@ scale_val () {
     value="$1"
     range_input="$2"
     range_target="$3"
-    scale_factor=$(( range_target / range_input ))
+    double_scaler=""
+    if [ "$range_input" -ge "$range_target" ]; then
+        double_scaler="$range_input"
+    else
+        double_scaler="$range_target"
+    fi
+    scaled_target=$(( range_target * double_scaler ))
+    scale_factor=$(( scaled_target / range_input ))
     scaled_value=$(( value * scale_factor ))
+    scaled_value=$(( scaled_value / double_scaler ))
     printf '%s' $scaled_value
 }
 
