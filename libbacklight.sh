@@ -87,7 +87,11 @@ set_scaled () {
     # remove float part if any
     max_val="${max_val%.*}"
     value="$2"
-    scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
+    if [ "$max_val" -ge "$max_brightness" ]; then
+        scaled_value=$(scale_val "$value" "$max_brightness" "$max_val")
+    else
+        scaled_value=$(unscale_val "$value" "$max_brightness" "$max_val")
+    fi
     if [ -w "$brightness_file" ]; then
         printf '%s' "$scaled_value" > "$brightness_file"
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
