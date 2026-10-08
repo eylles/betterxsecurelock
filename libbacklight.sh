@@ -92,6 +92,7 @@ set_scaled () {
     else
         scaled_value=$(unscale_val "$value" "$max_brightness" "$max_val")
     fi
+    scaled_value=$(max_cap "$scaled_value" "$max_val")
     if [ -w "$brightness_file" ]; then
         printf '%s' "$scaled_value" > "$brightness_file"
         if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
