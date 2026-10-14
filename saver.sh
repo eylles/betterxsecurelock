@@ -74,6 +74,11 @@ geometry=$(xdpyinfo | grep 'dimensions:' | cut -d' ' -f7)
 
 # type:        int
 # description:
+#   x11 screen geometry WIDTH
+screen_width="${geometry%%x*}"
+
+# type:        int
+# description:
 #   current screen saver module pid
 #   used by sig_handler to kill the running screen saver module.
 saver_pid=""
@@ -247,7 +252,7 @@ run_saver() {
                     if ! kill -0 "$ssbar_pid" 2>/dev/null ; then
                         xterm \
                             -into "$XSCREENSAVER_WINDOW" \
-                            -g "98x1" -fa "$bar_font" -fs 20 -b 0 \
+                            -g "${screen_width}x1" -fa "$bar_font" -fs 20 -b 0 \
                             -e screensaverbar &
                         ssbar_pid=$!
                     fi
