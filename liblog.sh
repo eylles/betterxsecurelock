@@ -2,6 +2,10 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
+if [ -z "$VERSION" ]; then
+    . ./libversion.sh
+fi
+
 # type: int
 # description: digit width of the process id number
 # default: 6
@@ -35,10 +39,11 @@ PIDWIDTH="$(( PIDWIDTH + 2 ))"
 write_log () {
     name="$myname"
     message="$*"
-    printf '[%s] %12s %*s: %s\n' \
+    printf '[%s] %12s %*s %s: %s\n' \
         "$(date +'%Y-%m-%d %H:%M:%S')" \
         "$name" \
         "$PIDWIDTH" "[$mypid]" \
+        "$VERSION" \
         "$message" \
         >> "$LOGFILE"
 }

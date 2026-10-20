@@ -9,13 +9,17 @@ UBIN_LOC = $(DESTDIR)$(UDEVDIR)
 .PHONY: install uninstall all bin lib clean
 
 include config.mk
+include version.mk
 
 all: bin lib
 
 bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 
-lib: libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
+lib: libversion.sh libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
 	libbacklight.sh
+
+libversion.sh: build
+	sed "s|@VERSION@|$(VERSION)|g" libversion.sh > build/$@
 
 libbool.sh: build
 	sed "s| \./| $(LIB_LOC)/|g" libbool.sh > build/$@
@@ -29,7 +33,7 @@ libpidtreesearch.sh: build
 libmsleep.sh: build
 	sed "s| \./| $(LIB_LOC)/|g" libmsleep.sh > build/$@
 
-liblog.sh: build
+liblog.sh: build libversion.sh
 	sed "s| \./| $(LIB_LOC)/|g" liblog.sh > build/$@
 
 libbacklight.sh: build
@@ -74,6 +78,7 @@ clean:
 	rm -f build/saver
 	rm -f build/screenlocker
 	rm -f build/screensaverbar
+	rm -f build/libversion.sh
 	rm -f build/libbool.sh
 	rm -f build/libutils.sh
 	rm -f build/libpidtreesearch.sh
@@ -92,6 +97,7 @@ install: all
 	cp -vf build/screensaverbar      $(BIN_LOC)/
 	cp -vf build/delaysleep          $(BIN_LOC)/
 	mkdir -p $(LIB_LOC)
+	cp -vf build/libversion.sh       $(LIB_LOC)/
 	cp -vf build/libbool.sh          $(LIB_LOC)/
 	cp -vf build/libutils.sh         $(LIB_LOC)/
 	cp -vf build/libpidtreesearch.sh $(LIB_LOC)/
@@ -107,6 +113,7 @@ uninstall:
 	rm -vf $(BIN_LOC)/screenlocker
 	rm -vf $(BIN_LOC)/screensaverbar
 	rm -vf $(BIN_LOC)/delaysleep
+	rm -vf $(LIB_LOC)/libversion.sh
 	rm -vf $(LIB_LOC)/libbool.sh
 	rm -vf $(LIB_LOC)/libutils.sh
 	rm -vf $(LIB_LOC)/libpidtreesearch.sh
