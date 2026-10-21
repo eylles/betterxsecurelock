@@ -8,6 +8,8 @@ fi
 
 . ./libutils.sh
 
+LOG_LEVEL=$(getval "LOG_LEVEL" "$CONF")
+
 # type: int
 # description: digit width of the process id number
 # default: 6
