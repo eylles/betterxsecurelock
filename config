@@ -1,3 +1,17 @@
+###########
+# logging #
+###########
+
+# log levels used by the programs
+# possible values:
+#   0  -  logging disabled
+#   1  -  show info messages
+#   2  -  show error messages
+#   3  -  show debug messages
+# -------------------------------------------
+# default: 1
+LOG_LEVEL=1
+
 ################
 # lockerd opts #
 ################
