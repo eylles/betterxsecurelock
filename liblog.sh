@@ -6,6 +6,8 @@ if [ -z "$VERSION" ]; then
     . ./libversion.sh
 fi
 
+. ./libutils.sh
+
 # type: int
 # description: digit width of the process id number
 # default: 6
