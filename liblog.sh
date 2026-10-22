@@ -9,6 +9,9 @@ fi
 . ./libutils.sh
 
 LOG_LEVEL=$(getval "LOG_LEVEL" "$CONF")
+if [ -z "$LOG_LEVEL" ]; then
+    LOG_LEVEL=1
+fi
 
 # type: int
 # description: digit width of the process id number
