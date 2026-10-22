@@ -36,18 +36,42 @@ if [ -n "$pw" ]; then
 fi
 PIDWIDTH="$(( PIDWIDTH + 2 ))"
 
-# Usage: write_log "message text"
+# Usage: write_log "priority" "message text"
 # Return: void
+# Arguments:
+#    priority: one of { inf, err, dbg }
 # Description:
 #   Write message to log file
 write_log () {
+    priority="$1"
+    shift
+    should_log="$_false"
     name="$myname"
     message="$*"
-    printf '[%s] %12s %*s %s: %s\n' \
-        "$(date +'%Y-%m-%d %H:%M:%S')" \
-        "$name" \
-        "$PIDWIDTH" "[$mypid]" \
-        "$VERSION" \
-        "$message" \
-        >> "$LOGFILE"
+    case "$priority" in
+      inf)
+        if [ "$LOG_LEVEL" -gt 0 ]; then
+          should_log="$_true"
+        fi
+        ;;
+      err)
+        if [ "$LOG_LEVEL" -gt 1 ]; then
+          should_log="$_true"
+        fi
+        ;;
+      dbg)
+        if [ "$LOG_LEVEL" -gt 2 ]; then
+          should_log="$_true"
+        fi
+        ;;
+    esac
+    if [ "$should_log" -eq "$_true" ]; then
+        printf '[%s] %12s %*s %s: %s\n' \
+            "$(date +'%Y-%m-%d %H:%M:%S')" \
+            "$name" \
+            "$PIDWIDTH" "[$mypid]" \
+            "$VERSION" \
+            "$message" \
+            >> "$LOGFILE"
+    fi
 }
