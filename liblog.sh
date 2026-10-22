@@ -49,6 +49,9 @@ write_log () {
             priority="$1"
             shift
             ;;
+        *)
+            priority="inf"
+            ;;
     esac
     should_log="$_false"
     name="$myname"
