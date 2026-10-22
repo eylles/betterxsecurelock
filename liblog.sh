@@ -43,8 +43,13 @@ PIDWIDTH="$(( PIDWIDTH + 2 ))"
 # Description:
 #   Write message to log file
 write_log () {
-    priority="$1"
-    shift
+    priority=""
+    case "$1" in
+        "inf"|"err"|"dbg")
+            priority="$1"
+            shift
+            ;;
+    esac
     should_log="$_false"
     name="$myname"
     message="$*"
