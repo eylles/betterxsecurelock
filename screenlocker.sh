@@ -102,7 +102,7 @@ kill_dangling_dimmers () {
         dangling_dim_screen_pid=$(pid_tree_search "$LOCKERD_PID" dim-screen)
         dimmer_comm=$(ps -p "$dangling_dim_screen_pid" -o command=)
         kill "$dangling_dim_screen_pid"
-        write_log \
+        write_log "dbg" \
             "dangling ${dimmer_comm##*/} PID: $dangling_dim_screen_pid killed."
     fi
 }
@@ -134,24 +134,24 @@ start_xsecurelock () {
     xsecurelock_pid=$!
     sleep 1
     if ps -p "$xsecurelock_pid" -o cmd | grep -q "xsecurelock" ; then
-        write_log \
+        write_log "dbg" \
             "launched xsecurelock PID: $xsecurelock_pid"
     else
-        write_log "xsecurelock start failed, trying again."
+        write_log "dbg" "xsecurelock start failed, trying again."
         start_xsecurelock
     fi
 }
 
 if pid_tree_search "$LOCKERD_PID" "xsecurelock" >/dev/null; then
     instance_pid=$(pid_tree_search "$LOCKERD_PID" "xsecurelock")
-    write_log \
+    write_log "inf" \
         "xsecurelock instance" \
         "$instance_pid" \
         "already running, no new instance will be launched."
     exit
 else
-    write_log "no xsecurelock instance running."
-    write_log "starting screenlocking."
+    write_log "inf" "no xsecurelock instance running."
+    write_log "inf" "starting screenlocking."
     . "${HOME}/.cache/wal/colors.sh"
     export SAVER_OPT="$COLO_OPT"
     case "${COLO_OPT}" in
@@ -180,11 +180,11 @@ else
                 dimmer_comm=$(ps -p "$dimmer_pid" -o command=)
                 kill -0 "$dimmer_pid" 2>/dev/null && \
                 kill "$dimmer_pid" 2>/dev/null && \
-                write_log "${dimmer_comm##*/} PID: $dimmer_pid killed."
+                write_log "dbg" "${dimmer_comm##*/} PID: $dimmer_pid killed."
             fi
             if kill -0 "$delaysleep_pid" 2>/dev/null; then
                 kill "$delaysleep_pid" 2>/dev/null && \
-                    write_log "delaysleep PID: $delaysleep_pid killed."
+                    write_log "dbg" "delaysleep PID: $delaysleep_pid killed."
             fi
         else
             if ! pid_tree_search "$mypid" delaysleep >/dev/null; then
@@ -200,4 +200,4 @@ else
     done
     kill_dangling_dimmers
 fi
-write_log "screen unlocked."
+write_log "inf" "screen unlocked."

@@ -124,7 +124,7 @@ export CONF LOGFILE PIDWIDTH
 . ./libpidtreesearch.sh
 
 if [ -z "$SessionID" ]; then
-    write_log "could not determine Session ID, exiting..."
+    write_log "inf" "could not determine Session ID, exiting..."
     exit 1
 fi
 
@@ -132,7 +132,7 @@ started_string="started."
 if [ -n "$opts" ]; then
     started_string="started with options: ${opts}"
 fi
-write_log "$started_string"
+write_log "inf" "$started_string"
 [ -n "$dbgOUT" ] && printf '%s %s\n' "$myname" "$started_string"
 [ -n "$dbgOUT" ] && printf '%s %s\n' "$myname pid:" "$mypid"
 
@@ -175,7 +175,7 @@ set_time () {
     xset s ${time_ss}
     # shellcheck disable=SC2086
     xset dpms ${time_dpms}
-    write_log "set time s as: ${time_ss} and dpms as: ${time_dpms}"
+    write_log "dbg" "set time s as: ${time_ss} and dpms as: ${time_dpms}"
 }
 
 # Usage: outHandler "SIG"
@@ -208,7 +208,7 @@ relHandler () {
 #   Writes to log.
 sigHandler () {
     [ -n "$dbgOUT" ] && printf '%s: %s\n' "${myname} received signal" "$1"
-    write_log "$1 received"
+    write_log "inf" "$1 received"
     set_time
 }
 
@@ -221,7 +221,7 @@ fi
 # capture pid
 # a simple $! is not enough thanks to using sed...
 xsslock_pid=$(pid_tree_search "${mypid}" "xss-lock")
-write_log "xss-lock pid captured as ${xsslock_pid}"
+write_log "dbg" "xss-lock pid captured as ${xsslock_pid}"
 
 trap 'sigHandler "HUP"' HUP
 trap 'sigHandler "USR1"' USR1
@@ -279,7 +279,7 @@ should_set_time () {
     return "$retval"
 }
 
-write_log "waiting for xss-lock"
+write_log "dbg" "waiting for xss-lock"
 # 5 cycles per second, 60 seconds per minute, 60 minutes
 INTERVAL=$(( 5 * 60 * 60 ))
 # 5 cycles per second, 20 seconds
@@ -288,14 +288,14 @@ MiliSecs=$(shuf -i 200-250 -n 1)
 while [ -z "$NO_CONTINUE" ]; do
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
-        write_log "running"
+        write_log "dbg" "running"
         # reset the count to 0
         count=0
     fi
     # check if we need to set time
     if [ $(( count % cyc )) -eq 0 ]; then
         if ! should_set_time ; then
-            write_log "incorrect time setting detected"
+            write_log "inf" "incorrect time setting detected"
             set_time
         fi
     fi
@@ -307,20 +307,20 @@ while [ -z "$NO_CONTINUE" ]; do
     msleep "$MiliSecs"
 done
 
-write_log "no continue received"
+write_log "inf" "no continue received"
 
 if kill -0 "$xsslock_pid" >/dev/null; then
     kill "$xsslock_pid"
-    write_log "xss-lock killed"
+    write_log "dbg" "xss-lock killed"
 fi
 [ -n "$dbgOUT" ] && printf '%s: %s\n' "${myname} killed" "xss-lock"
 case "$NO_CONTINUE" in
     1)
-        write_log "terminating."
+        write_log "inf" "terminating."
         exit 0
         ;;
     2)
-        write_log "reloading."
+        write_log "inf" "reloading."
         if [ -n "$opts" ]; then
             set -- ${opts}
         fi
