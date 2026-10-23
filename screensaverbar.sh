@@ -140,6 +140,8 @@ while [ "$cont" = 1 ]; do
     printf ' %*s ' "$wbat" "$cbat"
     printf '\r'
     msleep 500
+    MiliSecs=$(shuf -i 475-675 -n 1)
+    msleep "$MiliSecs"
 done
 
 trap 'exit_handler' EXIT
