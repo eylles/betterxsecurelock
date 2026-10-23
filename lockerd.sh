@@ -284,7 +284,6 @@ write_log "dbg" "waiting for xss-lock"
 INTERVAL=$(( 5 * 60 * 60 ))
 # 5 cycles per second, 20 seconds
 cyc=$(( 5 * 20 ))
-MiliSecs=$(shuf -i 200-250 -n 1)
 while [ -z "$NO_CONTINUE" ]; do
     # is the count of cycle iterations the same as the interval?
     if [ "$count" = "$INTERVAL" ]; then
@@ -303,7 +302,9 @@ while [ -z "$NO_CONTINUE" ]; do
     count=$(( count + 1 ))
     # the duty cycle of this daemon is 5 iterations per second
     # this is fast enough to feel responsive to signals, yet not hog
-    # resources, mainly cpu
+    # resources, mainly cpu, still some jitter is added in hopes of
+    # a flatter cpu usage curve
+    MiliSecs=$(shuf -i 200-250 -n 1)
     msleep "$MiliSecs"
 done
 
