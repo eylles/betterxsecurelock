@@ -8,9 +8,12 @@ fi
 
 . ./libutils.sh
 
-LOG_LEVEL=$(getval "LOG_LEVEL" "$CONF")
 if [ -z "$LOG_LEVEL" ]; then
-    LOG_LEVEL=1
+    LOG_LEVEL=$(getval "LOG_LEVEL" "$CONF")
+    if [ -z "$LOG_LEVEL" ]; then
+        LOG_LEVEL=1
+    fi
+    export LOG_LEVEL
 fi
 
 # type: int
