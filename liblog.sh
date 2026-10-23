@@ -6,6 +6,7 @@ if [ -z "$VERSION" ]; then
     . ./libversion.sh
 fi
 
+. ./libbool.sh
 . ./libutils.sh
 
 if [ -z "$LOG_LEVEL" ]; then
