@@ -247,7 +247,8 @@ run_saver() {
         if kill -0 "$saver_pid" 2>/dev/null; then
             # show screensaver bar
             while kill -0 "$saver_pid" 2>/dev/null; do
-                msleep 100
+                MiliSecs=$(shuf -i 100-150 -n 1)
+                msleep "$MiliSecs"
                 if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid" 2>/dev/null ; then
                         xterm \
