@@ -191,8 +191,10 @@ main () {
         count=$(( count + 1 ))
         # the duty cycle of this daemon is 5 iterations per second
         # this is fast enough to feel responsive to signals, yet not hog
-        # resources, mainly cpu
-        msleep 200
+        # resources, mainly cpu, still some jitter is added in hopes of
+        # a flatter cpu usage curve
+        MiliSecs=$(shuf -i 200-250 -n 1)
+        msleep "$MiliSecs"
     done
 
     if [ -n "$dbgOUT" ] || [ -n "$VERB" ]; then
