@@ -139,7 +139,7 @@ while [ "$cont" = 1 ]; do
     printf '%*s' "$padding" " "
     printf ' %*s ' "$wbat" "$cbat"
     printf '\r'
-    MiliSecs=$(shuf -i 475-675 -n 1)
+    MiliSecs=$(shuf -i 115-375 -n 1)
     msleep "$MiliSecs"
 done
 

@@ -196,7 +196,7 @@ else
                 dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen")
             fi
         fi
-        MiliSecs=$(shuf -i 100-225 -n 1)
+        MiliSecs=$(shuf -i 100-115 -n 1)
         msleep "$MiliSecs"
     done
     kill_dangling_dimmers

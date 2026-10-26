@@ -193,7 +193,7 @@ main () {
         # this is fast enough to feel responsive to signals, yet not hog
         # resources, mainly cpu, still some jitter is added in hopes of
         # a flatter cpu usage curve
-        MiliSecs=$(shuf -i 200-250 -n 1)
+        MiliSecs=$(shuf -i 200-225 -n 1)
         msleep "$MiliSecs"
     done
 
