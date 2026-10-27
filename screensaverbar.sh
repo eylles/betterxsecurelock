@@ -126,7 +126,7 @@ ontop () {
 printf '\33[?25l'
 cont=1
 while [ "$cont" = 1 ]; do
-    MiliSecs=$(shuf -i 115-375 -n 1)
+    MiliSecs=$(shuf -i 55-105 -n 1)
     ontop
     cday=$(date '+%Y %m %d')
     ctime=$(date '+%T')
