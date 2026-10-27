@@ -174,6 +174,7 @@ else
     kill_dangling_dimmers
     # auth watcher
     while pid_tree_search "$mypid" xsecurelock >/dev/null; do
+        MiliSecs=$(shuf -i 100-115 -n 1)
         if pid_tree_search "$mypid" auth_x11 >/dev/null; then
             # kill_dangling_dimmers
             if kill -0 "$dimmer_pid" 2>/dev/null; then
@@ -196,7 +197,6 @@ else
                 dimmer_pid=$(pid_tree_search "$LOCKERD_PID" "dim-screen")
             fi
         fi
-        MiliSecs=$(shuf -i 100-115 -n 1)
         msleep "$MiliSecs"
     done
     kill_dangling_dimmers

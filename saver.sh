@@ -248,7 +248,6 @@ run_saver() {
             # show screensaver bar
             while kill -0 "$saver_pid" 2>/dev/null; do
                 MiliSecs=$(shuf -i 100-115 -n 1)
-                msleep "$MiliSecs"
                 if pid_tree_search "$LOCKERD_PID" auth_x11 >/dev/null; then
                     if ! kill -0 "$ssbar_pid" 2>/dev/null ; then
                         xterm \
@@ -259,6 +258,7 @@ run_saver() {
                     fi
                     # wait
                 fi
+                msleep "$MiliSecs"
             done
         else
             printf '%s\n' "${myname}: saver module failed, re-running."
