@@ -1,0 +1,36 @@
+.TH BACKLIGHT 1 blight\-@VERSION@
+.SH NAME
+blight \- read and adjust display backlight
+.SH SYNOPSIS
+.B blight
+.RB [ option ]
+.RB [ operation ]
+.RB [ value... ]
+.SH DESCRIPTION
+.P
+Simple and minimal program to adjust screen backlight and get the current
+backlight level.
+.SH OPTIONS
+.TP
+.B "\-h, \-\-help, \-help, help, h"
+Print brief usage information to standard output and exit.
+
+.TP
+.B "\-v, \-\-verbose, \-verbose, verbose, v"
+Show verbose output.
+
+.TP
+.B "\-d, \-\-debug, \-debug, debug, d"
+Show debug output.
+
+.SH AUTHOR
+.EX
+eylles                 <ed.ylles1997 at gmail.com>
+.EE
+.SH HOMEPAGE
+.TP
+Source code:
+.EE
+https://github.com/eylles/betterxsecurelock
+.EX
+
