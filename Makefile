@@ -2,6 +2,7 @@
 PREFIX = /usr/local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
+MAN_LOC = $(DESTDIR)$(PREFIX)/share/man/man1
 UDEV_PREFIX = /usr
 UDEVDIR = $(UDEV_PREFIX)/lib/udev
 UDEV_LOC = $(DESTDIR)$(UDEVDIR)/rules.d
@@ -11,12 +12,14 @@ UBIN_LOC = $(DESTDIR)$(UDEVDIR)
 include config.mk
 include version.mk
 
-all: bin lib
+all: bin lib man
 
 bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 
 lib: libversion.sh libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
 	libbacklight.sh
+
+man: blight.1
 
 libversion.sh: build
 	sed "s|@VERSION@|$(VERSION)|g" libversion.sh > build/$@
@@ -69,6 +72,9 @@ screenlocker: build
 screensaverbar: build
 	sed "s| \./| $(LIB_LOC)/|g" screensaverbar.sh > build/$@
 	chmod 755 build/$@
+
+blight.1: build
+	sed "s|@VERSION@|$(VERSION)|g" blight.1.in > build/$@
 
 clean:
 	rm -f build/blight

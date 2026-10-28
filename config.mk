@@ -5,6 +5,8 @@ PREFIX = /usr/local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 # libraries location
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
+# manpage location
+MAN_LOC = $(DESTDIR)$(PREFIX)/share/man/man1
 # udev prefix
 UDEV_PREFIX = /usr
 # udev base directory
