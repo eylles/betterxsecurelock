@@ -23,6 +23,22 @@ Show verbose output.
 .B "\-d, \-\-debug, \-debug, debug, d"
 Show debug output.
 
+.SH OPERATIONS
+.TP
+.B "get, g"
+Get current brightness value. Return value is in the 0 to 255 INT range.
+
+.TP
+.B "set, s"
+Set brightness value. The value can be in the 0 to 255 INT range, larger values
+are capped to 255, negatives are capped to 0, INT percentages from 0 to 100 are
+also accepted, the
+.B "+"
+plus and
+.B "-"
+minus signs are accepted as modifier argument after the value to change the
+operation to either increase or decrease by the value amount.
+
 .SH AUTHOR
 .EX
 eylles                 <ed.ylles1997 at gmail.com>
