@@ -78,6 +78,7 @@ blight.1: build
 
 clean:
 	rm -f build/blight
+	rm -f build/blight.1
 	rm -f build/delaysleep
 	rm -f build/dim-screen
 	rm -f build/lockerd
@@ -110,6 +111,8 @@ install: all
 	cp -vf build/libmsleep.sh        $(LIB_LOC)/
 	cp -vf build/liblog.sh           $(LIB_LOC)/
 	cp -vf build/libbacklight.sh     $(LIB_LOC)/
+	mkdir -p $(MAN_LOC)
+	cp -vf build/blight.1            $(MAN_LOC)/
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
@@ -126,6 +129,7 @@ uninstall:
 	rm -vf $(LIB_LOC)/libmsleep.sh
 	rm -vf $(LIB_LOC)/liblog.sh
 	rm -vf $(LIB_LOC)/libbacklight.sh
+	rm -vf $(MAN_LOC)/blight.1
 
 install_on_ac_power:
 	mkdir -p $(BIN_LOC)
