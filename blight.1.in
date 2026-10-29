@@ -30,9 +30,13 @@ Get current brightness value. Return value is in the 0 to 255 INT range.
 
 .TP
 .B "set, s"
-Set brightness value. The value can be in the 0 to 255 INT range, larger values
-are capped to 255, negatives are capped to 0, INT percentages from 0 to 100 are
-also accepted, the
+Set brightness value.
+.br
+The value can be in the 0 to 255 INT range, larger values are capped to 255,
+negatives are capped to 0, INT percentages from 0 to 100 are
+also accepted.
+.br
+The
 .B "+"
 plus and
 .B "-"
