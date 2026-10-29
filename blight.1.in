@@ -5,7 +5,12 @@ blight \- read and adjust display backlight
 .B blight
 .RB [ option ]
 .RB [ operation ]
-.RB [ value... ]
+<
+.RB [ NUM | PERC ]
+<
+.RB [ + | - ]
+>
+>
 .SH DESCRIPTION
 .P
 Simple and minimal program to adjust screen backlight and get the current
