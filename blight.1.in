@@ -39,6 +39,95 @@ plus and
 minus signs are accepted as modifier argument after the value to change the
 operation to either increase or decrease by the value amount.
 
+.SH EXAMPLES
+.TP
+Get current brightness:
+.RS
+blight g
+.RE
+Example output:
+.RS
+255
+.RE
+
+.TP
+Get current brightness with debug output:
+.RS
+blight d g
+.RE
+Example output:
+.RS
+Operation: get
+.br
+255 (100%)
+.RE
+
+.TP
+Set brightness to 255:
+.RS
+blight g 255
+.RE
+
+.TP
+Set brightness to 100%:
+.RS
+blight g 100%
+.RE
+
+.TP
+Set brightness to 255 with debug output:
+.RS
+blight d g 255
+.RE
+Example output:
+.RS
+Operation: set
+.br
+    value: 255
+.br
+brightness level: 255 (100%)  amdgpu_bl0 [actual value:    255]
+.RE
+
+.TP
+Set brightness to 100% with debug output:
+.RS
+blight d g 100%
+.RE
+Example output:
+.RS
+Operation: set
+.br
+    value: 255
+.br
+brightness level: 255 (100%)  amdgpu_bl0 [actual value:    255]
+.RE
+
+.TP
+Try to set brightness to 500 with debug output:
+.RS
+blight d g 500
+.RE
+Example output:
+.RS
+Operation: set
+.br
+    value: 500
+.br
+brightness level: 255 (100%)  amdgpu_bl0 [actual value:    255]
+.RE
+
+.TP
+Increase brightness by 5:
+.RS
+blight s 5 +
+.RE
+
+.TP
+Increase brightness by 5%:
+.RS
+blight s 5% +
+.RE
+
 .SH AUTHOR
 .EX
 eylles                 <ed.ylles1997 at gmail.com>
