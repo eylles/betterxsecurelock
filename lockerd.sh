@@ -19,7 +19,7 @@ export LOCKERD_PID=$mypid
 TIME_TO_LOCK=""
 xsslock_pid=""
 
-logdir="${HOME}/.local/state/better-xsecurelock"
+logdir="${XDG_STATE_HOME:-${HOME}/.local/state}/better-xsecurelock"
 if [ ! -f "$logdir" ]; then
     mkdir -p "$logdir"
 fi
