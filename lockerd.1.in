@@ -1,0 +1,41 @@
+.TH LOCKERD 1 lockerd\-@VERSION@
+.SH NAME
+lockerd \- screen locking daemon
+.SH SYNOPSIS
+.B lockerd
+.RB [ options ]
+.SH DESCRIPTION
+.P
+Daemon that sets up screen locking and screen saver.
+.SH OPTIONS
+.TP
+.B "\-h, help"
+Print brief usage information to standard output and exit.
+
+.TP
+.B "\-d, debug"
+Show debug output.
+
+.TP
+.B "\-c, config  [ CONFIG ]"
+Pass lockerd a CONFIG file to use.
+
+.TP
+.B "\-l, logfile  [ LOGFILE ]"
+Pass lockerd a LOGFILE file to use.
+
+.TP
+.B "\-s, session-id  [ XDG_SESSION_ID ]"
+Pass lockerd the XDG_SESSION_ID if it cannot be passed by environment variable.
+
+.SH AUTHOR
+.EX
+eylles                 <ed.ylles1997 at gmail.com>
+.EE
+.SH HOMEPAGE
+.TP
+Source code:
+.EE
+https://github.com/eylles/betterxsecurelock
+.EX
+
