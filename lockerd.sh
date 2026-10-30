@@ -20,7 +20,7 @@ TIME_TO_LOCK=""
 xsslock_pid=""
 
 logdir="${XDG_STATE_HOME:-${HOME}/.local/state}/better-xsecurelock"
-if [ ! -f "$logdir" ]; then
+if [ ! -d "$logdir" ]; then
     mkdir -p "$logdir"
 fi
 LOGFILE="${logdir}/${myname}"
