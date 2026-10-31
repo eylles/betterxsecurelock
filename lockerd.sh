@@ -32,6 +32,9 @@ TIME=600
 
 # ${HOME}/.config/better-xsecurelock/
 CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/better-xsecurelock"
+if [ ! -d "$CONFIG_DIR" ]; then
+    mkdir -p "$CONFIG_DIR"
+fi
 #config file
 CONF="${CONFIG_DIR}/config"
 
