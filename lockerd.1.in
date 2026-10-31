@@ -19,10 +19,14 @@ Show debug output.
 .TP
 .B "\-c, config  [ CONFIG ]"
 Pass lockerd a CONFIG file to use.
+.br
+The default config file is at $XDG_CONFIG_HOME/better-xsecurelock/config
 
 .TP
 .B "\-l, logfile  [ LOGFILE ]"
 Pass lockerd a LOGFILE file to use.
+.br
+The default logfile is at $XDG_STATE_HOME/better-xsecurelock/lockerd
 
 .TP
 .B "\-s, session-id  [ XDG_SESSION_ID ]"
