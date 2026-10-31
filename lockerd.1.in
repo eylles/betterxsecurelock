@@ -32,6 +32,21 @@ The default logfile is at $XDG_STATE_HOME/better-xsecurelock/lockerd
 .B "\-s, session-id  [ XDG_SESSION_ID ]"
 Pass lockerd the XDG_SESSION_ID if it cannot be passed by environment variable.
 
+.SH SIGNALS
+.P
+In addition the daemon also reacts to the following signals:
+.TP
+.B "HUP"
+Reload the config.
+
+.TP
+.B "USR1"
+Reload the config.
+
+.TP
+.B "USR2"
+Relaunch the program.
+
 .SH AUTHOR
 .EX
 eylles                 <ed.ylles1997 at gmail.com>
