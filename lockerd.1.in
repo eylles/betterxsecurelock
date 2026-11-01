@@ -7,6 +7,18 @@ lockerd \- screen locking daemon
 .SH DESCRIPTION
 .P
 Daemon that sets up screen locking and screen saver.
+.br
+Mainly a wrapper around xss-lock(1), lockerd is the centerpiece that builds the
+environment for the betterxsecurelock setup that handles integrations to create
+a modern and good looking screen locking and screen saver setup that uses
+xsecurelock and xss-lock, the xss-lock program handles hooking up the screen
+locker to the XServer X Screen Saver events as well as Login Manager events such
+as systemd or elogind, lockerd handles the configuration and behaviours around,
+such as setting up the X Screen Saver timeout, the idle time to lock and the
+time to off the screen as well as monitoring for discrepancies between the
+configured timeut settings with the running time settings and correcting them if
+needed.
+
 .SH OPTIONS
 .TP
 .B "\-h, help"
