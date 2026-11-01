@@ -85,6 +85,7 @@ clean:
 	rm -f build/delaysleep
 	rm -f build/dim-screen
 	rm -f build/lockerd
+	rm -f build/lockerd.1
 	rm -f build/saver
 	rm -f build/screenlocker
 	rm -f build/screensaverbar
@@ -116,6 +117,7 @@ install: all
 	cp -vf build/libbacklight.sh     $(LIB_LOC)/
 	mkdir -p $(MAN_LOC)
 	cp -vf build/blight.1            $(MAN_LOC)/
+	cp -vf build/lockerd.1            $(MAN_LOC)/
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
@@ -133,6 +135,7 @@ uninstall:
 	rm -vf $(LIB_LOC)/liblog.sh
 	rm -vf $(LIB_LOC)/libbacklight.sh
 	rm -vf $(MAN_LOC)/blight.1
+	rm -vf $(MAN_LOC)/lockerd.1
 
 install_on_ac_power:
 	mkdir -p $(BIN_LOC)
