@@ -2,7 +2,7 @@
 PREFIX = /usr/local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
-MAN_LOC = $(DESTDIR)$(PREFIX)/share/man/man1
+MAN_LOC = $(DESTDIR)$(PREFIX)/share/man
 UDEV_PREFIX = /usr
 UDEVDIR = $(UDEV_PREFIX)/lib/udev
 UDEV_LOC = $(DESTDIR)$(UDEVDIR)/rules.d
@@ -115,9 +115,9 @@ install: all
 	cp -vf build/libmsleep.sh        $(LIB_LOC)/
 	cp -vf build/liblog.sh           $(LIB_LOC)/
 	cp -vf build/libbacklight.sh     $(LIB_LOC)/
-	mkdir -p $(MAN_LOC)
-	cp -vf build/blight.1            $(MAN_LOC)/
-	cp -vf build/lockerd.1            $(MAN_LOC)/
+	mkdir -p $(MAN_LOC)/man1
+	cp -vf build/blight.1            $(MAN_LOC)/man1
+	cp -vf build/lockerd.1            $(MAN_LOC)/man1
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
@@ -134,8 +134,8 @@ uninstall:
 	rm -vf $(LIB_LOC)/libmsleep.sh
 	rm -vf $(LIB_LOC)/liblog.sh
 	rm -vf $(LIB_LOC)/libbacklight.sh
-	rm -vf $(MAN_LOC)/blight.1
-	rm -vf $(MAN_LOC)/lockerd.1
+	rm -vf $(MAN_LOC)/man1/blight.1
+	rm -vf $(MAN_LOC)/man1/lockerd.1
 
 install_on_ac_power:
 	mkdir -p $(BIN_LOC)
