@@ -63,6 +63,25 @@ Reload the config.
 .B "USR2"
 Relaunch the program.
 
+.SH FILES
+
+.TP
+.B "CONFIG"
+The config file is located at:
+.B $XDG_CONFIG_HOME/better-xsecurelock/config
+in case that
+.B XDG_CONFIG_HOME
+is not defined the base path is defaulted to $HOME/.config
+
+
+.TP
+.B "LOGFILE"
+The log file is located at:
+.B $XDG_STATE_HOME/better-xsecurelock/lockerd
+in case that
+.B XDG_STATE_HOME
+is not defined the base path is defaulted to $HOME/.local/state
+
 .SH AUTHOR
 .EX
 eylles                 <ed.ylles1997 at gmail.com>
