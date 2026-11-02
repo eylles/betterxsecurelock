@@ -43,6 +43,10 @@ The default logfile is at $XDG_STATE_HOME/better-xsecurelock/lockerd
 .TP
 .B "\-s, session-id  [ XDG_SESSION_ID ]"
 Pass lockerd the XDG_SESSION_ID if it cannot be passed by environment variable.
+.br
+The XDG_SESSION_ID is needed for the locked daemon and program that compose
+betterxsecurelock to work properly, without it nothing will work as intended so
+lockerd justs exits with an error if no valid XDG_SESSION_ID is present.
 
 .SH SIGNALS
 .P
