@@ -73,7 +73,6 @@ in case that
 .B XDG_CONFIG_HOME
 is not defined the base path is defaulted to $HOME/.config
 
-
 .TP
 .B "LOGFILE"
 The log file is located at:
@@ -92,4 +91,3 @@ Source code:
 .EE
 https://github.com/eylles/betterxsecurelock
 .EX
-
