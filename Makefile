@@ -19,7 +19,7 @@ bin: blight delaysleep dim-screen lockerd saver screenlocker screensaverbar
 lib: libversion.sh libbool.sh libutils.sh libpidtreesearch.sh libmsleep.sh liblog.sh \
 	libbacklight.sh
 
-man: blight.1 lockerd.1
+man: blight.1 lockerd.1 better-xsecurelock.7
 
 libversion.sh: build
 	sed "s|@VERSION@|$(VERSION)|g" libversion.sh > build/$@
@@ -78,6 +78,9 @@ blight.1: build
 
 lockerd.1: build
 	sed "s|@VERSION@|$(VERSION)|g" lockerd.1.in > build/$@
+
+better-xsecurelock.7: build
+	sed "s|@VERSION@|$(VERSION)|g" better-xsecurelock.7.in > build/$@
 
 clean:
 	rm -f build/blight
