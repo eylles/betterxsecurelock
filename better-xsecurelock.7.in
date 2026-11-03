@@ -1,0 +1,46 @@
+.TH BETTERX-SECURELOCK 7 better-xsecurelock\-@VERSION@
+.SH NAME
+better-xsecurelock \- batteries included xsecurelock setup
+.SH DESCRIPTION
+You are reading the manual page for the
+.B better-xsecurelock
+package, this package is a set of scripts and wrappers around multiple utilities
+to compose xsecurelock and xss-lock into a setup that provides the minimum
+experience expected from a screen locker and screen saver for x11 with the top
+tier security of xsecurelock.
+
+.SH CONTENTS
+.P
+The
+.B better-xsecurelock
+package contains the following programs, the intended user facing ones come with
+their own manual page.
+
+.TP
+.B lockerd (1)
+
+.TP screenlocker
+
+.TP
+.B dim-screen
+
+.TP
+.B blight (1)
+
+.TP saver
+
+.TP screensaverbar
+
+.TP
+.B delaysleep
+
+.SH AUTHOR
+.EX
+eylles                 <ed.ylles1997 at gmail.com>
+.EE
+.SH HOMEPAGE
+.TP
+Source code:
+.EE
+https://github.com/eylles/betterxsecurelock
+.EX
