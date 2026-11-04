@@ -120,10 +120,10 @@ install: all
 	cp -vf build/liblog.sh            $(LIB_LOC)/
 	cp -vf build/libbacklight.sh      $(LIB_LOC)/
 	mkdir -p $(MAN_LOC)/man1
-	cp -vf build/blight.1             $(MAN_LOC)/man1
-	cp -vf build/lockerd.1            $(MAN_LOC)/man1
+	cp -vf build/blight.1             $(MAN_LOC)/man1/
+	cp -vf build/lockerd.1            $(MAN_LOC)/man1/
 	mkdir -p $(MAN_LOC)/man7
-	cp -vf build/better-xsecurelock.7 $(MAN_LOC)/man1
+	cp -vf build/better-xsecurelock.7 $(MAN_LOC)/man7/
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
