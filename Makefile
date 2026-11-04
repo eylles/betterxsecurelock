@@ -83,6 +83,7 @@ better-xsecurelock.7: build
 	sed "s|@VERSION@|$(VERSION)|g" better-xsecurelock.7.in > build/$@
 
 clean:
+	rm -f build/better-xsecurelock.7
 	rm -f build/blight
 	rm -f build/blight.1
 	rm -f build/delaysleep
@@ -121,6 +122,8 @@ install: all
 	mkdir -p $(MAN_LOC)/man1
 	cp -vf build/blight.1            $(MAN_LOC)/man1
 	cp -vf build/lockerd.1            $(MAN_LOC)/man1
+	mkdir -p $(MAN_LOC)/man7
+	cp -vf build/better-xsecurelock.7            $(MAN_LOC)/man1
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
@@ -139,6 +142,7 @@ uninstall:
 	rm -vf $(LIB_LOC)/libbacklight.sh
 	rm -vf $(MAN_LOC)/man1/blight.1
 	rm -vf $(MAN_LOC)/man1/lockerd.1
+	rm -vf $(MAN_LOC)/man7/better-xsecurelock.7
 
 install_on_ac_power:
 	mkdir -p $(BIN_LOC)
