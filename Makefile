@@ -104,26 +104,26 @@ clean:
 
 install: all
 	mkdir -p $(BIN_LOC)
-	cp -vf build/blight              $(BIN_LOC)/
-	cp -vf build/dim-screen          $(BIN_LOC)/
-	cp -vf build/lockerd             $(BIN_LOC)/
-	cp -vf build/saver               $(BIN_LOC)/
-	cp -vf build/screenlocker        $(BIN_LOC)/
-	cp -vf build/screensaverbar      $(BIN_LOC)/
-	cp -vf build/delaysleep          $(BIN_LOC)/
+	cp -vf build/blight               $(BIN_LOC)/
+	cp -vf build/dim-screen           $(BIN_LOC)/
+	cp -vf build/lockerd              $(BIN_LOC)/
+	cp -vf build/saver                $(BIN_LOC)/
+	cp -vf build/screenlocker         $(BIN_LOC)/
+	cp -vf build/screensaverbar       $(BIN_LOC)/
+	cp -vf build/delaysleep           $(BIN_LOC)/
 	mkdir -p $(LIB_LOC)
-	cp -vf build/libversion.sh       $(LIB_LOC)/
-	cp -vf build/libbool.sh          $(LIB_LOC)/
-	cp -vf build/libutils.sh         $(LIB_LOC)/
-	cp -vf build/libpidtreesearch.sh $(LIB_LOC)/
-	cp -vf build/libmsleep.sh        $(LIB_LOC)/
-	cp -vf build/liblog.sh           $(LIB_LOC)/
-	cp -vf build/libbacklight.sh     $(LIB_LOC)/
+	cp -vf build/libversion.sh        $(LIB_LOC)/
+	cp -vf build/libbool.sh           $(LIB_LOC)/
+	cp -vf build/libutils.sh          $(LIB_LOC)/
+	cp -vf build/libpidtreesearch.sh  $(LIB_LOC)/
+	cp -vf build/libmsleep.sh         $(LIB_LOC)/
+	cp -vf build/liblog.sh            $(LIB_LOC)/
+	cp -vf build/libbacklight.sh      $(LIB_LOC)/
 	mkdir -p $(MAN_LOC)/man1
-	cp -vf build/blight.1            $(MAN_LOC)/man1
+	cp -vf build/blight.1             $(MAN_LOC)/man1
 	cp -vf build/lockerd.1            $(MAN_LOC)/man1
 	mkdir -p $(MAN_LOC)/man7
-	cp -vf build/better-xsecurelock.7            $(MAN_LOC)/man1
+	cp -vf build/better-xsecurelock.7 $(MAN_LOC)/man1
 
 uninstall:
 	rm -vf $(BIN_LOC)/blight
