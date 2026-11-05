@@ -27,12 +27,12 @@ their own manual page.
 .TP
 .B blight (1)
 
+.TP
+.B delaysleep
+
 .TP saver
 
 .TP screensaverbar
-
-.TP
-.B delaysleep
 
 .SH AUTHOR
 .EX
