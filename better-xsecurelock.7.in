@@ -17,22 +17,46 @@ package contains the following programs, the intended user facing ones come with
 their own manual page.
 
 .TP
-.B lockerd (1)
+.B lockerd(1)
+Main daemon and wrapper over xss-lock(1), it sets up the environment for all the
+sub programs by exporting the config file location, sets the x11 screen saver
+timeout and cycle as well as the DPMS standby, suspend and off values.
 
-.TP screenlocker
+.TP
+.B screenlocker
+Program launched by xss-lock(1) upon an XServerScreenSaver event, a login
+manager event, or an xdg-screensaver(1) lock call, it wraps xsecurelock as well
+as manages dim-screen and delaysleep to provide screen dimming and system auto
+sleep if the configuration allows.
 
 .TP
 .B dim-screen
+Program that dims the screen brightness from 255 to 0 step by step, it leverages
+blight(1) to do so.
 
 .TP
-.B blight (1)
+.B blight(1)
+Program to adjust backlight through the /sys/class/backlight/*/brightness
+interface.
 
 .TP
 .B delaysleep
+Program that waits a configurable amount of time before putting the system to
+sleep, this is done with the systemact(1) program by default with the "sleep"
+action.
 
-.TP saver
+.TP
+.B saver
+Program that provides the screensaver, the screensaver is randomly started from
+a list of possible screensavers, 5 different lists are used, while the specific
+list is picked randomly from the screenlocker launch the specific saver is
+picked randomly from the used list.
 
-.TP screensaverbar
+.TP
+.B screensaverbar
+Program that provides the statusbar during the screensaver, the program is just
+a tiny shell script and the statusbar is rendered text within the xterm terminal
+emulator.
 
 .SH AUTHOR
 .EX
