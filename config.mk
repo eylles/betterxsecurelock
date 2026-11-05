@@ -7,6 +7,8 @@ BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
 # manpage location
 MAN_LOC = $(DESTDIR)$(PREFIX)/share/man
+# docs and examples location
+DOC_LOC = $(DESTDIR)$(PREFIX)/share/doc/better-xsecurelock
 # udev prefix
 UDEV_PREFIX = /usr
 # udev base directory

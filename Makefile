@@ -3,6 +3,7 @@ PREFIX = /usr/local
 BIN_LOC = $(DESTDIR)$(PREFIX)/bin
 LIB_LOC = $(DESTDIR)$(PREFIX)/lib/better-xsecurelock
 MAN_LOC = $(DESTDIR)$(PREFIX)/share/man
+DOC_LOC = $(DESTDIR)$(PREFIX)/share/doc/better-xsecurelock
 UDEV_PREFIX = /usr
 UDEVDIR = $(UDEV_PREFIX)/lib/udev
 UDEV_LOC = $(DESTDIR)$(UDEVDIR)/rules.d
